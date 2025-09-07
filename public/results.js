@@ -6,7 +6,7 @@ async function loadResults() {
     
     if (!currentUser) {
         alert('No user profile found. Please return to home and set up your profile.');
-        window.location.href = '/';
+        window.location.href = '/app';
         return;
     }
     
@@ -180,16 +180,12 @@ function displayOverallAnalysis() {
     document.getElementById('overallResults').style.display = 'block';
     
     const analysis = generateAnalysis();
+    displayOptimizationResults(analysis);
     
     document.getElementById('analysisContent').innerHTML = `
         <div class="recommendation">
             <h3>Performance Summary</h3>
             ${analysis.summary}
-            
-            <h3>Recommended Settings</h3>
-            <p><strong>DPI:</strong> ${analysis.recommendedDPI}</p>
-            <p><strong>Sensitivity:</strong> ${analysis.recommendedSensitivity}</p>
-            <p><strong>cm/360°:</strong> ${analysis.recommendedCm360.toFixed(1)} cm</p>
             
             <h3>Areas for Improvement</h3>
             ${analysis.improvements}
@@ -280,8 +276,111 @@ function generateAnalysis() {
         improvements: improvements,
         recommendedDPI: Math.round(avgDPI),
         recommendedSensitivity: Math.round(avgSens * 100) / 100,
-        recommendedCm360: avgCm360
+        recommendedCm360: avgCm360,
+        confidence: calculateConfidence(topResults.length, allTestResults.length)
     };
+}
+
+function calculateConfidence(topResults, totalResults) {
+    const dataQuality = Math.min(totalResults / 20, 1);
+    const consistencyFactor = topResults >= 3 ? 1 : topResults / 3;
+    return Math.round((dataQuality * consistencyFactor * 100));
+}
+
+async function displayOptimizationResults(analysis) {
+    const optimizationSection = document.getElementById('optimizationResults');
+    
+    if (!optimizationSection) return;
+    
+    optimizationSection.style.display = 'block';
+    
+    document.getElementById('optimalDPI').textContent = analysis.recommendedDPI;
+    document.getElementById('optimalSens').textContent = analysis.recommendedSensitivity;
+    document.getElementById('optimalCm').textContent = analysis.recommendedCm360.toFixed(1) + ' cm';
+    document.getElementById('confidence').textContent = analysis.confidence + '%';
+    
+    try {
+        const response = await fetch('/api/optimize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: currentUser,
+                cmPer360: analysis.recommendedCm360
+            })
+        });
+        
+        if (response.ok) {
+            const optimizationData = await response.json();
+            displayEquipmentRecommendations(optimizationData.mousepadRecommendation);
+            displayAnalysisReasoning(optimizationData.reasoning, analysis);
+        }
+    } catch (error) {
+        console.error('Error fetching optimization data:', error);
+        displayBasicRecommendations(analysis);
+    }
+}
+
+function displayEquipmentRecommendations(mousepadRec) {
+    if (!mousepadRec) return;
+    
+    document.getElementById('mousepadSize').textContent = mousepadRec.size;
+    document.getElementById('mousepadReasoning').textContent = mousepadRec.reasoning;
+    
+    const productsContainer = document.getElementById('mousepadProducts');
+    if (mousepadRec.products && mousepadRec.products.length > 0) {
+        productsContainer.innerHTML = '<h5>Recommended Products:</h5><ul>' + 
+            mousepadRec.products.map(product => `<li>${product}</li>`).join('') + 
+            '</ul>';
+    }
+}
+
+function displayAnalysisReasoning(reasoning, analysis) {
+    const reasoningContainer = document.getElementById('analysisReasoning');
+    
+    let reasoningText = reasoning || generateBasicReasoning(analysis);
+    
+    reasoningContainer.innerHTML = reasoningText;
+}
+
+function generateBasicReasoning(analysis) {
+    return `
+        <p>Based on your test results, we recommend <strong>${analysis.recommendedDPI} DPI</strong> 
+        with <strong>${analysis.recommendedSensitivity} in-game sensitivity</strong> 
+        (${analysis.recommendedCm360.toFixed(1)}cm/360°).</p>
+        
+        <p>This setting balances precision and speed based on your performance patterns across all tests. 
+        Your strongest performance came from settings closest to this recommendation.</p>
+        
+        <p>Continue practicing with these settings to build muscle memory and improve consistency.</p>
+    `;
+}
+
+function displayBasicRecommendations(analysis) {
+    const cmPer360 = analysis.recommendedCm360;
+    
+    let mousepadSize = 'Large (45cm x 40cm+)';
+    let reasoning = `With your ${cmPer360.toFixed(1)}cm/360° setting, you need adequate space for full rotations.`;
+    
+    if (cmPer360 <= 15) {
+        mousepadSize = 'Extra Large (60cm x 30cm+)';
+        reasoning = `Your high sensitivity (${cmPer360.toFixed(1)}cm/360°) still benefits from a large mousepad for consistency and comfort during extended play sessions.`;
+    } else if (cmPer360 <= 25) {
+        mousepadSize = 'Large (45cm x 40cm)';
+        reasoning = `Your medium sensitivity (${cmPer360.toFixed(1)}cm/360°) works well with a large mousepad, providing good balance between space efficiency and movement freedom.`;
+    } else if (cmPer360 <= 40) {
+        mousepadSize = 'Extra Large (60cm x 30cm+)';
+        reasoning = `Your lower sensitivity (${cmPer360.toFixed(1)}cm/360°) requires significant mouse movement. A large mousepad ensures you never run out of space during gameplay.`;
+    } else {
+        mousepadSize = 'Desk Pad (80cm x 40cm+)';
+        reasoning = `Your very low sensitivity (${cmPer360.toFixed(1)}cm/360°) demands maximum mouse real estate. Consider a full desk pad for optimal performance.`;
+    }
+    
+    document.getElementById('mousepadSize').textContent = mousepadSize;
+    document.getElementById('mousepadReasoning').textContent = reasoning;
+    
+    displayAnalysisReasoning(null, analysis);
 }
 
 function exportResults() {
@@ -304,12 +403,12 @@ function exportResults() {
 function clearAllData() {
     if (confirm('Are you sure you want to clear all test data? This cannot be undone.')) {
         localStorage.clear();
-        window.location.href = '/';
+        window.location.href = '/app';
     }
 }
 
 function goHome() {
-    window.location.href = '/';
+    window.location.href = '/app';
 }
 
 window.addEventListener('load', function() {

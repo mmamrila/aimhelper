@@ -3,7 +3,233 @@ let testResults = [];
 let currentDPI = 800;
 let currentSensitivity = 1.0;
 
-document.getElementById('profileForm').addEventListener('submit', function(e) {
+// Check authentication status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuthStatus();
+});
+
+async function checkAuthStatus() {
+    try {
+        const response = await fetch('/api/auth/me', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.authenticated) {
+            currentUser = data.user;
+            updateUIForAuthenticatedUser(data.user);
+            
+            // Redirect returning users to dashboard
+            const hasTestData = await checkUserTestData(data.user.userId);
+            if (hasTestData) {
+                showDashboardOption();
+            }
+        }
+    } catch (error) {
+        console.log('Not authenticated:', error);
+    }
+}
+
+async function checkUserTestData(userId) {
+    try {
+        const response = await fetch(`/api/user-results/${userId}`, {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const results = await response.json();
+            return results.length > 0;
+        }
+    } catch (error) {
+        console.error('Error checking user test data:', error);
+    }
+    return false;
+}
+
+function showDashboardOption() {
+    const heroSection = document.querySelector('.hero-section');
+    
+    if (heroSection && !document.getElementById('dashboardPrompt')) {
+        const dashboardPrompt = document.createElement('div');
+        dashboardPrompt.id = 'dashboardPrompt';
+        dashboardPrompt.className = 'dashboard-prompt';
+        dashboardPrompt.innerHTML = `
+            <div class="prompt-content">
+                <h3>Welcome Back! 👋</h3>
+                <p>You have previous test results. Would you like to view your dashboard or start a new analysis?</p>
+                <div class="prompt-actions">
+                    <button onclick="window.location.href='/dashboard'" class="primary-btn">View Dashboard</button>
+                    <button onclick="this.parentElement.parentElement.parentElement.style.display='none'" class="secondary-btn">Start New Analysis</button>
+                </div>
+            </div>
+        `;
+        
+        heroSection.appendChild(dashboardPrompt);
+    }
+}
+
+function updateUIForAuthenticatedUser(user) {
+    // Update the back button to show user info instead
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.innerHTML = `← ${user.username}`;
+        backBtn.onclick = () => showUserMenu();
+    }
+    
+    // Pre-fill form if user has a profile
+    loadUserProfile();
+}
+
+function showUserMenu() {
+    const menu = document.createElement('div');
+    menu.style.cssText = `
+        position: fixed;
+        top: 60px;
+        left: 20px;
+        background: rgba(16, 16, 30, 0.95);
+        border: 1px solid rgba(0, 210, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 1000;
+        min-width: 200px;
+        backdrop-filter: blur(10px);
+    `;
+    
+    menu.innerHTML = `
+        <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-weight: 600; color: #00d2ff;">${currentUser.username}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.6);">${currentUser.email}</div>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <button onclick="window.location.href='/'" style="
+                background: none; border: none; color: #ffffff; cursor: pointer;
+                padding: 8px 0; width: 100%; text-align: left;
+            ">🏠 Home</button>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <button onclick="handleLogout()" style="
+                background: none; border: none; color: #ff6b6b; cursor: pointer;
+                padding: 8px 0; width: 100%; text-align: left;
+            ">Sign Out</button>
+        </div>
+    `;
+    
+    document.body.appendChild(menu);
+    
+    setTimeout(() => {
+        document.addEventListener('click', function closeMenu(e) {
+            if (!menu.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        });
+    }, 10);
+}
+
+async function loadUserProfile() {
+    try {
+        const response = await fetch('/api/user-profile', {
+            credentials: 'include'
+        });
+        if (response.ok) {
+            const profile = await response.json();
+            
+            // Pre-fill form with saved data
+            if (profile.current_dpi) {
+                document.getElementById('currentDPI').value = profile.current_dpi;
+                currentDPI = profile.current_dpi;
+            }
+            if (profile.current_sensitivity) {
+                document.getElementById('currentSensitivity').value = profile.current_sensitivity;
+                currentSensitivity = profile.current_sensitivity;
+            }
+            if (profile.preferred_game) {
+                document.getElementById('preferredGame').value = profile.preferred_game;
+            }
+        }
+    } catch (error) {
+        console.log('No saved profile found');
+    }
+}
+
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            currentUser = null;
+            
+            // Reset back button
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) {
+                backBtn.innerHTML = '← Back to Home';
+                backBtn.onclick = () => window.location.href = '/app';
+            }
+            
+            // Remove menu
+            document.querySelectorAll('[style*="position: fixed"]').forEach(el => {
+                if (el.textContent.includes('Sign Out')) el.remove();
+            });
+            
+            showSuccessMessage('Signed out successfully.');
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+}
+
+function showSuccessMessage(message) {
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(76, 175, 80, 0.1);
+        border: 2px solid rgba(76, 175, 80, 0.3);
+        color: #4caf50;
+        padding: 15px 20px;
+        border-radius: 10px;
+        z-index: 3000;
+        font-weight: 600;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    successDiv.textContent = message;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        successDiv.remove();
+    }, 4000);
+}
+
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(244, 67, 54, 0.1);
+        border: 2px solid rgba(244, 67, 54, 0.3);
+        color: #f44336;
+        padding: 15px 20px;
+        border-radius: 10px;
+        z-index: 3000;
+        font-weight: 600;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    errorDiv.textContent = message;
+    
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+        errorDiv.remove();
+    }, 4000);
+}
+
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const submitButton = this.querySelector('button[type="submit"]');
@@ -13,11 +239,43 @@ document.getElementById('profileForm').addEventListener('submit', function(e) {
     submitButton.innerHTML = '⏳ Saving Profile...';
     submitButton.disabled = true;
     
+    // Get form data
+    const userId = document.getElementById('userId').value;
+    currentDPI = parseInt(document.getElementById('currentDPI').value);
+    currentSensitivity = parseFloat(document.getElementById('currentSensitivity').value);
+    const preferredGame = document.getElementById('preferredGame').value;
+    
+    // Save to database if user is authenticated
+    if (currentUser) {
+        try {
+            const response = await fetch('/api/user-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    displayName: userId,
+                    preferredGame: preferredGame,
+                    currentDpi: currentDPI,
+                    currentSensitivity: currentSensitivity
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to save profile');
+            }
+        } catch (error) {
+            console.error('Failed to save profile:', error);
+            showErrorMessage('Failed to save profile to database');
+        }
+    }
+    
+    // For backward compatibility with anonymous users
+    if (!currentUser) {
+        currentUser = userId;
+    }
+    
     // Simulate processing time for better UX
     setTimeout(() => {
-        currentUser = document.getElementById('userId').value;
-        currentDPI = parseInt(document.getElementById('currentDPI').value);
-        currentSensitivity = parseFloat(document.getElementById('currentSensitivity').value);
         
         const testsSection = document.getElementById('testsSection');
         if (testsSection) {

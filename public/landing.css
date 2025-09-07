@@ -692,6 +692,9 @@ section {
 
 .cta-actions {
     margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cta-guarantee {

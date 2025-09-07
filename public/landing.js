@@ -211,8 +211,8 @@ function addRippleEffect(element, event) {
 }
 
 function showLoginModal() {
-    // Create simple login modal
     const modal = document.createElement('div');
+    modal.id = 'authModal';
     modal.style.cssText = `
         position: fixed;
         inset: 0;
@@ -228,46 +228,122 @@ function showLoginModal() {
     
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-primary);
+        background: linear-gradient(135deg, rgba(16, 16, 30, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+        border: 1px solid rgba(0, 210, 255, 0.2);
         border-radius: 20px;
         padding: 40px;
-        max-width: 400px;
+        max-width: 420px;
         width: 90%;
-        text-align: center;
+        text-align: left;
         transform: scale(0.9);
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     `;
     
     modalContent.innerHTML = `
-        <h3 style="font-size: 24px; margin-bottom: 16px;">Coming Soon</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 24px;">User accounts are currently in development. For now, you can use the app without signing up!</p>
-        <button id="closeModal" style="
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        ">Got it</button>
+        <div id="authTabs" style="display: flex; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <button class="auth-tab active" data-tab="login" style="
+                flex: 1; padding: 12px; background: none; border: none; color: #00d2ff; 
+                font-weight: 600; cursor: pointer; border-bottom: 2px solid #00d2ff;
+                transition: all 0.3s ease;
+            ">Sign In</button>
+            <button class="auth-tab" data-tab="register" style="
+                flex: 1; padding: 12px; background: none; border: none; color: rgba(255,255,255,0.6); 
+                font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent;
+                transition: all 0.3s ease;
+            ">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form">
+            <h3 style="font-size: 24px; margin-bottom: 20px; color: #ffffff;">Welcome Back</h3>
+            <form id="loginFormElement">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; color: #ffffff; font-weight: 500;">Email or Username</label>
+                    <input type="text" id="loginEmailUsername" required style="
+                        width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.1); 
+                        border-radius: 10px; background: rgba(255,255,255,0.05); color: #ffffff;
+                        font-size: 16px; transition: all 0.3s ease;
+                    ">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 8px; color: #ffffff; font-weight: 500;">Password</label>
+                    <input type="password" id="loginPassword" required style="
+                        width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.1); 
+                        border-radius: 10px; background: rgba(255,255,255,0.05); color: #ffffff;
+                        font-size: 16px; transition: all 0.3s ease;
+                    ">
+                </div>
+                <button type="submit" style="
+                    width: 100%; background: linear-gradient(45deg, #00d2ff, #3a7bd5); color: white;
+                    border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600;
+                    cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px;
+                ">Sign In</button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-form" style="display: none;">
+            <h3 style="font-size: 24px; margin-bottom: 20px; color: #ffffff;">Create Account</h3>
+            <form id="registerFormElement">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: #ffffff; font-weight: 500;">Username</label>
+                    <input type="text" id="registerUsername" required style="
+                        width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.1); 
+                        border-radius: 10px; background: rgba(255,255,255,0.05); color: #ffffff;
+                        font-size: 16px; transition: all 0.3s ease;
+                    ">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; color: #ffffff; font-weight: 500;">Email</label>
+                    <input type="email" id="registerEmail" required style="
+                        width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.1); 
+                        border-radius: 10px; background: rgba(255,255,255,0.05); color: #ffffff;
+                        font-size: 16px; transition: all 0.3s ease;
+                    ">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 8px; color: #ffffff; font-weight: 500;">Password</label>
+                    <input type="password" id="registerPassword" required minlength="6" style="
+                        width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.1); 
+                        border-radius: 10px; background: rgba(255,255,255,0.05); color: #ffffff;
+                        font-size: 16px; transition: all 0.3s ease;
+                    ">
+                    <small style="color: rgba(255,255,255,0.6); font-size: 14px;">Minimum 6 characters</small>
+                </div>
+                <button type="submit" style="
+                    width: 100%; background: linear-gradient(45deg, #4caf50, #66bb6a); color: white;
+                    border: none; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600;
+                    cursor: pointer; transition: all 0.3s ease; margin-bottom: 15px;
+                ">Create Account</button>
+            </form>
+        </div>
+
+        <div id="authError" style="
+            background: rgba(244, 67, 54, 0.1); border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #f44336; padding: 12px; border-radius: 8px; margin-bottom: 20px;
+            display: none; font-size: 14px;
+        "></div>
+
+        <button id="closeAuthModal" style="
+            position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.1);
+            border: none; color: rgba(255,255,255,0.6); width: 30px; height: 30px;
+            border-radius: 50%; cursor: pointer; font-size: 18px;
+            transition: all 0.3s ease;
+        ">×</button>
     `;
     
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
+    
+    // Setup auth functionality
+    setupAuthModal();
     
     // Animate in
     setTimeout(() => {
         modal.style.opacity = '1';
         modalContent.style.transform = 'scale(1)';
     }, 10);
-    
-    // Close handlers
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    
-    modalContent.querySelector('#closeModal').addEventListener('click', closeModal);
     
     function closeModal() {
         modal.style.opacity = '0';
@@ -276,6 +352,235 @@ function showLoginModal() {
             modal.remove();
         }, 300);
     }
+    
+    // Close handlers
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    document.getElementById('closeAuthModal').addEventListener('click', closeModal);
+}
+
+function setupAuthModal() {
+    // Tab switching
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            const targetTab = e.target.dataset.tab;
+            
+            // Update active tab
+            document.querySelectorAll('.auth-tab').forEach(t => {
+                t.classList.remove('active');
+                t.style.color = 'rgba(255,255,255,0.6)';
+                t.style.borderBottomColor = 'transparent';
+            });
+            
+            e.target.classList.add('active');
+            e.target.style.color = '#00d2ff';
+            e.target.style.borderBottomColor = '#00d2ff';
+            
+            // Show/hide forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            document.getElementById(targetTab + 'Form').style.display = 'block';
+            
+            // Clear error
+            document.getElementById('authError').style.display = 'none';
+        });
+    });
+    
+    // Form submissions
+    document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
+    document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
+    
+    // Input focus effects
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', (e) => {
+            e.target.style.borderColor = '#00d2ff';
+            e.target.style.background = 'rgba(0, 210, 255, 0.1)';
+        });
+        
+        input.addEventListener('blur', (e) => {
+            e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+            e.target.style.background = 'rgba(255,255,255,0.05)';
+        });
+    });
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    
+    const emailOrUsername = document.getElementById('loginEmailUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const errorDiv = document.getElementById('authError');
+    
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ emailOrUsername, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Success - close modal and update UI
+            document.getElementById('authModal').remove();
+            updateUIForAuthenticatedUser(data);
+            showSuccessMessage('Welcome back! You\'re now signed in.');
+        } else {
+            // Show error
+            errorDiv.textContent = data.error;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Network error. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('registerUsername').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const errorDiv = document.getElementById('authError');
+    
+    try {
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username, email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Success - close modal and update UI
+            document.getElementById('authModal').remove();
+            updateUIForAuthenticatedUser(data);
+            showSuccessMessage('Account created successfully! Welcome to AimHelper Pro.');
+        } else {
+            // Show error
+            errorDiv.textContent = data.error;
+            errorDiv.style.display = 'block';
+        }
+    } catch (error) {
+        errorDiv.textContent = 'Network error. Please try again.';
+        errorDiv.style.display = 'block';
+    }
+}
+
+function updateUIForAuthenticatedUser(user) {
+    // Update navbar
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.textContent = user.username;
+        loginBtn.onclick = showUserMenu;
+    }
+    
+    // Store user info globally
+    window.currentUser = user;
+}
+
+function showUserMenu() {
+    // Simple user menu for now
+    const menu = document.createElement('div');
+    menu.style.cssText = `
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        background: rgba(16, 16, 30, 0.95);
+        border: 1px solid rgba(0, 210, 255, 0.2);
+        border-radius: 10px;
+        padding: 15px;
+        z-index: 1000;
+        min-width: 200px;
+    `;
+    
+    menu.innerHTML = `
+        <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-weight: 600; color: #00d2ff;">${window.currentUser.username}</div>
+            <div style="font-size: 12px; color: rgba(255,255,255,0.6);">${window.currentUser.email}</div>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <a href="/app" style="color: #ffffff; text-decoration: none; display: block; padding: 8px 0;">Dashboard</a>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <button onclick="handleLogout()" style="
+                background: none; border: none; color: #ff6b6b; cursor: pointer;
+                padding: 8px 0; width: 100%; text-align: left;
+            ">Sign Out</button>
+        </div>
+    `;
+    
+    document.body.appendChild(menu);
+    
+    // Close menu when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', function closeMenu(e) {
+            if (!menu.contains(e.target)) {
+                menu.remove();
+                document.removeEventListener('click', closeMenu);
+            }
+        });
+    }, 10);
+}
+
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            // Reset UI
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.textContent = 'Sign In';
+                loginBtn.onclick = showLoginModal;
+            }
+            
+            window.currentUser = null;
+            
+            // Remove any open menus
+            document.querySelectorAll('[style*="position: fixed"]').forEach(el => {
+                if (el.textContent.includes('Sign Out')) el.remove();
+            });
+            
+            showSuccessMessage('Signed out successfully.');
+        }
+    } catch (error) {
+        console.error('Logout failed:', error);
+    }
+}
+
+function showSuccessMessage(message) {
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(76, 175, 80, 0.1);
+        border: 2px solid rgba(76, 175, 80, 0.3);
+        color: #4caf50;
+        padding: 15px 20px;
+        border-radius: 10px;
+        z-index: 3000;
+        font-weight: 600;
+        animation: slideInRight 0.5s ease-out;
+    `;
+    successDiv.textContent = message;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        successDiv.remove();
+    }, 4000);
 }
 
 
@@ -292,6 +597,17 @@ style.textContent = `
     .animate-in {
         opacity: 1 !important;
         transform: translateY(0) !important;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 `;
 document.head.appendChild(style);

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Dashboard - FPS Sensitivity Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Performance Dashboard</h1>
+            <div class="user-info">
+                <span class="welcome-text">Welcome back, <span id="username">-</span></span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <!-- Performance Overview -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card overview-card">
+                <h2>🎯 Performance Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalTests">0</div>
+                        <div class="stat-label">Total Tests</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="avgAccuracy">0%</div>
+                        <div class="stat-label">Avg Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="avgReaction">0ms</div>
+                        <div class="stat-label">Avg Reaction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="consistency">0%</div>
+                        <div class="stat-label">Consistency</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Settings -->
+            <div class="dashboard-card settings-card">
+                <h2>⚙️ Current Settings</h2>
+                <div class="current-settings" id="currentSettings">
+                    <div class="setting-item">
+                        <span class="setting-label">DPI:</span>
+                        <span class="setting-value" id="currentDPI">-</span>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">Sensitivity:</span>
+                        <span class="setting-value" id="currentSens">-</span>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">cm/360°:</span>
+                        <span class="setting-value" id="currentCm360">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="dashboard-card progress-card">
+                <h2>📈 Progress Tracking</h2>
+                <div class="progress-content">
+                    <div class="progress-chart" id="progressChart">
+                        <canvas id="performanceChart" width="300" height="150"></canvas>
+                    </div>
+                    <div class="improvement-indicator" id="improvementIndicator">
+                        <div class="improvement-value" id="improvementValue">+0%</div>
+                        <div class="improvement-text">vs last session</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test History -->
+            <div class="dashboard-card history-card">
+                <h2>🕐 Recent Tests</h2>
+                <div class="test-history" id="testHistory">
+                    <p>No recent test data available</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="dashboard-actions">
+            <button id="newTestBtn" class="primary-btn">Start New Analysis</button>
+            <button id="viewResultsBtn" class="secondary-btn">View Detailed Results</button>
+            <button id="settingsBtn" class="secondary-btn">Update Settings</button>
+            <button id="educationBtn" class="secondary-btn" onclick="window.location.href='/education'">📚 Learn About Sensitivity</button>
+        </div>
+
+        <!-- Recommendations Panel -->
+        <div class="recommendations-panel" id="recommendationsPanel" style="display: none;">
+            <h2>💡 Personalized Recommendations</h2>
+            <div class="recommendations-content" id="recommendationsContent">
+                <!-- Dynamic recommendations will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -13,6 +13,50 @@
             <button id="homeBtn" class="home-btn">← Back to Home</button>
         </div>
 
+        <!-- Optimization Results Section -->
+        <div class="optimization-results" id="optimizationResults" style="display: none;">
+            <h2>🎯 Optimal Settings Recommendation</h2>
+            <div class="recommendation">
+                <div class="recommendation-grid">
+                    <div class="rec-item">
+                        <div class="rec-label">Recommended DPI</div>
+                        <div class="rec-value" id="optimalDPI">-</div>
+                    </div>
+                    <div class="rec-item">
+                        <div class="rec-label">Recommended Sensitivity</div>
+                        <div class="rec-value" id="optimalSens">-</div>
+                    </div>
+                    <div class="rec-item">
+                        <div class="rec-label">cm/360°</div>
+                        <div class="rec-value" id="optimalCm">-</div>
+                    </div>
+                    <div class="rec-item">
+                        <div class="rec-label">Confidence</div>
+                        <div class="rec-value" id="confidence">-</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Equipment Recommendations -->
+            <div class="equipment-section" id="equipmentSection">
+                <h3>🖥️ Equipment Recommendations</h3>
+                <div class="equipment-card" id="mousepadRecommendation">
+                    <h4>🗺️ Mousepad Size</h4>
+                    <div class="equipment-details">
+                        <div class="equipment-size" id="mousepadSize">-</div>
+                        <div class="equipment-reasoning" id="mousepadReasoning">-</div>
+                        <div class="equipment-products" id="mousepadProducts"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analysis Reasoning -->
+            <div class="analysis-section" id="analysisSection">
+                <h3>🔬 Why These Settings?</h3>
+                <div class="analysis-text" id="analysisReasoning">-</div>
+            </div>
+        </div>
+
         <div class="results-dashboard" id="dashboard">
             <div class="results-card">
                 <h3>Circle Tracking</h3>
@@ -44,6 +88,7 @@
             <div class="results-actions">
                 <button id="exportBtn" class="results-btn">Export Results</button>
                 <button id="clearBtn" class="retry-btn">Clear All Data</button>
+                <button id="educationBtn" class="results-btn" onclick="window.location.href='/education'">📚 Learn More</button>
             </div>
         </div>
     </div>
