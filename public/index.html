@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AimHelper Pro - FPS Sensitivity Optimizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="app-nav">
+                <button onclick="window.location.href='/'" class="back-btn">← Back to Home</button>
+            </div>
+            <h1>AimHelper Pro</h1>
+            <p>AI-powered sensitivity optimization for competitive FPS gaming</p>
+            <div class="subtitle">Complete your performance analysis</div>
+        </header>
+
+        <div class="setup-section">
+            <h2>🎯 Gaming Profile Setup</h2>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="userId">🏷️ Player Name/ID:</label>
+                    <input type="text" id="userId" required placeholder="Enter your gaming handle or username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="currentDPI">🖱️ Current Mouse DPI:</label>
+                    <input type="number" id="currentDPI" required min="400" max="3200" value="800">
+                    <small>Recommended range: 400-3200 DPI for optimal gaming performance</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="currentSensitivity">⚙️ Current In-Game Sensitivity:</label>
+                    <input type="number" id="currentSensitivity" required min="0.1" max="10" step="0.01" value="1.0">
+                    <small>Your current sensitivity value from your FPS game settings</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preferredGame">🎮 Primary FPS Game:</label>
+                    <select id="preferredGame">
+                        <option value="cs2">Counter-Strike 2</option>
+                        <option value="valorant">Valorant</option>
+                        <option value="apex">Apex Legends</option>
+                        <option value="overwatch">Overwatch 2</option>
+                        <option value="cod">Call of Duty</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <button type="submit">🚀 Save Profile & Start Testing</button>
+            </form>
+        </div>
+
+        <div class="tests-section" id="testsSection" style="display: none;">
+            <h2>⚡ AI-Powered Sensitivity Analysis</h2>
+            <p class="instruction">Complete all 4 tests to unlock your personalized sensitivity recommendations. Our AI analyzes your performance across different scenarios to find your optimal settings.</p>
+            
+            <div class="test-grid">
+                <div class="test-card">
+                    <h3>Circle Tracking</h3>
+                    <p>Follow a moving target to test smooth tracking ability</p>
+                    <div class="test-status" id="circleStatus">Not Started</div>
+                    <button data-test="circle-tracking" class="test-btn">Start Test</button>
+                </div>
+                
+                <div class="test-card">
+                    <h3>Grid Shot</h3>
+                    <p>Click targets as they appear to test precision and reaction time</p>
+                    <div class="test-status" id="gridStatus">Not Started</div>
+                    <button data-test="grid-shot" class="test-btn">Start Test</button>
+                </div>
+                
+                <div class="test-card">
+                    <h3>Flick Test</h3>
+                    <p>Quick target-to-target movements to test flick accuracy</p>
+                    <div class="test-status" id="flickStatus">Not Started</div>
+                    <button data-test="flick-test" class="test-btn">Start Test</button>
+                </div>
+                
+                <div class="test-card">
+                    <h3>Consistency Test</h3>
+                    <p>Repeat the same movement multiple times to test muscle memory</p>
+                    <div class="test-status" id="consistencyStatus">Not Started</div>
+                    <button data-test="consistency-test" class="test-btn">Start Test</button>
+                </div>
+            </div>
+            
+            <div class="optimization-section">
+                <button id="optimizeBtn" disabled class="optimize-btn">
+                    Get Optimal Sensitivity
+                </button>
+                <button id="viewResultsBtn" class="results-btn">View Detailed Results</button>
+            </div>
+        </div>
+
+        <div class="current-settings">
+            <h3>Current Settings</h3>
+            <div id="currentSettingsDisplay">
+                <p>DPI: <span id="displayDPI">800</span></p>
+                <p>Sensitivity: <span id="displaySens">1.0</span></p>
+                <p>cm/360°: <span id="displayCm">-</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

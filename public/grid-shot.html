@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Shot Test - FPS Sensitivity Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>Grid Shot Test</h1>
+            <button id="homeBtn" class="home-btn">← Back to Home</button>
+        </div>
+
+        <div class="test-instructions" id="instructions">
+            <h2>Instructions</h2>
+            <p>Click on targets as quickly and accurately as possible when they appear.</p>
+            <p>The test will automatically try different sensitivity settings.</p>
+            <p><strong>Settings:</strong> DPI: <span id="currentDPI"></span> | Sensitivity: <span id="currentSens"></span></p>
+            <button id="startBtn" class="start-btn">Start Test</button>
+        </div>
+
+        <div class="test-area" id="testArea" style="display: none;">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="test-ui">
+                <div class="test-info">
+                    <p>Test: <span id="currentTestNum">1</span> / <span id="totalTests">1</span></p>
+                    <p>Time: <span id="timeDisplay">60</span>s</p>
+                    <p>Score: <span id="scoreDisplay">0</span></p>
+                    <p>Accuracy: <span id="accuracyDisplay">0</span>%</p>
+                </div>
+                <div class="sensitivity-info">
+                    <p>DPI: <span id="testDPI"></span></p>
+                    <p>Sensitivity: <span id="testSens"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-results" id="results" style="display: none;">
+            <h2>Grid Shot Results</h2>
+            <div id="resultsContent"></div>
+            <div class="results-actions">
+                <button id="retryBtn" class="retry-btn">Retry Test</button>
+                <button id="nextTestBtn" class="test-btn">Next Test: Flick Test →</button>
+                <button id="homeBtn2" class="home-btn">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="grid-shot.js"></script>
+</body>
+</html>

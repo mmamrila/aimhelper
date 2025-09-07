@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Dashboard - FPS Sensitivity Optimizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="test-header">
+            <h1>Results Dashboard</h1>
+            <button id="homeBtn" class="home-btn">← Back to Home</button>
+        </div>
+
+        <div class="results-dashboard" id="dashboard">
+            <div class="results-card">
+                <h3>Circle Tracking</h3>
+                <div id="circleResults">No data available</div>
+            </div>
+            
+            <div class="results-card">
+                <h3>Grid Shot</h3>
+                <div id="gridResults">No data available</div>
+            </div>
+            
+            <div class="results-card">
+                <h3>Flick Test</h3>
+                <div id="flickResults">No data available</div>
+            </div>
+            
+            <div class="results-card">
+                <h3>Consistency Test</h3>
+                <div id="consistencyResults">No data available</div>
+            </div>
+        </div>
+
+        <div class="optimization-section">
+            <div id="overallResults" style="display: none;">
+                <h2>Overall Performance Analysis</h2>
+                <div id="analysisContent"></div>
+            </div>
+            
+            <div class="results-actions">
+                <button id="exportBtn" class="results-btn">Export Results</button>
+                <button id="clearBtn" class="retry-btn">Clear All Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="results.js"></script>
+</body>
+</html>
