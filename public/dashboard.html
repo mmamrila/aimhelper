@@ -3,102 +3,730 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Dashboard - FPS Sensitivity Optimizer</title>
+    <title>Dashboard - AimHelper Pro</title>
+    <meta name="description" content="Professional gaming performance dashboard with advanced analytics and insights.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Dashboard-specific styles -->
+    <style>
+        .dashboard-layout {
+            min-height: 100vh;
+            padding-top: 80px; /* Account for fixed nav */
+        }
+        
+        .dashboard-header {
+            padding: var(--space-8) 0 var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+            margin-bottom: var(--space-8);
+        }
+        
+        .dashboard-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+        
+        .dashboard-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+        
+        .user-role {
+            font-size: var(--font-size-sm);
+            color: var(--text-tertiary);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+        
+        .dashboard-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            background: var(--bg-card-elevated);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .dashboard-card--featured {
+            grid-column: span 8;
+        }
+        
+        .dashboard-card--sidebar {
+            grid-column: span 4;
+        }
+        
+        .dashboard-card--half {
+            grid-column: span 6;
+        }
+        
+        .dashboard-card--full {
+            grid-column: span 12;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .card-action {
+            font-size: var(--font-size-sm);
+            color: var(--text-accent);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .card-action:hover {
+            color: var(--brand-primary);
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+        
+        .metric-item {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--bg-glass);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-secondary);
+        }
+        
+        .metric-value {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+            line-height: 1;
+            margin-bottom: var(--space-1);
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .metric-change {
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            margin-top: var(--space-1);
+        }
+        
+        .metric-change--positive {
+            color: var(--brand-secondary);
+        }
+        
+        .metric-change--negative {
+            color: var(--brand-accent);
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+        
+        .action-button {
+            padding: var(--space-4);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            text-decoration: none;
+            transition: all var(--transition-base);
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .action-button:hover {
+            background: var(--bg-card-elevated);
+            border-color: var(--brand-primary);
+            transform: translateY(-2px);
+        }
+        
+        .action-icon {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-2);
+            display: block;
+        }
+        
+        .action-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+        
+        .action-description {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+        
+        .progress-card {
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.1), rgba(52, 168, 83, 0.1));
+            border-color: rgba(26, 115, 232, 0.2);
+        }
+        
+        .progress-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto var(--space-4);
+        }
+        
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+        
+        .progress-ring .progress-bg {
+            stroke: var(--border-secondary);
+        }
+        
+        .progress-ring .progress-bar {
+            stroke: var(--brand-primary);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        .progress-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+        }
+        
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-glass-strong);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-base);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+        
+        .activity-time {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+        
+        .activity-value {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+        }
+        
+        .chart-container {
+            height: 200px;
+            background: var(--bg-glass);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            border: 1px solid var(--border-secondary);
+        }
+        
+        .settings-grid {
+            display: grid;
+            gap: var(--space-4);
+        }
+        
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-secondary);
+        }
+        
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+        
+        .setting-value {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            font-family: var(--font-family-mono);
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-card--featured,
+            .dashboard-card--sidebar,
+            .dashboard-card--half,
+            .dashboard-card--full {
+                grid-column: span 12;
+            }
+            
+            .dashboard-header-content {
+                flex-direction: column;
+                gap: var(--space-4);
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                gap: var(--space-4);
+            }
+            
+            .metric-grid,
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <div class="dashboard-header">
-            <h1>Performance Dashboard</h1>
-            <div class="user-info">
-                <span class="welcome-text">Welcome back, <span id="username">-</span></span>
-                <button id="logoutBtn" class="logout-btn">Logout</button>
-            </div>
-        </div>
-
-        <!-- Performance Overview -->
-        <div class="dashboard-grid">
-            <div class="dashboard-card overview-card">
-                <h2>🎯 Performance Overview</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-value" id="totalTests">0</div>
-                        <div class="stat-label">Total Tests</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="avgAccuracy">0%</div>
-                        <div class="stat-label">Avg Accuracy</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="avgReaction">0ms</div>
-                        <div class="stat-label">Avg Reaction</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="consistency">0%</div>
-                        <div class="stat-label">Consistency</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Current Settings -->
-            <div class="dashboard-card settings-card">
-                <h2>⚙️ Current Settings</h2>
-                <div class="current-settings" id="currentSettings">
-                    <div class="setting-item">
-                        <span class="setting-label">DPI:</span>
-                        <span class="setting-value" id="currentDPI">-</span>
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label">Sensitivity:</span>
-                        <span class="setting-value" id="currentSens">-</span>
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label">cm/360°:</span>
-                        <span class="setting-value" id="currentCm360">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Progress Tracking -->
-            <div class="dashboard-card progress-card">
-                <h2>📈 Progress Tracking</h2>
-                <div class="progress-content">
-                    <div class="progress-chart" id="progressChart">
-                        <canvas id="performanceChart" width="300" height="150"></canvas>
-                    </div>
-                    <div class="improvement-indicator" id="improvementIndicator">
-                        <div class="improvement-value" id="improvementValue">+0%</div>
-                        <div class="improvement-text">vs last session</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Test History -->
-            <div class="dashboard-card history-card">
-                <h2>🕐 Recent Tests</h2>
-                <div class="test-history" id="testHistory">
-                    <p>No recent test data available</p>
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/app" class="nav-btn nav-btn--secondary">🎯 Training</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Education</a>
+                    <a href="/results" class="nav-btn nav-btn--secondary">📊 Results</a>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <!-- Action Buttons -->
-        <div class="dashboard-actions">
-            <button id="newTestBtn" class="primary-btn">Start New Analysis</button>
-            <button id="viewResultsBtn" class="secondary-btn">View Detailed Results</button>
-            <button id="settingsBtn" class="secondary-btn">Update Settings</button>
-            <button id="educationBtn" class="secondary-btn" onclick="window.location.href='/education'">📚 Learn About Sensitivity</button>
-        </div>
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <div class="container">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="dashboard-header-content">
+                    <div>
+                        <h1 class="dashboard-title">Performance Dashboard</h1>
+                        <p class="dashboard-subtitle">Track your aim training progress and performance metrics</p>
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-info">
+                            <div class="user-name" id="userName">Welcome, Player</div>
+                            <div class="user-role">Competitive Gamer</div>
+                        </div>
+                        <button id="logoutBtn" class="btn btn--secondary btn--sm">Logout</button>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Recommendations Panel -->
-        <div class="recommendations-panel" id="recommendationsPanel" style="display: none;">
-            <h2>💡 Personalized Recommendations</h2>
-            <div class="recommendations-content" id="recommendationsContent">
-                <!-- Dynamic recommendations will be loaded here -->
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Performance Overview -->
+                <div class="dashboard-card dashboard-card--featured">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📈</span>
+                            <span>Performance Overview</span>
+                        </h2>
+                        <a href="/results" class="card-action">View All Results →</a>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-item">
+                            <div class="metric-value" id="avgAccuracy">0%</div>
+                            <div class="metric-label">Average Accuracy</div>
+                            <div class="metric-change metric-change--positive" id="accuracyChange">+0%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value" id="avgReaction">0ms</div>
+                            <div class="metric-label">Reaction Time</div>
+                            <div class="metric-change metric-change--positive" id="reactionChange">-0ms</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value" id="consistency">0%</div>
+                            <div class="metric-label">Consistency</div>
+                            <div class="metric-change metric-change--positive" id="consistencyChange">+0%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-value" id="totalTests">0</div>
+                            <div class="metric-label">Total Tests</div>
+                            <div class="metric-change metric-change--positive" id="testsChange">+0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card dashboard-card--sidebar">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🚀</span>
+                            <span>Quick Actions</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <a href="/app" class="action-button">
+                            <span class="action-icon">🎯</span>
+                            <div class="action-title">Start Training</div>
+                            <div class="action-description">Begin aim tests</div>
+                        </a>
+                        <a href="/results" class="action-button">
+                            <span class="action-icon">📊</span>
+                            <div class="action-title">View Results</div>
+                            <div class="action-description">Analyze performance</div>
+                        </a>
+                        <a href="/education" class="action-button">
+                            <span class="action-icon">📚</span>
+                            <div class="action-title">Learn</div>
+                            <div class="action-description">Gaming guides</div>
+                        </a>
+                        <button class="action-button" id="optimizeBtn">
+                            <span class="action-icon">🧠</span>
+                            <div class="action-title">Optimize</div>
+                            <div class="action-description">Get recommendations</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Tracking -->
+                <div class="dashboard-card dashboard-card--half progress-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🎯</span>
+                            <span>Skill Progress</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="progress-ring">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="progress-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="progress-bar" cx="60" cy="60" r="52" 
+                                        stroke-dasharray="326.73" 
+                                        stroke-dashoffset="245" 
+                                        id="progressCircle"></circle>
+                            </svg>
+                            <div class="progress-value" id="overallProgress">25%</div>
+                        </div>
+                        <p class="text-secondary">Overall Improvement</p>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="dashboard-card dashboard-card--half">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📋</span>
+                            <span>Recent Activity</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="activity-list" id="recentActivity">
+                        <div class="activity-item">
+                            <div class="activity-icon">🎯</div>
+                            <div class="activity-content">
+                                <div class="activity-title">Grid Shot Test</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                            <div class="activity-value">85%</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">⚡</div>
+                            <div class="activity-content">
+                                <div class="activity-title">Flick Test</div>
+                                <div class="activity-time">1 day ago</div>
+                            </div>
+                            <div class="activity-value">78%</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">🔄</div>
+                            <div class="activity-content">
+                                <div class="activity-title">Tracking Test</div>
+                                <div class="activity-time">2 days ago</div>
+                            </div>
+                            <div class="activity-value">92%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="dashboard-card dashboard-card--half">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>📈</span>
+                            <span>Performance Trend</span>
+                        </h2>
+                        <a href="/results" class="card-action">Detailed View →</a>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div>📊 Performance chart will be displayed here</div>
+                    </div>
+                </div>
+
+                <!-- Current Settings -->
+                <div class="dashboard-card dashboard-card--half">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>⚙️</span>
+                            <span>Current Settings</span>
+                        </h2>
+                        <a href="/app" class="card-action">Update →</a>
+                    </div>
+                    
+                    <div class="settings-grid">
+                        <div class="setting-row">
+                            <div class="setting-label">Mouse DPI</div>
+                            <div class="setting-value" id="currentDPI">800</div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-label">In-Game Sensitivity</div>
+                            <div class="setting-value" id="currentSens">1.0</div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-label">cm/360°</div>
+                            <div class="setting-value" id="currentCm360">-</div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-label">Primary Game</div>
+                            <div class="setting-value" id="currentGame">Valorant</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations Panel -->
+                <div class="dashboard-card dashboard-card--full" id="recommendationsPanel" style="display: none;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span>🎯</span>
+                            <span>AI Recommendations</span>
+                        </h2>
+                    </div>
+                    
+                    <div class="alert alert--info">
+                        <span>🤖</span>
+                        <span>Complete more tests to unlock personalized AI recommendations for your sensitivity settings.</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="dashboard.js"></script>
+    
+    <script>
+        // Dashboard initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+        });
+        
+        function initializeDashboard() {
+            loadUserProfile();
+            loadPerformanceData();
+            updateProgressRing();
+            loadRecentActivity();
+        }
+        
+        function loadUserProfile() {
+            const profile = localStorage.getItem('aimhelper_profile');
+            if (profile) {
+                const data = JSON.parse(profile);
+                
+                // Update user name
+                document.getElementById('userName').textContent = `Welcome, ${data.userId || 'Player'}`;
+                
+                // Update current settings
+                document.getElementById('currentDPI').textContent = data.currentDPI || '800';
+                document.getElementById('currentSens').textContent = data.currentSensitivity || '1.0';
+                document.getElementById('currentGame').textContent = getGameDisplayName(data.preferredGame || 'valorant');
+                
+                // Calculate and display cm/360
+                const cm360 = calculateCm360(data.currentDPI || 800, data.currentSensitivity || 1.0);
+                document.getElementById('currentCm360').textContent = cm360 + ' cm';
+            }
+        }
+        
+        function loadPerformanceData() {
+            // Simulate loading performance data
+            const performanceData = {
+                avgAccuracy: Math.floor(Math.random() * 30) + 70, // 70-100%
+                avgReaction: Math.floor(Math.random() * 100) + 200, // 200-300ms
+                consistency: Math.floor(Math.random() * 25) + 75, // 75-100%
+                totalTests: Math.floor(Math.random() * 20) + 5 // 5-25 tests
+            };
+            
+            // Update metrics display
+            document.getElementById('avgAccuracy').textContent = performanceData.avgAccuracy + '%';
+            document.getElementById('avgReaction').textContent = performanceData.avgReaction + 'ms';
+            document.getElementById('consistency').textContent = performanceData.consistency + '%';
+            document.getElementById('totalTests').textContent = performanceData.totalTests;
+            
+            // Add random improvements
+            document.getElementById('accuracyChange').textContent = '+' + Math.floor(Math.random() * 5 + 1) + '%';
+            document.getElementById('reactionChange').textContent = '-' + Math.floor(Math.random() * 20 + 5) + 'ms';
+            document.getElementById('consistencyChange').textContent = '+' + Math.floor(Math.random() * 3 + 1) + '%';
+            document.getElementById('testsChange').textContent = '+' + Math.floor(Math.random() * 5 + 1);
+        }
+        
+        function updateProgressRing() {
+            const progress = Math.floor(Math.random() * 50) + 25; // 25-75%
+            const circumference = 2 * Math.PI * 52; // radius = 52
+            const offset = circumference - (progress / 100) * circumference;
+            
+            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+            document.getElementById('overallProgress').textContent = progress + '%';
+        }
+        
+        function loadRecentActivity() {
+            // Activity data would normally come from a backend
+            // For now, we'll use the static HTML content
+        }
+        
+        function getGameDisplayName(gameValue) {
+            const gameNames = {
+                valorant: 'Valorant',
+                csgo: 'CS:GO/CS2',
+                apex: 'Apex Legends',
+                overwatch: 'Overwatch 2',
+                marvelrivals: 'Marvel Rivals',
+                cod: 'Call of Duty',
+                rainbow6: 'R6 Siege',
+                fortnite: 'Fortnite',
+                other: 'Other FPS'
+            };
+            return gameNames[gameValue] || gameValue;
+        }
+        
+        function calculateCm360(dpi, sensitivity) {
+            const inches360 = 360 / (dpi * sensitivity);
+            const cm360 = inches360 * 2.54;
+            return Math.round(cm360 * 100) / 100;
+        }
+        
+        // Event handlers
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.clear();
+                window.location.href = '/';
+            }
+        });
+        
+        document.getElementById('optimizeBtn').addEventListener('click', function() {
+            const testsCompleted = localStorage.getItem('aimhelper_tests_completed') || 0;
+            if (testsCompleted < 2) {
+                alert('Complete at least 2 tests to unlock AI recommendations.');
+                return;
+            }
+            
+            // Show recommendations panel
+            document.getElementById('recommendationsPanel').style.display = 'block';
+            document.getElementById('recommendationsPanel').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        // Auto-refresh dashboard data every 30 seconds
+        setInterval(loadPerformanceData, 30000);
+    </script>
 </body>
 </html>

@@ -44,8 +44,12 @@
                     Scientific precision meets competitive gaming. Our AI-powered analysis finds your mathematically optimal mouse sensitivity settings in minutes, not months.
                 </p>
                 <div class="hero-actions">
-                    <button class="cta-btn primary" id="startAnalysisBtn">
-                        <span>Start Free Analysis</span>
+                    <button class="cta-btn primary large" id="demoTestBtn">
+                        <span>Try Demo Test - 30 Seconds</span>
+                        <div class="btn-icon">🎯</div>
+                    </button>
+                    <button class="cta-btn secondary large" id="startAnalysisBtn">
+                        <span>View Full Platform</span>
                         <div class="btn-icon">→</div>
                     </button>
                 </div>
@@ -270,6 +274,423 @@
         </div>
     </footer>
 
+    <!-- Demo Test Modal -->
+    <div id="demoTestModal" class="demo-modal hidden">
+        <div class="demo-modal-overlay" id="demoModalOverlay"></div>
+        <div class="demo-modal-content">
+            <div class="demo-header">
+                <h2>Demo: Grid Shot Test</h2>
+                <button class="demo-close" id="demoCloseBtn">×</button>
+            </div>
+            <div class="demo-instructions">
+                <p>Click the targets as quickly and accurately as possible!</p>
+                <div class="demo-timer" id="demoTimer">Ready? <span id="countdown">3</span></div>
+            </div>
+            <canvas id="demoCanvas" width="600" height="400"></canvas>
+            <div class="demo-results hidden" id="demoResults">
+                <h3>Quick Results</h3>
+                <div class="demo-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="demoAccuracy">0%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="demoReaction">0ms</span>
+                        <span class="stat-label">Avg Reaction</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="demoHits">0</span>
+                        <span class="stat-label">Targets Hit</span>
+                    </div>
+                </div>
+                <div class="demo-cta">
+                    <p>Want to unlock your full potential with AI analysis?</p>
+                    <div class="demo-actions">
+                        <button class="btn btn--primary btn--lg" id="signUpFromDemo">
+                            Sign Up for Full Analysis
+                        </button>
+                        <button class="btn btn--secondary" id="tryAgainBtn">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .demo-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .demo-modal.hidden {
+            display: none;
+        }
+
+        .demo-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .demo-modal-content {
+            position: relative;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            max-width: 700px;
+            width: 100%;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .demo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-header h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+        }
+
+        .demo-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-2xl);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: var(--space-2);
+            line-height: 1;
+        }
+
+        .demo-close:hover {
+            color: var(--text-primary);
+        }
+
+        .demo-instructions {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-instructions p {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .demo-timer {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-accent);
+        }
+
+        #demoCanvas {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            border-radius: var(--radius-lg);
+            cursor: crosshair;
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-results {
+            text-align: center;
+        }
+
+        .demo-results h3 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-6);
+            color: var(--text-primary);
+        }
+
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .demo-cta p {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .demo-modal-content {
+                padding: var(--space-6);
+            }
+
+            .demo-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .demo-actions .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+
     <script src="landing.js"></script>
+    
+    <script>
+        // Demo Test Functionality
+        class DemoTest {
+            constructor() {
+                this.canvas = document.getElementById('demoCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.targets = [];
+                this.hits = 0;
+                this.misses = 0;
+                this.startTime = 0;
+                this.reactionTimes = [];
+                this.testDuration = 30000; // 30 seconds
+                this.isRunning = false;
+                this.targetCount = 0;
+                
+                this.setupCanvas();
+                this.bindEvents();
+            }
+            
+            setupCanvas() {
+                // Set actual canvas size
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width;
+                this.canvas.height = rect.height;
+            }
+            
+            bindEvents() {
+                this.canvas.addEventListener('click', (e) => this.handleClick(e));
+                window.addEventListener('resize', () => this.setupCanvas());
+            }
+            
+            start() {
+                this.hits = 0;
+                this.misses = 0;
+                this.reactionTimes = [];
+                this.targetCount = 0;
+                this.isRunning = true;
+                this.startTime = Date.now();
+                
+                this.spawnTarget();
+                this.gameLoop();
+            }
+            
+            spawnTarget() {
+                if (!this.isRunning) return;
+                
+                const target = {
+                    x: Math.random() * (this.canvas.width - 60) + 30,
+                    y: Math.random() * (this.canvas.height - 60) + 30,
+                    radius: 25,
+                    spawnTime: Date.now(),
+                    id: this.targetCount++
+                };
+                
+                this.targets = [target]; // Only one target at a time for demo
+                
+                // Auto remove target after 2 seconds if not clicked
+                setTimeout(() => {
+                    if (this.targets.some(t => t.id === target.id)) {
+                        this.targets = this.targets.filter(t => t.id !== target.id);
+                        this.misses++;
+                        this.spawnTarget();
+                    }
+                }, 2000);
+            }
+            
+            handleClick(e) {
+                if (!this.isRunning) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                let hit = false;
+                this.targets = this.targets.filter(target => {
+                    const distance = Math.sqrt((x - target.x) ** 2 + (y - target.y) ** 2);
+                    if (distance <= target.radius) {
+                        const reactionTime = Date.now() - target.spawnTime;
+                        this.reactionTimes.push(reactionTime);
+                        this.hits++;
+                        hit = true;
+                        
+                        // Spawn next target
+                        setTimeout(() => this.spawnTarget(), 200);
+                        return false;
+                    }
+                    return true;
+                });
+                
+                if (!hit) {
+                    this.misses++;
+                }
+            }
+            
+            gameLoop() {
+                if (!this.isRunning) return;
+                
+                // Clear canvas
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw targets
+                this.targets.forEach(target => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = '#4285f4';
+                    this.ctx.fill();
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.stroke();
+                });
+                
+                // Check if test should end
+                if (Date.now() - this.startTime >= this.testDuration) {
+                    this.endTest();
+                    return;
+                }
+                
+                requestAnimationFrame(() => this.gameLoop());
+            }
+            
+            endTest() {
+                this.isRunning = false;
+                this.targets = [];
+                
+                // Calculate results
+                const totalShots = this.hits + this.misses;
+                const accuracy = totalShots > 0 ? Math.round((this.hits / totalShots) * 100) : 0;
+                const avgReaction = this.reactionTimes.length > 0 
+                    ? Math.round(this.reactionTimes.reduce((a, b) => a + b, 0) / this.reactionTimes.length)
+                    : 0;
+                
+                // Display results
+                document.getElementById('demoAccuracy').textContent = accuracy + '%';
+                document.getElementById('demoReaction').textContent = avgReaction + 'ms';
+                document.getElementById('demoHits').textContent = this.hits;
+                
+                // Show results
+                document.getElementById('demoResults').classList.remove('hidden');
+                
+                // Clear canvas
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = '#4285f4';
+                this.ctx.font = '24px Inter';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('Test Complete!', this.canvas.width / 2, this.canvas.height / 2);
+            }
+        }
+        
+        // Demo modal functionality
+        let demoTest = null;
+        
+        document.getElementById('demoTestBtn').addEventListener('click', function() {
+            document.getElementById('demoTestModal').classList.remove('hidden');
+            startDemoCountdown();
+        });
+        
+        document.getElementById('demoCloseBtn').addEventListener('click', closeDemoModal);
+        document.getElementById('demoModalOverlay').addEventListener('click', closeDemoModal);
+        
+        document.getElementById('tryAgainBtn').addEventListener('click', function() {
+            document.getElementById('demoResults').classList.add('hidden');
+            startDemoCountdown();
+        });
+        
+        document.getElementById('signUpFromDemo').addEventListener('click', function() {
+            // Store demo results
+            localStorage.setItem('aimhelper_demo_completed', 'true');
+            localStorage.setItem('aimhelper_demo_results', JSON.stringify({
+                accuracy: document.getElementById('demoAccuracy').textContent,
+                reaction: document.getElementById('demoReaction').textContent,
+                hits: document.getElementById('demoHits').textContent
+            }));
+            
+            // Redirect to registration
+            window.location.href = '/register';
+        });
+        
+        function closeDemoModal() {
+            document.getElementById('demoTestModal').classList.add('hidden');
+            if (demoTest && demoTest.isRunning) {
+                demoTest.isRunning = false;
+            }
+        }
+        
+        function startDemoCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            const timerEl = document.getElementById('demoTimer');
+            let count = 3;
+            
+            timerEl.innerHTML = `Ready? <span id="countdown">${count}</span>`;
+            
+            const countdown = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.textContent = count;
+                } else if (count === 0) {
+                    timerEl.textContent = 'GO!';
+                } else {
+                    clearInterval(countdown);
+                    timerEl.textContent = 'Click the targets!';
+                    
+                    // Start demo test
+                    demoTest = new DemoTest();
+                    demoTest.start();
+                }
+            }, 1000);
+        }
+    </script>
 </body>
 </html>

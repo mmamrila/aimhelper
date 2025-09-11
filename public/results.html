@@ -3,96 +3,792 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Results Dashboard - FPS Sensitivity Optimizer</title>
+    <title>Performance Analysis - AimHelper Pro</title>
+    <meta name="description" content="Complete analysis of your aim training performance with personalized recommendations.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Results page specific styles -->
+    <style>
+        .results-layout {
+            min-height: 100vh;
+            background: var(--bg-primary);
+            padding: var(--space-6) 0;
+        }
+
+        .results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .results-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+        }
+
+        .results-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .completion-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            background: linear-gradient(135deg, var(--brand-secondary), var(--brand-secondary-light));
+            border-radius: var(--radius-full);
+            color: white;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-8);
+        }
+
+        /* Recommendation Section */
+        .recommendation-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            border: 1px solid var(--border-primary);
+        }
+
+        .recommendation-header {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .recommendation-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .recommendation-confidence {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: rgba(52, 168, 83, 0.1);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+            border-radius: var(--radius-full);
+            color: var(--brand-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .setting-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+            border: 1px solid var(--border-primary);
+            transition: all 0.2s ease;
+        }
+
+        .setting-card:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .setting-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .setting-value {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--brand-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .setting-unit {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        /* Performance Overview */
+        .performance-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .test-result-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            border: 1px solid var(--border-primary);
+            position: relative;
+        }
+
+        .test-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .test-name {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .test-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .test-status--completed {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--brand-secondary);
+        }
+
+        .test-status--incomplete {
+            background: rgba(255, 193, 7, 0.1);
+            color: #B8860B;
+        }
+
+        .test-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .metric-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .test-insight {
+            padding: var(--space-3);
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        /* AI Analysis Section */
+        .ai-analysis {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            border: 1px solid var(--border-primary);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+
+        .analysis-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .analysis-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+        }
+
+        .analysis-content {
+            line-height: var(--line-height-relaxed);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .insight-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            border: 1px solid var(--border-primary);
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+
+        .insight-icon {
+            font-size: 18px;
+        }
+
+        .insight-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .insight-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        /* Actions Section */
+        .results-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            margin-top: var(--space-8);
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-weight-medium);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: var(--font-size-base);
+        }
+
+        .action-btn--primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .action-btn--primary:hover {
+            background: var(--brand-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .action-btn--secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .action-btn--secondary:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .action-btn--danger {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--brand-accent);
+            border: 1px solid rgba(234, 67, 53, 0.2);
+        }
+
+        .action-btn--danger:hover {
+            background: rgba(234, 67, 53, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .results-container {
+                padding: 0 var(--space-4);
+            }
+
+            .recommendation-section,
+            .ai-analysis {
+                padding: var(--space-6);
+            }
+
+            .settings-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-4);
+            }
+
+            .performance-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .results-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-btn {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .test-metrics {
+                grid-template-columns: 1fr;
+                gap: var(--space-2);
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <div class="test-header">
-            <h1>Results Dashboard</h1>
-            <button id="homeBtn" class="home-btn">← Back to Home</button>
-        </div>
+    <div class="results-layout">
+        <div class="results-container">
+            <!-- Header -->
+            <div class="results-header">
+                <div class="completion-badge">
+                    <span>✅</span>
+                    <span>Analysis Complete</span>
+                </div>
+                <h1 class="results-title">Your Performance Analysis</h1>
+                <p class="results-subtitle">Based on your aim training data, here are your personalized recommendations</p>
+            </div>
 
-        <!-- Optimization Results Section -->
-        <div class="optimization-results" id="optimizationResults" style="display: none;">
-            <h2>🎯 Optimal Settings Recommendation</h2>
-            <div class="recommendation">
-                <div class="recommendation-grid">
-                    <div class="rec-item">
-                        <div class="rec-label">Recommended DPI</div>
-                        <div class="rec-value" id="optimalDPI">-</div>
+            <!-- Optimal Settings Recommendation -->
+            <div class="recommendation-section">
+                <div class="recommendation-header">
+                    <h2 class="recommendation-title">🎯 Recommended Settings</h2>
+                    <div class="recommendation-confidence">
+                        <span>🔬</span>
+                        <span id="confidenceLevel">High Confidence</span>
                     </div>
-                    <div class="rec-item">
-                        <div class="rec-label">Recommended Sensitivity</div>
-                        <div class="rec-value" id="optimalSens">-</div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <div class="setting-label">Mouse DPI</div>
+                        <div class="setting-value" id="optimalDPI">800</div>
+                        <div class="setting-unit">DPI</div>
                     </div>
-                    <div class="rec-item">
-                        <div class="rec-label">cm/360°</div>
-                        <div class="rec-value" id="optimalCm">-</div>
+                    <div class="setting-card">
+                        <div class="setting-label">Game Sensitivity</div>
+                        <div class="setting-value" id="optimalSens">0.35</div>
+                        <div class="setting-unit">in-game</div>
                     </div>
-                    <div class="rec-item">
-                        <div class="rec-label">Confidence</div>
-                        <div class="rec-value" id="confidence">-</div>
+                    <div class="setting-card">
+                        <div class="setting-label">True Sensitivity</div>
+                        <div class="setting-value" id="trueSens">280</div>
+                        <div class="setting-unit">eDPI</div>
+                    </div>
+                    <div class="setting-card">
+                        <div class="setting-label">Distance</div>
+                        <div class="setting-value" id="cm360">41.5</div>
+                        <div class="setting-unit">cm/360°</div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Equipment Recommendations -->
-            <div class="equipment-section" id="equipmentSection">
-                <h3>🖥️ Equipment Recommendations</h3>
-                <div class="equipment-card" id="mousepadRecommendation">
-                    <h4>🗺️ Mousepad Size</h4>
-                    <div class="equipment-details">
-                        <div class="equipment-size" id="mousepadSize">-</div>
-                        <div class="equipment-reasoning" id="mousepadReasoning">-</div>
-                        <div class="equipment-products" id="mousepadProducts"></div>
-                    </div>
+
+            <!-- Performance Overview -->
+            <div class="performance-overview" id="performanceOverview">
+                <!-- Test result cards will be dynamically generated -->
+            </div>
+
+            <!-- AI Analysis -->
+            <div class="ai-analysis">
+                <div class="analysis-header">
+                    <div class="analysis-icon">🤖</div>
+                    <h2 class="analysis-title">AI Performance Analysis</h2>
+                </div>
+                
+                <div class="analysis-content" id="analysisContent">
+                    <p>Our AI has analyzed your performance across all completed tests to understand your unique aiming style and identify areas for improvement. Here's what we discovered:</p>
+                </div>
+
+                <div class="insights-grid" id="insightsGrid">
+                    <!-- AI insights will be dynamically generated -->
                 </div>
             </div>
-            
-            <!-- Analysis Reasoning -->
-            <div class="analysis-section" id="analysisSection">
-                <h3>🔬 Why These Settings?</h3>
-                <div class="analysis-text" id="analysisReasoning">-</div>
-            </div>
-        </div>
 
-        <div class="results-dashboard" id="dashboard">
-            <div class="results-card">
-                <h3>Circle Tracking</h3>
-                <div id="circleResults">No data available</div>
-            </div>
-            
-            <div class="results-card">
-                <h3>Grid Shot</h3>
-                <div id="gridResults">No data available</div>
-            </div>
-            
-            <div class="results-card">
-                <h3>Flick Test</h3>
-                <div id="flickResults">No data available</div>
-            </div>
-            
-            <div class="results-card">
-                <h3>Consistency Test</h3>
-                <div id="consistencyResults">No data available</div>
-            </div>
-        </div>
-
-        <div class="optimization-section">
-            <div id="overallResults" style="display: none;">
-                <h2>Overall Performance Analysis</h2>
-                <div id="analysisContent"></div>
-            </div>
-            
+            <!-- Actions -->
             <div class="results-actions">
-                <button id="exportBtn" class="results-btn">Export Results</button>
-                <button id="clearBtn" class="retry-btn">Clear All Data</button>
-                <button id="educationBtn" class="results-btn" onclick="window.location.href='/education'">📚 Learn More</button>
+                <button class="action-btn action-btn--primary" id="retakeTestsBtn">
+                    <span>🔄</span>
+                    <span>Retake Tests</span>
+                </button>
+                <button class="action-btn action-btn--secondary" id="exportBtn">
+                    <span>📊</span>
+                    <span>Export Results</span>
+                </button>
+                <button class="action-btn action-btn--secondary" id="shareBtn">
+                    <span>📤</span>
+                    <span>Share Results</span>
+                </button>
+                <button class="action-btn action-btn--danger" id="clearDataBtn">
+                    <span>🗑️</span>
+                    <span>Clear Data</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="results.js"></script>
+    <script>
+        class ResultsPage {
+            constructor() {
+                this.testData = this.loadTestData();
+                this.userProfile = this.loadUserProfile();
+                this.init();
+            }
+
+            init() {
+                this.renderPerformanceOverview();
+                this.calculateOptimalSettings();
+                this.generateAIAnalysis();
+                this.setupEventListeners();
+            }
+
+            loadTestData() {
+                const data = {};
+                ['gridShot', 'circleTracking', 'flickTest', 'consistencyTest'].forEach(test => {
+                    const testData = localStorage.getItem(`aimhelper_${test}_results`);
+                    if (testData) {
+                        data[test] = JSON.parse(testData);
+                    }
+                });
+                return data;
+            }
+
+            loadUserProfile() {
+                const profile = localStorage.getItem('aimhelper_profile');
+                return profile ? JSON.parse(profile) : {};
+            }
+
+            renderPerformanceOverview() {
+                const container = document.getElementById('performanceOverview');
+                const tests = [
+                    { key: 'gridShot', name: 'Grid Shot', icon: '🎯' },
+                    { key: 'circleTracking', name: 'Circle Tracking', icon: '🔵' },
+                    { key: 'flickTest', name: 'Flick Test', icon: '⚡' },
+                    { key: 'consistencyTest', name: 'Consistency Test', icon: '📏' }
+                ];
+
+                container.innerHTML = tests.map(test => {
+                    const data = this.testData[test.key];
+                    const isCompleted = !!data;
+                    
+                    return `
+                        <div class="test-result-card">
+                            <div class="test-result-header">
+                                <div class="test-name">${test.icon} ${test.name}</div>
+                                <div class="test-status test-status--${isCompleted ? 'completed' : 'incomplete'}">
+                                    ${isCompleted ? 'Completed' : 'Incomplete'}
+                                </div>
+                            </div>
+                            ${isCompleted ? this.renderTestMetrics(test.key, data) : this.renderIncompleteTest(test.key)}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderTestMetrics(testKey, data) {
+                let metrics = '';
+                let insight = '';
+
+                switch(testKey) {
+                    case 'gridShot':
+                        metrics = `
+                            <div class="test-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">${data.score || 0}</div>
+                                    <div class="metric-label">Score</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">${data.accuracy ? Math.round(data.accuracy) : 0}%</div>
+                                    <div class="metric-label">Accuracy</div>
+                                </div>
+                            </div>
+                        `;
+                        insight = data.accuracy > 80 ? 'Excellent precision control' : 'Room for improvement in target acquisition';
+                        break;
+                    case 'circleTracking':
+                        metrics = `
+                            <div class="test-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">${data.avgDistance ? Math.round(data.avgDistance) : 0}px</div>
+                                    <div class="metric-label">Avg Distance</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">${data.stability ? Math.round(data.stability) : 0}%</div>
+                                    <div class="metric-label">Stability</div>
+                                </div>
+                            </div>
+                        `;
+                        insight = data.stability > 75 ? 'Strong tracking consistency' : 'Focus on smooth mouse movement';
+                        break;
+                    case 'flickTest':
+                        metrics = `
+                            <div class="test-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">${data.avgTime ? Math.round(data.avgTime) : 0}ms</div>
+                                    <div class="metric-label">Avg Time</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">${data.accuracy ? Math.round(data.accuracy) : 0}%</div>
+                                    <div class="metric-label">Accuracy</div>
+                                </div>
+                            </div>
+                        `;
+                        insight = data.avgTime < 300 ? 'Fast reaction times' : 'Consider practicing quick target acquisition';
+                        break;
+                    case 'consistencyTest':
+                        metrics = `
+                            <div class="test-metrics">
+                                <div class="metric">
+                                    <div class="metric-value">${data.consistency ? Math.round(data.consistency) : 0}%</div>
+                                    <div class="metric-label">Consistency</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">${data.variance ? Math.round(data.variance) : 0}</div>
+                                    <div class="metric-label">Variance</div>
+                                </div>
+                            </div>
+                        `;
+                        insight = data.consistency > 80 ? 'Very consistent performance' : 'Work on maintaining steady aim';
+                        break;
+                }
+
+                return `
+                    ${metrics}
+                    <div class="test-insight">${insight}</div>
+                `;
+            }
+
+            renderIncompleteTest(testKey) {
+                return `
+                    <div class="test-insight">
+                        Complete this test to get personalized insights and improve your overall analysis.
+                    </div>
+                `;
+            }
+
+            calculateOptimalSettings() {
+                // Calculate optimal settings based on test data
+                const dpi = this.userProfile.dpi || 800;
+                const currentSens = this.userProfile.sensitivity || 0.5;
+                
+                // AI-based sensitivity calculation
+                let optimalSens = currentSens;
+                let confidence = 'Medium';
+
+                // Analyze performance data to suggest adjustments
+                if (this.testData.gridShot && this.testData.flickTest) {
+                    const gridAccuracy = this.testData.gridShot.accuracy || 0;
+                    const flickTime = this.testData.flickTest.avgTime || 500;
+                    
+                    if (gridAccuracy < 70 && flickTime > 400) {
+                        // Lower sensitivity for better precision
+                        optimalSens = Math.max(0.1, currentSens * 0.8);
+                        confidence = 'High';
+                    } else if (gridAccuracy > 85 && flickTime < 250) {
+                        // Potentially increase sensitivity for faster movements
+                        optimalSens = Math.min(2.0, currentSens * 1.1);
+                        confidence = 'High';
+                    }
+                }
+
+                const trueSens = Math.round(dpi * optimalSens);
+                const cm360 = Math.round((2.54 * 360) / (dpi * optimalSens * 0.022) * 10) / 10;
+
+                document.getElementById('optimalDPI').textContent = dpi;
+                document.getElementById('optimalSens').textContent = optimalSens.toFixed(2);
+                document.getElementById('trueSens').textContent = trueSens;
+                document.getElementById('cm360').textContent = cm360;
+                document.getElementById('confidenceLevel').textContent = `${confidence} Confidence`;
+            }
+
+            generateAIAnalysis() {
+                const completedTests = Object.keys(this.testData).length;
+                const insights = [];
+
+                if (completedTests === 0) {
+                    insights.push({
+                        icon: '📊',
+                        title: 'Complete More Tests',
+                        text: 'Complete at least one test to receive personalized AI insights about your aiming performance.'
+                    });
+                } else {
+                    // Generate insights based on performance patterns
+                    if (this.testData.gridShot) {
+                        const accuracy = this.testData.gridShot.accuracy;
+                        if (accuracy > 80) {
+                            insights.push({
+                                icon: '🎯',
+                                title: 'Excellent Precision',
+                                text: 'Your target acquisition is very accurate. This suggests good mouse control and the right sensitivity for precision tasks.'
+                            });
+                        } else {
+                            insights.push({
+                                icon: '🎯',
+                                title: 'Precision Training',
+                                text: 'Consider lowering your sensitivity slightly and practicing deliberate, controlled movements to improve accuracy.'
+                            });
+                        }
+                    }
+
+                    if (this.testData.circleTracking) {
+                        const stability = this.testData.circleTracking.stability;
+                        if (stability > 75) {
+                            insights.push({
+                                icon: '🔵',
+                                title: 'Smooth Tracking',
+                                text: 'Your tracking is very stable, indicating good hand-eye coordination and consistent mouse movement patterns.'
+                            });
+                        } else {
+                            insights.push({
+                                icon: '🔵',
+                                title: 'Tracking Practice',
+                                text: 'Focus on smooth, continuous movements. Consider adjusting your grip or mouse surface for better tracking consistency.'
+                            });
+                        }
+                    }
+
+                    if (completedTests >= 2) {
+                        insights.push({
+                            icon: '⚙️',
+                            title: 'Personalized Settings',
+                            text: 'Based on your performance across multiple tests, we\'ve calculated optimal settings that balance speed and accuracy for your playstyle.'
+                        });
+                    }
+                }
+
+                document.getElementById('insightsGrid').innerHTML = insights.map(insight => `
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <span class="insight-icon">${insight.icon}</span>
+                            <span class="insight-title">${insight.title}</span>
+                        </div>
+                        <div class="insight-text">${insight.text}</div>
+                    </div>
+                `).join('');
+            }
+
+            setupEventListeners() {
+                document.getElementById('retakeTestsBtn').addEventListener('click', () => {
+                    window.location.href = '/test-interface';
+                });
+
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    this.exportResults();
+                });
+
+                document.getElementById('shareBtn').addEventListener('click', () => {
+                    this.shareResults();
+                });
+
+                document.getElementById('clearDataBtn').addEventListener('click', () => {
+                    if (confirm('Are you sure you want to clear all test data? This action cannot be undone.')) {
+                        this.clearAllData();
+                    }
+                });
+            }
+
+            exportResults() {
+                const results = {
+                    profile: this.userProfile,
+                    testData: this.testData,
+                    recommendations: {
+                        dpi: document.getElementById('optimalDPI').textContent,
+                        sensitivity: document.getElementById('optimalSens').textContent,
+                        trueSens: document.getElementById('trueSens').textContent,
+                        cm360: document.getElementById('cm360').textContent
+                    },
+                    exportDate: new Date().toISOString()
+                };
+
+                const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `aimhelper-results-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            shareResults() {
+                const text = `Check out my AimHelper Pro results! Recommended sensitivity: ${document.getElementById('optimalSens').textContent} at ${document.getElementById('optimalDPI').textContent} DPI`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'My AimHelper Pro Results',
+                        text: text,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert('Results copied to clipboard!');
+                    });
+                }
+            }
+
+            clearAllData() {
+                ['gridShot', 'circleTracking', 'flickTest', 'consistencyTest'].forEach(test => {
+                    localStorage.removeItem(`aimhelper_${test}_results`);
+                });
+                localStorage.removeItem('aimhelper_test_progress');
+                window.location.reload();
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new ResultsPage();
+        });
+    </script>
 </body>
 </html>

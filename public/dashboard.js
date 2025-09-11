@@ -39,14 +39,16 @@ async function checkAuthStatus() {
 
 async function loadUserData() {
     try {
-        const response = await fetch(`/api/user-results/${currentUser}`);
-        const results = await response.json();
+        const response = await fetch('/api/user-results', {
+            credentials: 'include'
+        });
+        const data = await response.json();
         
         if (response.ok) {
-            userResults = results;
+            userResults = data.results || [];
             updateDashboard();
         } else {
-            console.error('Error loading user data:', results.error);
+            console.error('Error loading user data:', data.error);
         }
     } catch (error) {
         console.error('Error fetching user data:', error);
@@ -217,16 +219,12 @@ async function loadRecommendations() {
     if (userResults.length === 0) return;
     
     try {
-        const latestResult = userResults[userResults.length - 1];
-        const response = await fetch('/api/optimize', {
+        const response = await fetch('/api/optimize-sensitivity', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                userId: currentUser,
-                cmPer360: latestResult.cm_per_360
-            })
+            credentials: 'include'
         });
         
         if (response.ok) {
@@ -302,11 +300,56 @@ async function logout() {
     }
 }
 
+// Add profile management functions
+async function loadUserProfile() {
+    try {
+        const response = await fetch('/api/user-profile', {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const profile = await response.json();
+            if (profile.preferred_game) {
+                updateGameSpecificInfo(profile.preferred_game);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
+
+function updateGameSpecificInfo(game) {
+    // Could add game-specific tips or UI elements here
+    console.log('User preferred game:', game);
+}
+
+function showSection(sectionName) {
+    // Hide all sections
+    document.querySelectorAll('[id$="Section"]').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionName + 'Section');
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
+}
+
 window.addEventListener('load', function() {
     initDashboard();
+    loadUserProfile();
     
-    document.getElementById('newTestBtn').addEventListener('click', startNewTest);
-    document.getElementById('viewResultsBtn').addEventListener('click', viewResults);
-    document.getElementById('settingsBtn').addEventListener('click', updateSettings);
-    document.getElementById('logoutBtn').addEventListener('click', logout);
+    // Add event listeners if elements exist
+    const newTestBtn = document.getElementById('newTestBtn');
+    if (newTestBtn) newTestBtn.addEventListener('click', startNewTest);
+    
+    const viewResultsBtn = document.getElementById('viewResultsBtn');
+    if (viewResultsBtn) viewResultsBtn.addEventListener('click', viewResults);
+    
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (settingsBtn) settingsBtn.addEventListener('click', updateSettings);
+    
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) logoutBtn.addEventListener('click', logout);
 });

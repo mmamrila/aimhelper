@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aim Training - AimHelper Pro</title>
+    <meta name="description" content="Professional aim training interface with real-time analytics and progress tracking.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Test Interface Styles -->
+    <style>
+        .test-interface {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .test-sidebar {
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: var(--space-4);
+        }
+
+        .sidebar-logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+
+        .user-info {
+            text-align: center;
+        }
+
+        .user-name {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .user-level {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .progress-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .overall-progress {
+            margin-bottom: var(--space-6);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-glass);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-light));
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .test-list {
+            list-style: none;
+        }
+
+        .test-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            margin-bottom: var(--space-2);
+        }
+
+        .test-item:hover {
+            background: var(--bg-glass);
+        }
+
+        .test-item.active {
+            background: var(--bg-glass-strong);
+            border: 1px solid var(--brand-primary);
+        }
+
+        .test-item.completed {
+            background: rgba(52, 168, 83, 0.1);
+        }
+
+        .test-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-base);
+            background: var(--bg-glass);
+            border: 1px solid var(--border-primary);
+        }
+
+        .test-item.completed .test-icon {
+            background: var(--brand-secondary);
+            border-color: var(--brand-secondary);
+            color: white;
+        }
+
+        .test-item.active .test-icon {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .test-details {
+            flex: 1;
+        }
+
+        .test-name {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .test-status {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .test-item.completed .test-status {
+            color: var(--brand-secondary);
+        }
+
+        .test-item.active .test-status {
+            color: var(--brand-primary);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .quick-stats {
+            display: grid;
+            gap: var(--space-3);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3);
+            background: var(--bg-glass);
+            border-radius: var(--radius-lg);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+        }
+
+        /* Actions Section */
+        .actions-section {
+            padding: var(--space-6);
+            margin-top: auto;
+        }
+
+        .action-btn {
+            width: 100%;
+            margin-bottom: var(--space-3);
+            text-align: center;
+        }
+
+        .action-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Main Content Area */
+        .test-main {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            padding: var(--space-6) var(--space-8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .test-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+
+        .test-controls {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .test-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-8);
+            background: var(--bg-primary);
+        }
+
+        /* Test Canvas */
+        .test-canvas-container {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16/10;
+            background: #000;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #testCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        /* Test Instructions */
+        .test-instructions {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .instruction-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .instruction-text {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--space-4);
+        }
+
+        .instruction-tips {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Test Status */
+        .test-status-bar {
+            position: absolute;
+            top: var(--space-4);
+            left: var(--space-4);
+            right: var(--space-4);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3) var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-family-mono);
+            font-size: var(--font-size-sm);
+            color: white;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .status-label {
+            opacity: 0.7;
+        }
+
+        .status-value {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        /* Test Results Modal */
+        .test-results-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: var(--space-4);
+        }
+
+        .test-results-modal.hidden {
+            display: none;
+        }
+
+        .results-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-6);
+        }
+
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .result-stat {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+
+        .result-stat-value {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+            margin-bottom: var(--space-1);
+        }
+
+        .result-stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+        }
+
+        /* Progressive Disclosure */
+        .ai-insight {
+            background: linear-gradient(135deg, rgba(26, 115, 232, 0.1), rgba(52, 168, 83, 0.1));
+            border: 1px solid rgba(26, 115, 232, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .ai-insight-title {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--brand-primary-light);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .ai-insight-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .test-interface {
+                grid-template-columns: 1fr;
+            }
+
+            .test-sidebar {
+                position: fixed;
+                left: -100%;
+                top: 0;
+                bottom: 0;
+                width: 320px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .test-sidebar.open {
+                left: 0;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            .mobile-header {
+                display: flex;
+                align-items: center;
+                gap: var(--space-3);
+                padding: var(--space-4) var(--space-6);
+                background: var(--bg-secondary);
+                border-bottom: 1px solid var(--border-primary);
+            }
+
+            .sidebar-toggle {
+                background: none;
+                border: none;
+                color: var(--text-primary);
+                font-size: var(--font-size-xl);
+                cursor: pointer;
+                padding: var(--space-2);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .test-content {
+                padding: var(--space-4);
+            }
+
+            .test-header {
+                padding: var(--space-4);
+                flex-direction: column;
+                gap: var(--space-3);
+                text-align: center;
+            }
+
+            .results-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .results-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="test-interface">
+        <!-- Sidebar -->
+        <aside class="test-sidebar" id="testSidebar">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <a href="/dashboard" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Player</div>
+                    <div class="user-level">Training Session</div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <h3 class="progress-title">Overall Progress</h3>
+                <div class="overall-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgressFill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Tests Completed</span>
+                        <span id="progressCounter">0/4</span>
+                    </div>
+                </div>
+
+                <ul class="test-list">
+                    <li class="test-item active" data-test="grid-shot">
+                        <div class="test-icon">🎯</div>
+                        <div class="test-details">
+                            <div class="test-name">Grid Shot</div>
+                            <div class="test-status">In Progress</div>
+                        </div>
+                    </li>
+                    <li class="test-item" data-test="flick-test">
+                        <div class="test-icon">⚡</div>
+                        <div class="test-details">
+                            <div class="test-name">Flick Test</div>
+                            <div class="test-status">Not Started</div>
+                        </div>
+                    </li>
+                    <li class="test-item" data-test="tracking">
+                        <div class="test-icon">🔄</div>
+                        <div class="test-details">
+                            <div class="test-name">Tracking</div>
+                            <div class="test-status">Not Started</div>
+                        </div>
+                    </li>
+                    <li class="test-item" data-test="consistency">
+                        <div class="test-icon">📊</div>
+                        <div class="test-details">
+                            <div class="test-name">Consistency</div>
+                            <div class="test-status">Not Started</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <h3 class="progress-title">Current Session</h3>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Accuracy</span>
+                        <span class="stat-value" id="sessionAccuracy">-%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg Reaction</span>
+                        <span class="stat-value" id="sessionReaction">-ms</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Targets Hit</span>
+                        <span class="stat-value" id="sessionHits">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions-section">
+                <button class="btn btn--secondary action-btn" onclick="window.location.href='/dashboard'">
+                    📊 Dashboard
+                </button>
+                <button class="btn btn--secondary action-btn" onclick="window.location.href='/results'">
+                    📈 View Results
+                </button>
+                <button class="btn btn--primary action-btn" id="getRecommendationsBtn" disabled>
+                    🧠 Get AI Insights
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="test-main">
+            <!-- Mobile Header -->
+            <div class="mobile-header" style="display: none;">
+                <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+                <h1 class="test-title">Grid Shot Test</h1>
+            </div>
+
+            <!-- Test Header -->
+            <header class="test-header">
+                <div>
+                    <h1 class="test-title" id="testTitle">Grid Shot Test</h1>
+                    <p class="test-subtitle" id="testSubtitle">Click targets as quickly and accurately as possible</p>
+                </div>
+                <div class="test-controls">
+                    <button class="btn btn--secondary" id="pauseBtn" style="display: none;">
+                        ⏸️ Pause
+                    </button>
+                    <button class="btn btn--secondary" id="endTestBtn" style="display: none;">
+                        🛑 End Test
+                    </button>
+                </div>
+            </header>
+
+            <!-- Test Content -->
+            <div class="test-content">
+                <!-- Instructions -->
+                <div class="test-instructions" id="testInstructions">
+                    <h2 class="instruction-title">Grid Shot Test</h2>
+                    <p class="instruction-text">
+                        Targets will appear randomly on the screen. Click them as quickly and accurately as possible. 
+                        The test lasts for 60 seconds and measures your precision clicking ability.
+                    </p>
+                    <p class="instruction-tips">
+                        💡 Tip: Focus on accuracy first, then speed. Consistent performance is key!
+                    </p>
+                    <button class="btn btn--primary btn--lg" id="startTestBtn">
+                        Start Test
+                    </button>
+                </div>
+
+                <!-- Test Canvas -->
+                <div class="test-canvas-container" id="testCanvasContainer" style="display: none;">
+                    <canvas id="testCanvas"></canvas>
+                    
+                    <!-- Status Bar -->
+                    <div class="test-status-bar">
+                        <div class="status-item">
+                            <span class="status-label">Time:</span>
+                            <span class="status-value" id="timeRemaining">60s</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Accuracy:</span>
+                            <span class="status-value" id="liveAccuracy">100%</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Hits:</span>
+                            <span class="status-value" id="liveHits">0</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Streak:</span>
+                            <span class="status-value" id="liveStreak">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Test Results Modal -->
+    <div class="test-results-modal hidden" id="testResultsModal">
+        <div class="results-content">
+            <h2 class="results-title">Test Complete!</h2>
+            
+            <!-- AI Insight -->
+            <div class="ai-insight" id="aiInsight" style="display: none;">
+                <div class="ai-insight-title">
+                    <span>🤖</span>
+                    <span>AI Insight</span>
+                </div>
+                <p class="ai-insight-text" id="aiInsightText"></p>
+            </div>
+
+            <div class="results-stats">
+                <div class="result-stat">
+                    <div class="result-stat-value" id="finalAccuracy">0%</div>
+                    <div class="result-stat-label">Accuracy</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value" id="finalReaction">0ms</div>
+                    <div class="result-stat-label">Avg Reaction</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value" id="finalHits">0</div>
+                    <div class="result-stat-label">Targets Hit</div>
+                </div>
+                <div class="result-stat">
+                    <div class="result-stat-value" id="finalStreak">0</div>
+                    <div class="result-stat-label">Best Streak</div>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <button class="btn btn--secondary" id="retryBtn">
+                    🔄 Retry Test
+                </button>
+                <button class="btn btn--primary" id="nextTestBtn">
+                    ➡️ Next Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test Interface Manager
+        class TestInterface {
+            constructor() {
+                this.currentTest = 'grid-shot';
+                this.testsCompleted = 0;
+                this.sessionData = {
+                    accuracy: 0,
+                    reaction: 0,
+                    hits: 0,
+                    tests: []
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadUserData();
+                this.setupEventListeners();
+                this.updateMobileLayout();
+                this.loadTestProgress();
+            }
+            
+            loadUserData() {
+                const user = localStorage.getItem('aimhelper_user');
+                if (user) {
+                    const userData = JSON.parse(user);
+                    document.getElementById('userName').textContent = userData.username || userData.name || 'Player';
+                }
+            }
+            
+            setupEventListeners() {
+                // Mobile sidebar toggle
+                document.getElementById('sidebarToggle').addEventListener('click', () => {
+                    document.getElementById('testSidebar').classList.toggle('open');
+                    document.getElementById('sidebarOverlay').classList.toggle('show');
+                });
+                
+                document.getElementById('sidebarOverlay').addEventListener('click', () => {
+                    document.getElementById('testSidebar').classList.remove('open');
+                    document.getElementById('sidebarOverlay').classList.remove('show');
+                });
+                
+                // Test navigation
+                document.querySelectorAll('.test-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const testType = item.dataset.test;
+                        this.switchTest(testType);
+                    });
+                });
+                
+                // Test controls
+                document.getElementById('startTestBtn').addEventListener('click', () => {
+                    this.startTest();
+                });
+                
+                document.getElementById('retryBtn').addEventListener('click', () => {
+                    this.hideResults();
+                    this.resetTest();
+                });
+                
+                document.getElementById('nextTestBtn').addEventListener('click', () => {
+                    this.hideResults();
+                    this.moveToNextTest();
+                });
+                
+                // Recommendations button
+                document.getElementById('getRecommendationsBtn').addEventListener('click', () => {
+                    window.location.href = '/results';
+                });
+            }
+            
+            updateMobileLayout() {
+                const mobileHeader = document.querySelector('.mobile-header');
+                if (window.innerWidth <= 1024) {
+                    mobileHeader.style.display = 'flex';
+                } else {
+                    mobileHeader.style.display = 'none';
+                }
+            }
+            
+            loadTestProgress() {
+                // Load progress from localStorage
+                const progress = localStorage.getItem('aimhelper_test_progress');
+                if (progress) {
+                    const progressData = JSON.parse(progress);
+                    this.testsCompleted = progressData.completed || 0;
+                    this.updateProgressDisplay();
+                    
+                    // Enable recommendations if enough tests completed
+                    if (this.testsCompleted >= 2) {
+                        document.getElementById('getRecommendationsBtn').disabled = false;
+                    }
+                }
+            }
+            
+            switchTest(testType) {
+                this.currentTest = testType;
+                
+                // Update active test in sidebar
+                document.querySelectorAll('.test-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`[data-test="${testType}"]`).classList.add('active');
+                
+                // Update test title and instructions
+                this.updateTestContent(testType);
+                
+                // Reset test state
+                this.resetTest();
+            }
+            
+            updateTestContent(testType) {
+                const testConfigs = {
+                    'grid-shot': {
+                        title: 'Grid Shot Test',
+                        subtitle: 'Click targets as quickly and accurately as possible',
+                        instruction: 'Targets will appear randomly on the screen. Click them as quickly and accurately as possible. The test lasts for 60 seconds and measures your precision clicking ability.',
+                        tip: '💡 Tip: Focus on accuracy first, then speed. Consistent performance is key!'
+                    },
+                    'flick-test': {
+                        title: 'Flick Test',
+                        subtitle: 'Quick target-to-target movements',
+                        instruction: 'A target will appear, then disappear and reappear in a new location. Flick to the new target as quickly as possible. This tests your ability to make quick, accurate movements.',
+                        tip: '💡 Tip: Use your wrist for small movements and arm for larger ones.'
+                    },
+                    'tracking': {
+                        title: 'Tracking Test',
+                        subtitle: 'Follow moving targets smoothly',
+                        instruction: 'Keep your crosshair on the moving target for as long as possible. This tests your ability to maintain smooth, controlled movements while tracking.',
+                        tip: '💡 Tip: Predict the target\'s movement and maintain steady control.'
+                    },
+                    'consistency': {
+                        title: 'Consistency Test',
+                        subtitle: 'Repeat precise movements',
+                        instruction: 'Click the same target location multiple times. This measures how consistently you can repeat the same movement and tests your muscle memory.',
+                        tip: '💡 Tip: Develop a rhythm and maintain consistent form throughout.'
+                    }
+                };
+                
+                const config = testConfigs[testType];
+                document.getElementById('testTitle').textContent = config.title;
+                document.getElementById('testSubtitle').textContent = config.subtitle;
+                document.querySelector('.instruction-title').textContent = config.title;
+                document.querySelector('.instruction-text').textContent = config.instruction;
+                document.querySelector('.instruction-tips').innerHTML = config.tip;
+            }
+            
+            startTest() {
+                // Hide instructions, show canvas
+                document.getElementById('testInstructions').style.display = 'none';
+                document.getElementById('testCanvasContainer').style.display = 'block';
+                
+                // Start the actual test (this would integrate with existing test logic)
+                this.runTest();
+            }
+            
+            runTest() {
+                // Simulate test running for demo
+                let timeLeft = 60;
+                let hits = 0;
+                let accuracy = 100;
+                let streak = 0;
+                
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timeRemaining').textContent = timeLeft + 's';
+                    
+                    // Simulate hitting targets
+                    if (Math.random() > 0.7) {
+                        hits++;
+                        streak++;
+                        document.getElementById('liveHits').textContent = hits;
+                        document.getElementById('liveStreak').textContent = streak;
+                    }
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        this.endTest({
+                            accuracy: 85 + Math.random() * 10,
+                            reaction: 200 + Math.random() * 100,
+                            hits: hits,
+                            streak: streak
+                        });
+                    }
+                }, 1000);
+            }
+            
+            endTest(results) {
+                // Store test results
+                this.sessionData.tests.push({
+                    type: this.currentTest,
+                    ...results,
+                    timestamp: Date.now()
+                });
+                
+                // Update session stats
+                this.updateSessionStats();
+                
+                // Show results modal
+                this.showResults(results);
+                
+                // Mark test as completed
+                this.markTestCompleted();
+            }
+            
+            showResults(results) {
+                document.getElementById('finalAccuracy').textContent = Math.round(results.accuracy) + '%';
+                document.getElementById('finalReaction').textContent = Math.round(results.reaction) + 'ms';
+                document.getElementById('finalHits').textContent = results.hits;
+                document.getElementById('finalStreak').textContent = results.streak;
+                
+                // Show progressive AI insights
+                this.showAIInsight(results);
+                
+                document.getElementById('testResultsModal').classList.remove('hidden');
+            }
+            
+            showAIInsight(results) {
+                const insights = this.generateAIInsight(results);
+                if (insights) {
+                    document.getElementById('aiInsightText').textContent = insights;
+                    document.getElementById('aiInsight').style.display = 'block';
+                }
+            }
+            
+            generateAIInsight(results) {
+                const testCount = this.sessionData.tests.length;
+                
+                if (testCount === 1) {
+                    return "Good start! Your first test shows promising precision. Continue with more tests to get a complete analysis of your aim style.";
+                } else if (testCount === 2) {
+                    return "Patterns are emerging! I'm starting to see your natural aiming tendencies. Two more tests will unlock your personalized sensitivity recommendations.";
+                } else if (testCount >= 3) {
+                    return "Excellent progress! Your aiming profile is becoming clear. Based on your performance, you seem to favor precision over speed - this will help optimize your settings.";
+                }
+                
+                return null;
+            }
+            
+            hideResults() {
+                document.getElementById('testResultsModal').classList.add('hidden');
+            }
+            
+            markTestCompleted() {
+                const testItem = document.querySelector(`[data-test="${this.currentTest}"]`);
+                testItem.classList.add('completed');
+                testItem.querySelector('.test-status').textContent = 'Completed';
+                testItem.querySelector('.test-icon').innerHTML = '✓';
+                
+                this.testsCompleted++;
+                this.updateProgressDisplay();
+                
+                // Save progress
+                localStorage.setItem('aimhelper_test_progress', JSON.stringify({
+                    completed: this.testsCompleted,
+                    tests: this.sessionData.tests
+                }));
+                
+                // Enable recommendations if enough tests completed
+                if (this.testsCompleted >= 2) {
+                    document.getElementById('getRecommendationsBtn').disabled = false;
+                }
+            }
+            
+            updateProgressDisplay() {
+                const progressPercentage = (this.testsCompleted / 4) * 100;
+                document.getElementById('overallProgressFill').style.width = progressPercentage + '%';
+                document.getElementById('progressCounter').textContent = `${this.testsCompleted}/4`;
+            }
+            
+            updateSessionStats() {
+                const tests = this.sessionData.tests;
+                if (tests.length === 0) return;
+                
+                const avgAccuracy = tests.reduce((sum, test) => sum + test.accuracy, 0) / tests.length;
+                const avgReaction = tests.reduce((sum, test) => sum + test.reaction, 0) / tests.length;
+                const totalHits = tests.reduce((sum, test) => sum + test.hits, 0);
+                
+                document.getElementById('sessionAccuracy').textContent = Math.round(avgAccuracy) + '%';
+                document.getElementById('sessionReaction').textContent = Math.round(avgReaction) + 'ms';
+                document.getElementById('sessionHits').textContent = totalHits;
+            }
+            
+            moveToNextTest() {
+                const testOrder = ['grid-shot', 'flick-test', 'tracking', 'consistency'];
+                const currentIndex = testOrder.indexOf(this.currentTest);
+                
+                if (currentIndex < testOrder.length - 1) {
+                    this.switchTest(testOrder[currentIndex + 1]);
+                } else {
+                    // All tests completed
+                    window.location.href = '/results';
+                }
+            }
+            
+            resetTest() {
+                document.getElementById('testInstructions').style.display = 'block';
+                document.getElementById('testCanvasContainer').style.display = 'none';
+                
+                // Reset live stats
+                document.getElementById('timeRemaining').textContent = '60s';
+                document.getElementById('liveAccuracy').textContent = '100%';
+                document.getElementById('liveHits').textContent = '0';
+                document.getElementById('liveStreak').textContent = '0';
+            }
+        }
+        
+        // Initialize test interface
+        let testInterface;
+        document.addEventListener('DOMContentLoaded', () => {
+            testInterface = new TestInterface();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (testInterface) {
+                testInterface.updateMobileLayout();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3,115 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AimHelper Pro - FPS Sensitivity Optimizer</title>
+    <title>AimHelper Pro - Advanced Aim Analysis Platform</title>
+    <meta name="description" content="Professional-grade aim analysis and sensitivity optimization platform for competitive gaming.">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="app-nav">
-                <button onclick="window.location.href='/'" class="back-btn">← Back to Home</button>
-                <button id="educationBtn" class="education-btn" onclick="window.location.href='/education'">📚 Learn About Sensitivity</button>
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">← Back to Home</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Education Hub</a>
+                </div>
             </div>
-            <h1>AimHelper Pro</h1>
-            <p>AI-powered sensitivity optimization for competitive FPS gaming</p>
-            <div class="subtitle">Complete your performance analysis</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-badge">
+                <span>🎯</span>
+                <span>Professional Aim Analysis Platform</span>
+            </div>
+            <h1 class="header-title">AimHelper Pro</h1>
+            <p class="header-subtitle">AI-powered sensitivity optimization for competitive FPS gaming</p>
+            <p class="header-description">Complete your performance analysis to unlock your optimal gaming settings</p>
         </header>
 
-        <div class="setup-section">
-            <h2>🎯 Gaming Profile Setup</h2>
-            <form id="profileForm">
+        <!-- Gaming Profile Setup Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">🎮 Gaming Profile Setup</h2>
+                <p class="section-description">Configure your gaming profile for personalized analysis and recommendations</p>
+            </div>
+            
+            <form id="profileForm" class="form">
                 <div class="form-group">
-                    <label for="userId">🏷️ Player Name/ID:</label>
-                    <input type="text" id="userId" required placeholder="Enter your gaming handle or username">
+                    <label for="userId" class="form-label">🏷️ Player Name/ID</label>
+                    <input type="text" id="userId" class="form-input" required placeholder="Enter your gaming handle or username">
+                    <div class="form-help">This will be used to track your progress and save your results</div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="currentDPI">🖱️ Current Mouse DPI:</label>
-                    <input type="number" id="currentDPI" required min="400" max="3200" value="800">
-                    <small>Recommended range: 400-3200 DPI for optimal gaming performance</small>
+                    <label for="currentDPI" class="form-label">🖱️ Current Mouse DPI</label>
+                    <input type="number" id="currentDPI" class="form-input" required min="400" max="3200" value="800">
+                    <div class="form-help">Recommended range: 400-3200 DPI for optimal gaming performance</div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="currentSensitivity">⚙️ Current In-Game Sensitivity:</label>
-                    <input type="number" id="currentSensitivity" required min="0.1" max="10" step="0.01" value="1.0">
-                    <small>Your current sensitivity value from your FPS game settings</small>
+                    <label for="currentSensitivity" class="form-label">⚙️ Current In-Game Sensitivity</label>
+                    <input type="number" id="currentSensitivity" class="form-input" required min="0.1" max="10" step="0.01" value="1.0">
+                    <div class="form-help">Your current sensitivity value from your FPS game settings</div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="preferredGame">🎮 Primary FPS Game:</label>
-                    <select id="preferredGame">
+                    <label for="preferredGame" class="form-label">🎮 Primary FPS Game</label>
+                    <select id="preferredGame" class="form-select">
                         <option value="valorant">Valorant</option>
-                        <option value="csgo">CS:GO</option>
+                        <option value="csgo">CS:GO / CS2</option>
                         <option value="apex">Apex Legends</option>
                         <option value="overwatch">Overwatch 2</option>
                         <option value="marvelrivals">Marvel Rivals</option>
                         <option value="cod">Call of Duty</option>
                         <option value="rainbow6">Rainbow Six Siege</option>
                         <option value="fortnite">Fortnite</option>
-                        <option value="other">Other FPS</option>
+                        <option value="other">Other FPS Game</option>
                     </select>
+                    <div class="form-help">Select your main competitive FPS game for optimized recommendations</div>
                 </div>
                 
-                <button type="submit">🚀 Save Profile & Start Testing</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn--primary btn--lg">
+                        <span>🚀 Save Profile & Start Testing</span>
+                    </button>
+                </div>
             </form>
-        </div>
+        </section>
 
-        <div class="tests-section" id="testsSection" style="display: none;">
-            <h2>⚡ AI-Powered Sensitivity Analysis</h2>
-            <p class="instruction">Complete all 4 tests to unlock your personalized sensitivity recommendations. Our AI analyzes your performance across different scenarios to find your optimal settings.</p>
+        <!-- Performance Testing Section -->
+        <section class="section hidden" id="testsSection">
+            <div class="section-header">
+                <h2 class="section-title">⚡ AI-Powered Performance Analysis</h2>
+                <p class="section-description">Complete all 4 tests to unlock your personalized sensitivity recommendations. Our AI analyzes your performance across different scenarios to find your optimal settings.</p>
+            </div>
             
-            <div class="test-grid">
-                <div class="test-card">
-                    <h3>Circle Tracking</h3>
-                    <p>Follow a moving target to test smooth tracking ability</p>
-                    <div class="test-status" id="circleStatus">Not Started</div>
-                    <button data-test="circle-tracking" class="test-btn">Start Test</button>
+            <div class="alert alert--info">
+                <span>💡</span>
+                <span>Each test evaluates different aspects of your aim. Complete all tests for the most accurate analysis.</span>
+            </div>
+            
+            <div class="grid grid--2">
+                <div class="test-card" data-test="circle-tracking">
+                    <div class="test-card-icon">🔄</div>
+                    <h3 class="test-card-title">Circle Tracking</h3>
+                    <p class="test-card-description">Follow a moving target to test smooth tracking ability and micro-adjustments</p>
+                    <div class="test-status" id="circleStatus">
+                        <span>⏸️</span>
+                        <span>Not Started</span>
+                    </div>
+                    <button class="btn btn--primary" data-test="circle-tracking">Start Test</button>
                 </div>
                 
-                <div class="test-card">
-                    <h3>Grid Shot</h3>
-                    <p>Click targets as they appear to test precision and reaction time</p>
-                    <div class="test-status" id="gridStatus">Not Started</div>
-                    <button data-test="grid-shot" class="test-btn">Start Test</button>
+                <div class="test-card" data-test="grid-shot">
+                    <div class="test-card-icon">🎯</div>
+                    <h3 class="test-card-title">Grid Shot</h3>
+                    <p class="test-card-description">Click targets as they appear to test precision and reaction time</p>
+                    <div class="test-status" id="gridStatus">
+                        <span>⏸️</span>
+                        <span>Not Started</span>
+                    </div>
+                    <button class="btn btn--primary" data-test="grid-shot">Start Test</button>
                 </div>
                 
-                <div class="test-card">
-                    <h3>Flick Test</h3>
-                    <p>Quick target-to-target movements to test flick accuracy</p>
-                    <div class="test-status" id="flickStatus">Not Started</div>
-                    <button data-test="flick-test" class="test-btn">Start Test</button>
+                <div class="test-card" data-test="flick-test">
+                    <div class="test-card-icon">⚡</div>
+                    <h3 class="test-card-title">Flick Test</h3>
+                    <p class="test-card-description">Quick target-to-target movements to test flick accuracy and speed</p>
+                    <div class="test-status" id="flickStatus">
+                        <span>⏸️</span>
+                        <span>Not Started</span>
+                    </div>
+                    <button class="btn btn--primary" data-test="flick-test">Start Test</button>
                 </div>
                 
-                <div class="test-card">
-                    <h3>Consistency Test</h3>
-                    <p>Repeat the same movement multiple times to test muscle memory</p>
-                    <div class="test-status" id="consistencyStatus">Not Started</div>
-                    <button data-test="consistency-test" class="test-btn">Start Test</button>
+                <div class="test-card" data-test="consistency-test">
+                    <div class="test-card-icon">📊</div>
+                    <h3 class="test-card-title">Consistency Test</h3>
+                    <p class="test-card-description">Repeat the same movement multiple times to test muscle memory</p>
+                    <div class="test-status" id="consistencyStatus">
+                        <span>⏸️</span>
+                        <span>Not Started</span>
+                    </div>
+                    <button class="btn btn--primary" data-test="consistency-test">Start Test</button>
                 </div>
             </div>
             
             <div class="optimization-section">
-                <button id="optimizeBtn" disabled class="optimize-btn">
-                    Get Optimal Sensitivity
-                </button>
-                <button id="viewResultsBtn" class="results-btn">View Detailed Results</button>
+                <div class="optimization-actions">
+                    <button id="optimizeBtn" class="btn btn--warning btn--lg" disabled>
+                        <span>🧠 Get AI Recommendations</span>
+                    </button>
+                    <button id="viewResultsBtn" class="btn btn--secondary btn--lg">
+                        <span>📊 View Detailed Results</span>
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="current-settings">
-            <h3>Current Settings</h3>
-            <div id="currentSettingsDisplay">
-                <p>DPI: <span id="displayDPI">800</span></p>
-                <p>Sensitivity: <span id="displaySens">1.0</span></p>
-                <p>cm/360°: <span id="displayCm">-</span></p>
+        <!-- Current Settings Display -->
+        <section class="current-settings">
+            <h3 class="section-title">⚙️ Current Settings</h3>
+            <div class="settings-grid" id="currentSettingsDisplay">
+                <div class="setting-item">
+                    <div class="setting-label">DPI</div>
+                    <div class="setting-value" id="displayDPI">800</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Sensitivity</div>
+                    <div class="setting-value" id="displaySens">1.0</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">cm/360°</div>
+                    <div class="setting-value" id="displayCm">-</div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">Game</div>
+                    <div class="setting-value" id="displayGame" style="font-size: var(--font-size-lg);">Valorant</div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 
+    <!-- Success Message Template -->
+    <div id="successTemplate" class="alert alert--success animate-fade-in hidden">
+        <span>✅</span>
+        <span>Profile saved successfully! You can now start the performance tests.</span>
+    </div>
+
+    <!-- Scripts -->
     <script src="main.js"></script>
+    
+    <script>
+        // Enhanced profile form handling
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                userId: document.getElementById('userId').value,
+                currentDPI: parseInt(document.getElementById('currentDPI').value),
+                currentSensitivity: parseFloat(document.getElementById('currentSensitivity').value),
+                preferredGame: document.getElementById('preferredGame').value
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('aimhelper_profile', JSON.stringify(formData));
+            
+            // Update display
+            updateSettingsDisplay(formData);
+            
+            // Show success message
+            showSuccessMessage();
+            
+            // Show tests section with animation
+            setTimeout(() => {
+                document.getElementById('testsSection').classList.remove('hidden');
+                document.getElementById('testsSection').classList.add('animate-fade-in');
+                
+                // Smooth scroll to tests section
+                document.getElementById('testsSection').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 1000);
+        });
+        
+        function updateSettingsDisplay(data) {
+            document.getElementById('displayDPI').textContent = data.currentDPI;
+            document.getElementById('displaySens').textContent = data.currentSensitivity;
+            document.getElementById('displayGame').textContent = getGameDisplayName(data.preferredGame);
+            
+            // Calculate cm/360
+            const cm360 = calculateCm360(data.currentDPI, data.currentSensitivity);
+            document.getElementById('displayCm').textContent = cm360 + ' cm';
+        }
+        
+        function getGameDisplayName(gameValue) {
+            const gameNames = {
+                valorant: 'Valorant',
+                csgo: 'CS:GO/CS2',
+                apex: 'Apex Legends',
+                overwatch: 'Overwatch 2',
+                marvelrivals: 'Marvel Rivals',
+                cod: 'Call of Duty',
+                rainbow6: 'R6 Siege',
+                fortnite: 'Fortnite',
+                other: 'Other FPS'
+            };
+            return gameNames[gameValue] || gameValue;
+        }
+        
+        function calculateCm360(dpi, sensitivity) {
+            // Standard calculation for cm/360
+            const inches360 = 360 / (dpi * sensitivity);
+            const cm360 = inches360 * 2.54;
+            return Math.round(cm360 * 100) / 100;
+        }
+        
+        function showSuccessMessage() {
+            const template = document.getElementById('successTemplate');
+            const message = template.cloneNode(true);
+            message.id = '';
+            message.classList.remove('hidden');
+            
+            // Insert after the form section
+            const formSection = document.querySelector('.section');
+            formSection.appendChild(message);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                message.remove();
+            }, 4000);
+        }
+        
+        // Load saved profile on page load
+        window.addEventListener('load', function() {
+            const savedProfile = localStorage.getItem('aimhelper_profile');
+            if (savedProfile) {
+                const data = JSON.parse(savedProfile);
+                
+                // Fill form fields
+                document.getElementById('userId').value = data.userId || '';
+                document.getElementById('currentDPI').value = data.currentDPI || 800;
+                document.getElementById('currentSensitivity').value = data.currentSensitivity || 1.0;
+                document.getElementById('preferredGame').value = data.preferredGame || 'valorant';
+                
+                // Update display
+                updateSettingsDisplay(data);
+                
+                // Show tests section if profile exists
+                document.getElementById('testsSection').classList.remove('hidden');
+            }
+        });
+        
+        // Enhanced test card interactions
+        document.querySelectorAll('.test-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const testType = this.dataset.test;
+                if (testType) {
+                    window.location.href = `/${testType}`;
+                }
+            });
+        });
+        
+        // Test button handlers
+        document.querySelectorAll('[data-test]').forEach(button => {
+            if (button.tagName === 'BUTTON') {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const testType = this.dataset.test;
+                    if (testType) {
+                        window.location.href = `/${testType}`;
+                    }
+                });
+            }
+        });
+        
+        // Results button handler
+        document.getElementById('viewResultsBtn').addEventListener('click', function() {
+            window.location.href = '/results';
+        });
+        
+        // Optimize button handler
+        document.getElementById('optimizeBtn').addEventListener('click', function() {
+            // This would trigger the optimization process
+            alert('Optimization feature will analyze your test results and provide recommendations.');
+        });
+        
+        // Check for completed tests and enable optimize button
+        function checkTestCompletion() {
+            const tests = ['circle', 'grid', 'flick', 'consistency'];
+            let completedCount = 0;
+            
+            tests.forEach(test => {
+                const results = localStorage.getItem(`aimhelper_${test}_results`);
+                if (results) {
+                    completedCount++;
+                    const statusElement = document.getElementById(`${test}Status`);
+                    if (statusElement) {
+                        statusElement.innerHTML = '<span>✅</span><span>Completed</span>';
+                        statusElement.classList.add('test-status--completed');
+                    }
+                }
+            });
+            
+            // Enable optimize button if at least 2 tests completed
+            if (completedCount >= 2) {
+                document.getElementById('optimizeBtn').disabled = false;
+            }
+        }
+        
+        // Check test completion on load
+        window.addEventListener('load', checkTestCompletion);
+    </script>
 </body>
 </html>

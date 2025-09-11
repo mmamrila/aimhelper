@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join AimHelper Pro</title>
+    <meta name="description" content="Create your AimHelper Pro account and start your journey to perfect aim.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Registration specific styles -->
+    <style>
+        .register-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-primary);
+        }
+
+        .register-visual {
+            background: linear-gradient(135deg, var(--brand-secondary), #4ade80);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .visual-content {
+            position: relative;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+        }
+
+        .visual-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-6);
+            display: block;
+        }
+
+        .visual-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-4);
+            line-height: var(--line-height-tight);
+        }
+
+        .visual-subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+            line-height: var(--line-height-relaxed);
+        }
+
+        .register-form-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            background: var(--bg-secondary);
+        }
+
+        .register-form {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .register-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: var(--space-6);
+        }
+
+        .register-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            background: var(--bg-glass);
+            border: 2px solid var(--border-primary);
+            color: var(--text-muted);
+            transition: all var(--transition-base);
+        }
+
+        .step-circle.active {
+            background: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: white;
+        }
+
+        .step-circle.completed {
+            background: var(--brand-secondary);
+            border-color: var(--brand-secondary);
+            color: white;
+        }
+
+        .step-connector {
+            width: 40px;
+            height: 2px;
+            background: var(--border-primary);
+            transition: all var(--transition-base);
+        }
+
+        .step-connector.completed {
+            background: var(--brand-secondary);
+        }
+
+        .register-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .register-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-actions {
+            display: flex;
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+
+        .btn-back {
+            flex: 1;
+        }
+
+        .btn-next {
+            flex: 2;
+        }
+
+        .demo-results {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-results h3 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            text-align: center;
+        }
+
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+        }
+
+        .demo-stat {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--bg-glass-strong);
+            border-radius: var(--radius-md);
+        }
+
+        .demo-stat-value {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-accent);
+            font-family: var(--font-family-mono);
+        }
+
+        .demo-stat-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: var(--space-1);
+        }
+
+        .welcome-content {
+            text-align: center;
+            padding: var(--space-6) 0;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+        }
+
+        .welcome-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .welcome-message {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--space-6);
+        }
+
+        .feature-list {
+            text-align: left;
+            max-width: 300px;
+            margin: 0 auto var(--space-6);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+
+        .feature-icon {
+            color: var(--brand-secondary);
+            font-weight: var(--font-weight-bold);
+        }
+
+        @media (max-width: 1024px) {
+            .register-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .register-visual {
+                display: none;
+            }
+
+            .register-form-container {
+                padding: var(--space-6);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .demo-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn-back,
+            .btn-next {
+                flex: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-form-container {
+                padding: var(--space-4);
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <div class="register-layout">
+        <!-- Visual Side -->
+        <div class="register-visual">
+            <div class="visual-content">
+                <span class="visual-icon">🚀</span>
+                <h1 class="visual-title">Start Your Journey to Perfect Aim</h1>
+                <p class="visual-subtitle">Join thousands of gamers who've improved their performance with AimHelper Pro's scientific approach.</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="register-form-container">
+            <div class="register-form">
+                <!-- Header -->
+                <div class="register-header">
+                    <a href="/" class="register-logo">
+                        <div class="register-logo-icon">⚡</div>
+                        <span>AimHelper Pro</span>
+                    </a>
+                    
+                    <!-- Progress Indicator -->
+                    <div class="progress-indicator">
+                        <div class="progress-step">
+                            <div class="step-circle active" id="step1Circle">1</div>
+                            <div class="step-connector" id="connector1"></div>
+                            <div class="step-circle" id="step2Circle">2</div>
+                            <div class="step-connector" id="connector2"></div>
+                            <div class="step-circle" id="step3Circle">3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Messages -->
+                <div id="alertContainer"></div>
+
+                <!-- Multi-step Form -->
+                <form id="registrationForm">
+                    <!-- Step 1: Account Creation -->
+                    <div class="form-step active" id="step1">
+                        <h1 class="register-title">Create Your Account</h1>
+                        <p class="register-subtitle">Start with the basics to secure your account</p>
+
+                        <!-- Demo Results Display -->
+                        <div id="demoResultsDisplay" class="demo-results" style="display: none;">
+                            <h3>🎯 Your Demo Results</h3>
+                            <div class="demo-stats">
+                                <div class="demo-stat">
+                                    <div class="demo-stat-value" id="demoAccuracyDisplay">0%</div>
+                                    <div class="demo-stat-label">Accuracy</div>
+                                </div>
+                                <div class="demo-stat">
+                                    <div class="demo-stat-value" id="demoReactionDisplay">0ms</div>
+                                    <div class="demo-stat-label">Reaction</div>
+                                </div>
+                                <div class="demo-stat">
+                                    <div class="demo-stat-value" id="demoHitsDisplay">0</div>
+                                    <div class="demo-stat-label">Hits</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="username" class="form-label">Username</label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username"
+                                class="form-input" 
+                                placeholder="Choose a username"
+                                required 
+                                autocomplete="username"
+                            >
+                        </div>
+
+                        <div class="form-field">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required 
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="password" class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                class="form-input" 
+                                placeholder="Create a secure password"
+                                required 
+                                autocomplete="new-password"
+                                minlength="6"
+                            >
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn--secondary btn-back" onclick="window.location.href='/login'">
+                                Sign In Instead
+                            </button>
+                            <button type="button" class="btn btn--primary btn-next" id="nextToStep2">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Gaming Profile -->
+                    <div class="form-step" id="step2">
+                        <h1 class="register-title">Gaming Profile</h1>
+                        <p class="register-subtitle">Help us optimize your experience with your gaming setup</p>
+
+                        <div class="form-field">
+                            <label for="currentDPI" class="form-label">🖱️ Current Mouse DPI</label>
+                            <input 
+                                type="number" 
+                                id="currentDPI" 
+                                name="currentDPI"
+                                class="form-input" 
+                                placeholder="800"
+                                min="400" 
+                                max="3200" 
+                                value="800"
+                                required
+                            >
+                            <div class="form-help">Recommended range: 400-3200 DPI</div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="currentSensitivity" class="form-label">⚙️ In-Game Sensitivity</label>
+                            <input 
+                                type="number" 
+                                id="currentSensitivity" 
+                                name="currentSensitivity"
+                                class="form-input" 
+                                placeholder="1.0"
+                                min="0.1" 
+                                max="10" 
+                                step="0.01" 
+                                value="1.0"
+                                required
+                            >
+                            <div class="form-help">Your current sensitivity from game settings</div>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="preferredGame" class="form-label">🎮 Primary FPS Game</label>
+                            <select id="preferredGame" name="preferredGame" class="form-select" required>
+                                <option value="valorant">Valorant</option>
+                                <option value="csgo">CS:GO / CS2</option>
+                                <option value="apex">Apex Legends</option>
+                                <option value="overwatch">Overwatch 2</option>
+                                <option value="marvelrivals">Marvel Rivals</option>
+                                <option value="cod">Call of Duty</option>
+                                <option value="rainbow6">Rainbow Six Siege</option>
+                                <option value="fortnite">Fortnite</option>
+                                <option value="other">Other FPS</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn--secondary btn-back" id="backToStep1">
+                                Back
+                            </button>
+                            <button type="button" class="btn btn--primary btn-next" id="nextToStep3">
+                                Complete Registration
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Welcome -->
+                    <div class="form-step" id="step3">
+                        <div class="welcome-content">
+                            <div class="welcome-icon">🎯</div>
+                            <h1 class="welcome-title">Welcome to AimHelper Pro!</h1>
+                            <p class="welcome-message">Your account has been created successfully. You now have access to:</p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <span class="feature-icon">✓</span>
+                                    <span>Complete aim analysis suite</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">✓</span>
+                                    <span>AI-powered recommendations</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">✓</span>
+                                    <span>Progress tracking & analytics</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">✓</span>
+                                    <span>Personalized training plans</span>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn--primary btn--lg" id="startTraining">
+                                Start Your First Test
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        // Check for demo results on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL parameters for step
+            const urlParams = new URLSearchParams(window.location.search);
+            const stepParam = urlParams.get('step');
+            if (stepParam && stepParam === '2') {
+                // User came from login, skip to step 2
+                currentStep = 2;
+                showStep(2);
+                updateProgress();
+            }
+
+            // Display demo results if available
+            const demoResults = localStorage.getItem('aimhelper_demo_results');
+            if (demoResults) {
+                const results = JSON.parse(demoResults);
+                document.getElementById('demoResultsDisplay').style.display = 'block';
+                document.getElementById('demoAccuracyDisplay').textContent = results.accuracy;
+                document.getElementById('demoReactionDisplay').textContent = results.reaction;
+                document.getElementById('demoHitsDisplay').textContent = results.hits;
+            }
+        });
+
+        // Step navigation
+        document.getElementById('nextToStep2').addEventListener('click', function() {
+            if (validateStep1()) {
+                currentStep = 2;
+                showStep(2);
+                updateProgress();
+            }
+        });
+
+        document.getElementById('backToStep1').addEventListener('click', function() {
+            currentStep = 1;
+            showStep(1);
+            updateProgress();
+        });
+
+        document.getElementById('nextToStep3').addEventListener('click', function() {
+            if (validateStep2()) {
+                // Create user account
+                createAccount();
+            }
+        });
+
+        document.getElementById('startTraining').addEventListener('click', function() {
+            window.location.href = '/app';
+        });
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show current step
+            document.getElementById(`step${step}`).classList.add('active');
+        }
+
+        function updateProgress() {
+            // Update progress circles
+            for (let i = 1; i <= totalSteps; i++) {
+                const circle = document.getElementById(`step${i}Circle`);
+                const connector = document.getElementById(`connector${i}`);
+                
+                if (i < currentStep) {
+                    circle.classList.add('completed');
+                    circle.classList.remove('active');
+                    circle.innerHTML = '✓';
+                    if (connector) connector.classList.add('completed');
+                } else if (i === currentStep) {
+                    circle.classList.add('active');
+                    circle.classList.remove('completed');
+                    circle.innerHTML = i;
+                    if (connector) connector.classList.remove('completed');
+                } else {
+                    circle.classList.remove('active', 'completed');
+                    circle.innerHTML = i;
+                    if (connector) connector.classList.remove('completed');
+                }
+            }
+        }
+
+        function validateStep1() {
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            clearAlerts();
+
+            if (!username) {
+                showAlert('Please enter a username', 'error');
+                return false;
+            }
+
+            if (username.length < 3) {
+                showAlert('Username must be at least 3 characters long', 'error');
+                return false;
+            }
+
+            if (!email) {
+                showAlert('Please enter an email address', 'error');
+                return false;
+            }
+
+            if (!isValidEmail(email)) {
+                showAlert('Please enter a valid email address', 'error');
+                return false;
+            }
+
+            if (!password) {
+                showAlert('Please enter a password', 'error');
+                return false;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function validateStep2() {
+            const dpi = document.getElementById('currentDPI').value;
+            const sensitivity = document.getElementById('currentSensitivity').value;
+            const game = document.getElementById('preferredGame').value;
+
+            clearAlerts();
+
+            if (!dpi || dpi < 400 || dpi > 3200) {
+                showAlert('Please enter a valid DPI between 400 and 3200', 'error');
+                return false;
+            }
+
+            if (!sensitivity || sensitivity < 0.1 || sensitivity > 10) {
+                showAlert('Please enter a valid sensitivity between 0.1 and 10', 'error');
+                return false;
+            }
+
+            if (!game) {
+                showAlert('Please select your primary game', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function createAccount() {
+            const userData = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value, // In real app, this would be hashed
+                dpi: parseInt(document.getElementById('currentDPI').value),
+                sensitivity: parseFloat(document.getElementById('currentSensitivity').value),
+                game: document.getElementById('preferredGame').value,
+                createdAt: Date.now()
+            };
+
+            // Store user data
+            localStorage.setItem('aimhelper_user', JSON.stringify(userData));
+            localStorage.setItem('aimhelper_profile', JSON.stringify({
+                userId: userData.username,
+                currentDPI: userData.dpi,
+                currentSensitivity: userData.sensitivity,
+                preferredGame: userData.game
+            }));
+            localStorage.setItem('aimhelper_session', 'active');
+
+            // Clean up demo data
+            localStorage.removeItem('aimhelper_demo_completed');
+            localStorage.removeItem('aimhelper_demo_results');
+
+            // Move to welcome step
+            currentStep = 3;
+            showStep(3);
+            updateProgress();
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert--${type} show`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        function clearAlerts() {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '';
+        }
+
+        // Auto-focus username field
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>

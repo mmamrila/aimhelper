@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - AimHelper Pro</title>
+    <meta name="description" content="Sign in to your AimHelper Pro account to continue your aim training journey.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Auth page specific styles -->
+    <style>
+        .auth-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-primary);
+        }
+
+        .auth-visual {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .visual-content {
+            position: relative;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+        }
+
+        .visual-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-6);
+            display: block;
+        }
+
+        .visual-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-4);
+            line-height: var(--line-height-tight);
+        }
+
+        .visual-subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+            line-height: var(--line-height-relaxed);
+        }
+
+        .auth-form-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            background: var(--bg-secondary);
+        }
+
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .auth-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-bottom: var(--space-6);
+        }
+
+        .auth-logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+
+        .auth-title {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .auth-subtitle {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+
+        .auth-form-fields {
+            margin-bottom: var(--space-6);
+        }
+
+        .form-field {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            font-size: var(--font-size-sm);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .forgot-password {
+            color: var(--text-accent);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .forgot-password:hover {
+            color: var(--brand-primary);
+        }
+
+        .auth-submit {
+            width: 100%;
+            margin-bottom: var(--space-6);
+        }
+
+        .auth-divider {
+            text-align: center;
+            position: relative;
+            margin: var(--space-6) 0;
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-primary);
+        }
+
+        .auth-divider span {
+            background: var(--bg-secondary);
+            padding: 0 var(--space-4);
+        }
+
+        .auth-alternative {
+            text-align: center;
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+
+        .auth-alternative a {
+            color: var(--text-accent);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .auth-alternative a:hover {
+            color: var(--brand-primary);
+        }
+
+        .demo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: rgba(52, 168, 83, 0.1);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--brand-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .alert {
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-4);
+            font-size: var(--font-size-sm);
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert--error {
+            background: rgba(234, 67, 53, 0.1);
+            border: 1px solid rgba(234, 67, 53, 0.2);
+            color: var(--brand-accent);
+        }
+
+        .alert--success {
+            background: rgba(52, 168, 83, 0.1);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+            color: var(--brand-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            .auth-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-visual {
+                display: none;
+            }
+
+            .auth-form-container {
+                padding: var(--space-6);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-form-container {
+                padding: var(--space-4);
+            }
+
+            .visual-title {
+                font-size: var(--font-size-2xl);
+            }
+        }
+    </style>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <div class="auth-layout">
+        <!-- Visual Side -->
+        <div class="auth-visual">
+            <div class="visual-content">
+                <span class="visual-icon">🎯</span>
+                <h1 class="visual-title">Welcome Back to AimHelper Pro</h1>
+                <p class="visual-subtitle">Continue your journey to precision aim and optimal gaming performance.</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="auth-form-container">
+            <div class="auth-form">
+                <!-- Header -->
+                <div class="auth-header">
+                    <a href="/" class="auth-logo">
+                        <div class="auth-logo-icon">⚡</div>
+                        <span>AimHelper Pro</span>
+                    </a>
+                    
+                    <!-- Demo completion badge -->
+                    <div id="demoBadge" class="demo-badge" style="display: none;">
+                        <span>✅</span>
+                        <span>Demo completed! Sign in to continue</span>
+                    </div>
+                    
+                    <h1 class="auth-title">Sign In</h1>
+                    <p class="auth-subtitle">Access your performance data and continue training</p>
+                </div>
+
+                <!-- Alert Messages -->
+                <div id="alertContainer"></div>
+
+                <!-- Form -->
+                <form id="loginForm">
+                    <div class="auth-form-fields">
+                        <div class="form-field">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                class="form-input" 
+                                placeholder="Enter your email"
+                                required 
+                                autocomplete="email"
+                            >
+                        </div>
+                        
+                        <div class="form-field">
+                            <label for="password" class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required 
+                                autocomplete="current-password"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--lg auth-submit" id="loginBtn">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+
+                <div class="auth-alternative">
+                    <p>Don't have an account? <a href="/register" id="registerLink">Create one now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user completed demo
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoCompleted = localStorage.getItem('aimhelper_demo_completed');
+            if (demoCompleted === 'true') {
+                document.getElementById('demoBadge').style.display = 'inline-flex';
+            }
+        });
+
+        // Form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            // Clear previous alerts
+            clearAlerts();
+            
+            // Basic validation
+            if (!email || !password) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<span>Signing In...</span>';
+            loginBtn.disabled = true;
+            
+            // Simulate login process
+            setTimeout(() => {
+                // For demo purposes, any email/password combination works
+                if (email && password) {
+                    // Store user session
+                    const userData = {
+                        email: email,
+                        name: email.split('@')[0],
+                        loginTime: Date.now(),
+                        rememberMe: rememberMe
+                    };
+                    
+                    localStorage.setItem('aimhelper_user', JSON.stringify(userData));
+                    localStorage.setItem('aimhelper_session', 'active');
+                    
+                    showAlert('Login successful! Redirecting...', 'success');
+                    
+                    // Redirect based on user state
+                    setTimeout(() => {
+                        const profile = localStorage.getItem('aimhelper_profile');
+                        if (profile) {
+                            window.location.href = '/dashboard';
+                        } else {
+                            window.location.href = '/register?step=2'; // Skip to profile setup
+                        }
+                    }, 1500);
+                } else {
+                    showAlert('Invalid email or password', 'error');
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+            }, 1000);
+        });
+        
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert--${type} show`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        function clearAlerts() {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = '';
+        }
+        
+        // Handle forgot password
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            showAlert('Password reset functionality will be available soon', 'info');
+        });
+        
+        // Auto-focus email field
+        document.getElementById('email').focus();
+    </script>
+</body>
+</html>
