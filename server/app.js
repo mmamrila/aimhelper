@@ -127,9 +127,14 @@ app.use('/api/', limiter);
 
 // Authentication middleware
 const requireAuth = (req, res, next) => {
+  console.log('Auth check - Session:', req.session);
+  console.log('Auth check - User ID:', req.session?.userId);
+  
   if (req.session && req.session.userId) {
+    req.userId = req.session.userId; // Ensure userId is available
     return next();
   } else {
+    console.log('Authentication failed - no valid session');
     return res.status(401).json({ error: 'Authentication required' });
   }
 };
@@ -358,13 +363,25 @@ app.get('/api/user-profile', requireAuth, (req, res) => {
 });
 
 app.post('/api/user-profile', requireAuth, (req, res) => {
+  console.log('Profile save request received:', req.body);
+  console.log('User ID from session:', req.userId);
+  
   const { displayName, preferredGame, currentDpi, currentSensitivity, monitorResolution, mouseModel } = req.body;
+  
+  // Validate required fields
+  if (!displayName || !preferredGame) {
+    console.log('Validation failed - missing required fields');
+    return res.status(400).json({ error: 'Display name and preferred game are required' });
+  }
   
   // Update or insert profile
   db.get('SELECT id FROM user_profiles WHERE user_id = ?', [req.userId], (err, existing) => {
     if (err) {
-      return res.status(500).json({ error: 'Database error' });
+      console.error('Database error checking existing profile:', err);
+      return res.status(500).json({ error: 'Database error checking existing profile' });
     }
+    
+    console.log('Existing profile check result:', existing);
     
     if (existing) {
       // Update existing profile
@@ -376,8 +393,10 @@ app.post('/api/user-profile', requireAuth, (req, res) => {
       stmt.run(displayName, preferredGame, currentDpi, currentSensitivity, 
                monitorResolution, mouseModel, req.userId, function(err) {
         if (err) {
-          return res.status(500).json({ error: 'Failed to update profile' });
+          console.error('Failed to update profile:', err);
+          return res.status(500).json({ error: 'Failed to update profile: ' + err.message });
         }
+        console.log('Profile updated successfully');
         res.json({ message: 'Profile updated successfully' });
       });
       stmt.finalize();
@@ -390,8 +409,10 @@ app.post('/api/user-profile', requireAuth, (req, res) => {
       stmt.run(req.userId, displayName, preferredGame, currentDpi, currentSensitivity,
                monitorResolution, mouseModel, function(err) {
         if (err) {
-          return res.status(500).json({ error: 'Failed to create profile' });
+          console.error('Failed to create profile:', err);
+          return res.status(500).json({ error: 'Failed to create profile: ' + err.message });
         }
+        console.log('Profile created successfully with ID:', this.lastID);
         res.json({ id: this.lastID, message: 'Profile created successfully' });
       });
       stmt.finalize();

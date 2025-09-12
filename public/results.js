@@ -2,26 +2,48 @@ let currentUser = null;
 let allResults = {};
 
 async function loadResults() {
-    currentUser = localStorage.getItem('currentUser');
-    
-    if (!currentUser) {
-        alert('No user profile found. Please return to home and set up your profile.');
-        window.location.href = '/app';
-        return;
-    }
-    
     try {
-        const response = await fetch(`/api/user-results/${currentUser}`);
-        const results = await response.json();
+        // First check if user is authenticated
+        const authResponse = await fetch('/api/auth/me', {
+            credentials: 'include'
+        });
+        const authData = await authResponse.json();
+        
+        if (!authData.authenticated) {
+            alert('Please log in to view your results.');
+            window.location.href = '/login';
+            return;
+        }
+        
+        currentUser = authData.user.username;
+        document.getElementById('userName').textContent = authData.user.username;
+        
+        // Fetch user results using session authentication
+        const response = await fetch('/api/user-results', {
+            credentials: 'include'
+        });
+        const data = await response.json();
         
         if (response.ok) {
-            processResults(results);
+            processResults(data.results);
             displayResults();
         } else {
-            console.error('Error loading results:', results.error);
+            console.error('Error loading results:', data.error);
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="error-message">
+                    <p>Error loading results: ${data.error}</p>
+                    <button onclick="window.location.reload()" class="btn btn--primary">Try Again</button>
+                </div>
+            `;
         }
     } catch (error) {
         console.error('Error fetching results:', error);
+        document.getElementById('resultsContent').innerHTML = `
+            <div class="error-message">
+                <p>Failed to load results. Please try again.</p>
+                <button onclick="window.location.reload()" class="btn btn--primary">Retry</button>
+            </div>
+        `;
     }
 }
 
@@ -170,32 +192,83 @@ function displayConsistencyResults() {
     `;
 }
 
-function displayOverallAnalysis() {
-    const hasData = Object.values(allResults).some(results => results.length > 0);
+async function displayOverallAnalysis() {
+    const totalTests = Object.values(allResults).reduce((sum, results) => sum + results.length, 0);
+    const completedTestTypes = Object.keys(allResults).filter(testType => allResults[testType].length > 0);
     
-    if (!hasData) {
-        return;
-    }
+    // Show test completion status
+    const testStatus = {
+        'circle-tracking': allResults['circle-tracking'].length > 0,
+        'grid-shot': allResults['grid-shot'].length > 0,
+        'flick-test': allResults['flick-test'].length > 0,
+        'consistency-test': allResults['consistency-test'].length > 0
+    };
+    
+    const completedCount = Object.values(testStatus).filter(Boolean).length;
     
     document.getElementById('overallResults').style.display = 'block';
     
-    const analysis = generateAnalysis();
-    displayOptimizationResults(analysis);
+    if (totalTests === 0) {
+        document.getElementById('analysisContent').innerHTML = `
+            <div class="no-data-state">
+                <div class="icon">🎯</div>
+                <h3>Ready to Start Your Analysis?</h3>
+                <p>Complete our scientific aim tests to get AI-powered sensitivity recommendations.</p>
+                <div class="test-checklist">
+                    <div class="checklist-item incomplete">❌ Circle Tracking Test</div>
+                    <div class="checklist-item incomplete">❌ Grid Shot Test</div>
+                    <div class="checklist-item incomplete">❌ Flick Test</div>
+                    <div class="checklist-item incomplete">❌ Consistency Test</div>
+                </div>
+                <a href="/test-interface" class="btn btn--primary">Start Testing</a>
+            </div>
+        `;
+        return;
+    }
     
+    // Display current progress and recommendations
     document.getElementById('analysisContent').innerHTML = `
-        <div class="recommendation">
-            <h3>Performance Summary</h3>
-            ${analysis.summary}
+        <div class="analysis-section">
+            <div class="completion-header">
+                <h3>📊 Test Completion Status (${completedCount}/4)</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${(completedCount / 4) * 100}%"></div>
+                </div>
+            </div>
             
-            <h3>Areas for Improvement</h3>
-            ${analysis.improvements}
+            <div class="test-completion-grid">
+                <div class="completion-item ${testStatus['circle-tracking'] ? 'completed' : 'incomplete'}">
+                    <span class="status-icon">${testStatus['circle-tracking'] ? '✅' : '❌'}</span>
+                    <span class="test-name">Circle Tracking</span>
+                    ${testStatus['circle-tracking'] ? 
+                        `<span class="test-count">${allResults['circle-tracking'].length} completed</span>` : 
+                        '<a href="/circle-tracking" class="test-link btn--sm">Take Test</a>'}
+                </div>
+                <div class="completion-item ${testStatus['grid-shot'] ? 'completed' : 'incomplete'}">
+                    <span class="status-icon">${testStatus['grid-shot'] ? '✅' : '❌'}</span>
+                    <span class="test-name">Grid Shot</span>
+                    ${testStatus['grid-shot'] ? 
+                        `<span class="test-count">${allResults['grid-shot'].length} completed</span>` : 
+                        '<a href="/grid-shot" class="test-link btn--sm">Take Test</a>'}
+                </div>
+                <div class="completion-item ${testStatus['flick-test'] ? 'completed' : 'incomplete'}">
+                    <span class="status-icon">${testStatus['flick-test'] ? '✅' : '❌'}</span>
+                    <span class="test-name">Flick Test</span>
+                    ${testStatus['flick-test'] ? 
+                        `<span class="test-count">${allResults['flick-test'].length} completed</span>` : 
+                        '<a href="/flick-test" class="test-link btn--sm">Take Test</a>'}
+                </div>
+                <div class="completion-item ${testStatus['consistency-test'] ? 'completed' : 'incomplete'}">
+                    <span class="status-icon">${testStatus['consistency-test'] ? '✅' : '❌'}</span>
+                    <span class="test-name">Consistency Test</span>
+                    ${testStatus['consistency-test'] ? 
+                        `<span class="test-count">${allResults['consistency-test'].length} completed</span>` : 
+                        '<a href="/consistency-test" class="test-link btn--sm">Take Test</a>'}
+                </div>
+            </div>
             
-            <h3>Test Completion</h3>
-            <div class="test-completion">
-                <p>Circle Tracking: ${allResults['circle-tracking'].length > 0 ? '✅' : '❌'}</p>
-                <p>Grid Shot: ${allResults['grid-shot'].length > 0 ? '✅' : '❌'}</p>
-                <p>Flick Test: ${allResults['flick-test'].length > 0 ? '✅' : '❌'}</p>
-                <p>Consistency Test: ${allResults['consistency-test'].length > 0 ? '✅' : '❌'}</p>
+            <div class="progress-section">
+                ${completedCount >= 2 ? await generateAIAnalysis() : generatePartialAnalysis(completedCount, totalTests)}
             </div>
         </div>
     `;
@@ -411,11 +484,138 @@ function goHome() {
     window.location.href = '/app';
 }
 
+// Helper functions for new analysis system
+async function generateAIAnalysis() {
+    try {
+        const response = await fetch('/api/optimize-sensitivity', {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const optimization = await response.json();
+            return `
+                <div class="ai-analysis-result">
+                    <div class="analysis-header">
+                        <h3>🤖 AI Performance Analysis</h3>
+                        <div class="confidence-badge">
+                            <span class="confidence-label">Confidence:</span>
+                            <span class="confidence-value">${optimization.confidence}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="recommended-settings">
+                        <h4>🎯 Optimized Settings</h4>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <span class="setting-label">DPI</span>
+                                <span class="setting-value">${optimization.dpi}</span>
+                            </div>
+                            <div class="setting-item">
+                                <span class="setting-label">Sensitivity</span>
+                                <span class="setting-value">${optimization.sensitivity}</span>
+                            </div>
+                            <div class="setting-item">
+                                <span class="setting-label">cm/360°</span>
+                                <span class="setting-value">${optimization.cmPer360}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${optimization.gameProfile ? `
+                        <div class="game-analysis">
+                            <h4>🎮 ${optimization.gameProfile.name} Analysis</h4>
+                            <p>${optimization.gameProfile.description}</p>
+                            <p><strong>Optimal Range:</strong> ${optimization.gameProfile.optimalRange.min}-${optimization.gameProfile.optimalRange.max} cm/360°</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${optimization.mousepadRecommendation ? `
+                        <div class="equipment-recommendation">
+                            <h4>🖱️ Equipment Recommendation</h4>
+                            <p><strong>Mousepad Size:</strong> ${optimization.mousepadRecommendation.size}</p>
+                            <p>${optimization.mousepadRecommendation.reasoning}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="next-steps">
+                        <h4>📈 Next Steps</h4>
+                        <ul>
+                            <li>Apply these settings in your game</li>
+                            <li>Practice for 1-2 weeks to build muscle memory</li>
+                            <li>Complete more tests to refine recommendations</li>
+                            <li>Track your competitive performance improvements</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        } else {
+            throw new Error('Failed to get AI analysis');
+        }
+    } catch (error) {
+        console.error('Error getting AI analysis:', error);
+        return `
+            <div class="ai-analysis-error">
+                <h3>🤖 AI Analysis</h3>
+                <p>Unable to generate AI analysis at this time. Please try again later.</p>
+                <button onclick="location.reload()" class="btn btn--secondary">Retry Analysis</button>
+            </div>
+        `;
+    }
+}
+
+function generatePartialAnalysis(completedCount, totalTests) {
+    if (completedCount === 0) {
+        return `
+            <div class="partial-analysis">
+                <div class="analysis-header">
+                    <h3>🚀 Get Started with Your Analysis</h3>
+                </div>
+                <p>Complete at least 2 different test types to unlock AI-powered sensitivity recommendations.</p>
+                <div class="benefits-list">
+                    <div class="benefit-item">✨ Personalized DPI & sensitivity recommendations</div>
+                    <div class="benefit-item">🎮 Game-specific optimization</div>
+                    <div class="benefit-item">📊 Performance trend analysis</div>
+                    <div class="benefit-item">🛠️ Equipment recommendations</div>
+                </div>
+                <a href="/test-interface" class="btn btn--primary">Continue Testing</a>
+            </div>
+        `;
+    } else if (completedCount === 1) {
+        return `
+            <div class="partial-analysis">
+                <div class="analysis-header">
+                    <h3>📊 Making Progress!</h3>
+                </div>
+                <p>Great start! You've completed ${totalTests} test${totalTests > 1 ? 's' : ''} in ${completedCount} category.</p>
+                <p><strong>Complete 1 more test type</strong> to unlock your AI-powered sensitivity analysis.</p>
+                
+                <div class="preview-benefits">
+                    <h4>🔓 Unlock with 1 more test:</h4>
+                    <ul>
+                        <li>AI-optimized sensitivity recommendations</li>
+                        <li>Game-specific performance insights</li>
+                        <li>Equipment and mousepad suggestions</li>
+                    </ul>
+                </div>
+                
+                <a href="/test-interface" class="btn btn--primary">Complete 1 More Test</a>
+            </div>
+        `;
+    }
+    
+    // This shouldn't happen since completedCount >= 2 goes to AI analysis
+    return '';
+}
+
 window.addEventListener('load', function() {
     loadResults();
     
-    // Add event listeners
-    document.getElementById('homeBtn').addEventListener('click', goHome);
-    document.getElementById('exportBtn').addEventListener('click', exportResults);
-    document.getElementById('clearBtn').addEventListener('click', clearAllData);
+    // Add event listeners with error handling
+    const homeBtn = document.getElementById('homeBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    
+    if (homeBtn) homeBtn.addEventListener('click', goHome);
+    if (exportBtn) exportBtn.addEventListener('click', exportResults);
+    if (clearBtn) clearBtn.addEventListener('click', clearAllData);
 });

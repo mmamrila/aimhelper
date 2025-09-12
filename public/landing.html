@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scientific mouse sensitivity optimization for competitive gaming. AI-powered analysis finds your mathematically optimal DPI and sensitivity settings.">
     <title>AimHelper Pro - Precision Performance Analytics</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,49 +11,60 @@
     <link rel="stylesheet" href="landing.css">
 </head>
 <body>
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader" aria-label="Loading page content">
+        <div class="loader-spinner" role="status" aria-label="Loading"></div>
+    </div>
+    
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <div class="brand">
                 <div class="logo">
-                    <div class="logo-icon">⚡</div>
+                    <div class="logo-icon" aria-hidden="true">⚡</div>
                     <span>AimHelper Pro</span>
                 </div>
             </div>
             <div class="nav-actions">
-                <button class="nav-btn secondary" id="loginBtn">Sign In</button>
-                <button class="nav-btn primary" id="getStartedBtn">Get Started</button>
+                <button class="nav-btn secondary" id="loginBtn" aria-label="Sign in to your account">Sign In</button>
+                <button class="nav-btn primary" id="getStartedBtn" aria-label="Get started with AimHelper Pro">Get Started</button>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-background">
-            <div class="grid-overlay"></div>
-            <div class="gradient-overlay"></div>
-        </div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-badge">
-                    <span class="badge-text">🎯 Scientific Sensitivity Analysis</span>
-                </div>
-                <h1 class="hero-title">
-                    Unlock Your <span class="gradient-text">True Aim Potential</span>
-                </h1>
-                <p class="hero-subtitle">
-                    Scientific precision meets competitive gaming. Our AI-powered analysis finds your mathematically optimal mouse sensitivity settings in minutes, not months.
-                </p>
-                <div class="hero-actions">
-                    <button class="cta-btn primary large" id="demoTestBtn">
-                        <span>Try Demo Test - 30 Seconds</span>
-                        <div class="btn-icon">🎯</div>
-                    </button>
-                    <button class="cta-btn secondary large" id="startAnalysisBtn">
-                        <span>View Full Platform</span>
-                        <div class="btn-icon">→</div>
-                    </button>
-                </div>
+    <main id="main-content">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-background" aria-hidden="true">
+                <div class="grid-overlay"></div>
+                <div class="gradient-overlay"></div>
+            </div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="badge-text"><span aria-hidden="true">🎯</span> Scientific Sensitivity Analysis</span>
+                    </div>
+                    <h1 class="hero-title" id="hero-title">
+                        Unlock Your <span class="gradient-text">True Aim Potential</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Scientific precision meets competitive gaming. Our AI-powered analysis finds your mathematically optimal mouse sensitivity settings in minutes, not months.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="cta-btn primary large" id="demoTestBtn" aria-describedby="demo-description">
+                            <span>Try Demo Test - 30 Seconds</span>
+                            <div class="btn-icon" aria-hidden="true">🎯</div>
+                        </button>
+                        <span id="demo-description" class="sr-only">Start a quick 30-second demo test to see how AimHelper Pro works</span>
+                        <button class="cta-btn secondary large" id="startAnalysisBtn" aria-describedby="platform-description">
+                            <span>View Full Platform</span>
+                            <div class="btn-icon" aria-hidden="true">→</div>
+                        </button>
+                        <span id="platform-description" class="sr-only">Access the complete AimHelper Pro analysis platform</span>
+                    </div>
                 <div class="trust-indicators">
                     <div class="trust-item">
                         <span class="trust-icon">⚡</span>
@@ -117,12 +129,12 @@
     <!-- How It Works Section -->
     <section class="how-it-works">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate-on-scroll">
                 <h2>Your Path to Perfect Aim</h2>
                 <p>Four precise tests. One optimal result. Mathematical analysis of your aim patterns.</p>
             </div>
             <div class="process-steps">
-                <div class="step">
+                <div class="step animate-on-scroll delay-1">
                     <div class="step-number">01</div>
                     <div class="step-content">
                         <h3>Profile Setup</h3>
@@ -134,7 +146,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="step">
+                <div class="step animate-on-scroll delay-2">
                     <div class="step-number">02</div>
                     <div class="step-content">
                         <h3>Performance Testing</h3>
@@ -147,7 +159,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="step">
+                <div class="step animate-on-scroll delay-3">
                     <div class="step-number">03</div>
                     <div class="step-content">
                         <h3>AI Analysis</h3>
@@ -159,7 +171,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="step">
+                <div class="step animate-on-scroll delay-1">
                     <div class="step-number">04</div>
                     <div class="step-content">
                         <h3>Proven Results</h3>
@@ -275,12 +287,12 @@
     </footer>
 
     <!-- Demo Test Modal -->
-    <div id="demoTestModal" class="demo-modal hidden">
+    <div id="demoTestModal" class="demo-modal hidden" role="dialog" aria-labelledby="demo-title" aria-modal="true">
         <div class="demo-modal-overlay" id="demoModalOverlay"></div>
         <div class="demo-modal-content">
             <div class="demo-header">
-                <h2>Demo: Grid Shot Test</h2>
-                <button class="demo-close" id="demoCloseBtn">×</button>
+                <h2 id="demo-title">Demo: Grid Shot Test</h2>
+                <button class="demo-close" id="demoCloseBtn" aria-label="Close demo modal">×</button>
             </div>
             <div class="demo-instructions">
                 <p>Click the targets as quickly and accurately as possible!</p>
@@ -483,6 +495,119 @@
     <script src="landing.js"></script>
     
     <script>
+        // Enhanced Loading States and Animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide page loader once everything is loaded
+            const pageLoader = document.getElementById('pageLoader');
+            
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    pageLoader.classList.add('hidden');
+                    // Focus on main content after loading
+                    document.getElementById('main-content')?.focus();
+                }, 500);
+            });
+            
+            // Scroll-triggered animations
+            const observeElements = document.querySelectorAll('.animate-on-scroll');
+            
+            const animationObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            observeElements.forEach(el => {
+                animationObserver.observe(el);
+            });
+            
+            // Keyboard navigation support
+            function trapFocus(element) {
+                const focusableElements = element.querySelectorAll(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+                
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                lastFocusable.focus();
+                                e.preventDefault();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                firstFocusable.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                    
+                    if (e.key === 'Escape') {
+                        closeDemoModal();
+                    }
+                });
+            }
+            
+            // Modal keyboard support
+            const demoModal = document.getElementById('demoTestModal');
+            if (demoModal) {
+                trapFocus(demoModal);
+            }
+            
+            // Enhanced button interactions with loading states
+            function addButtonLoadingState(button, duration = 1000) {
+                button.classList.add('btn-loading');
+                button.setAttribute('disabled', 'true');
+                
+                setTimeout(() => {
+                    button.classList.remove('btn-loading');
+                    button.removeAttribute('disabled');
+                }, duration);
+            }
+            
+            // Add loading states to CTA buttons
+            document.getElementById('getStartedBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                addButtonLoadingState(this, 800);
+                setTimeout(() => {
+                    window.location.href = '/register';
+                }, 800);
+            });
+            
+            document.getElementById('loginBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                addButtonLoadingState(this, 600);
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 600);
+            });
+            
+            document.getElementById('startAnalysisBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                addButtonLoadingState(this, 800);
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 800);
+            });
+            
+            document.getElementById('startNowBtn')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                addButtonLoadingState(this, 800);
+                setTimeout(() => {
+                    window.location.href = '/register';
+                }, 800);
+            });
+        });
+    </script>
+    
+    <script>
         // Demo Test Functionality
         class DemoTest {
             constructor() {
@@ -636,12 +761,28 @@
         let demoTest = null;
         
         document.getElementById('demoTestBtn').addEventListener('click', function() {
-            document.getElementById('demoTestModal').classList.remove('hidden');
+            const modal = document.getElementById('demoTestModal');
+            modal.classList.remove('hidden');
+            // Focus on the close button when modal opens
+            setTimeout(() => {
+                document.getElementById('demoCloseBtn').focus();
+            }, 100);
             startDemoCountdown();
         });
         
         document.getElementById('demoCloseBtn').addEventListener('click', closeDemoModal);
         document.getElementById('demoModalOverlay').addEventListener('click', closeDemoModal);
+        
+        // Global keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modal
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('demoTestModal');
+                if (!modal.classList.contains('hidden')) {
+                    closeDemoModal();
+                }
+            }
+        });
         
         document.getElementById('tryAgainBtn').addEventListener('click', function() {
             document.getElementById('demoResults').classList.add('hidden');
@@ -663,6 +804,8 @@
         
         function closeDemoModal() {
             document.getElementById('demoTestModal').classList.add('hidden');
+            // Return focus to the button that opened the modal
+            document.getElementById('demoTestBtn').focus();
             if (demoTest && demoTest.isRunning) {
                 demoTest.isRunning = false;
             }
