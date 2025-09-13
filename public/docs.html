@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - AimHelper Pro</title>
+    <meta name="description" content="Complete documentation for AimHelper Pro - guides, API reference, and technical documentation for sensitivity optimization.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">← Back to Home</a>
+                    <a href="/app" class="nav-btn nav-btn--primary">Try Platform</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="docs-layout">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <div class="docs-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Getting Started</h3>
+                    <ul class="nav-links">
+                        <li><a href="#introduction" class="nav-link active">Introduction</a></li>
+                        <li><a href="#quick-start" class="nav-link">Quick Start</a></li>
+                        <li><a href="#system-requirements" class="nav-link">System Requirements</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">User Guide</h3>
+                    <ul class="nav-links">
+                        <li><a href="#profile-setup" class="nav-link">Profile Setup</a></li>
+                        <li><a href="#test-suite" class="nav-link">Test Suite</a></li>
+                        <li><a href="#results-analysis" class="nav-link">Results Analysis</a></li>
+                        <li><a href="#optimization" class="nav-link">Optimization</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Technical Reference</h3>
+                    <ul class="nav-links">
+                        <li><a href="#calculations" class="nav-link">Calculations</a></li>
+                        <li><a href="#game-profiles" class="nav-link">Game Profiles</a></li>
+                        <li><a href="#data-storage" class="nav-link">Data Storage</a></li>
+                    </ul>
+                </div>
+                
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Advanced</h3>
+                    <ul class="nav-links">
+                        <li><a href="#api-reference" class="nav-link">API Reference</a></li>
+                        <li><a href="#customization" class="nav-link">Customization</a></li>
+                        <li><a href="#troubleshooting" class="nav-link">Troubleshooting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="docs-content">
+            <div class="container">
+                <!-- Introduction -->
+                <section id="introduction" class="docs-section">
+                    <header class="section-header">
+                        <div class="header-badge">
+                            <span>📖</span>
+                            <span>Documentation</span>
+                        </div>
+                        <h1>AimHelper Pro Documentation</h1>
+                        <p class="header-subtitle">Complete guide to using and understanding AimHelper Pro's sensitivity optimization platform</p>
+                    </header>
+                    
+                    <div class="docs-content-body">
+                        <h2>What is AimHelper Pro?</h2>
+                        <p>AimHelper Pro is a web-based sensitivity optimization platform that uses AI-powered analysis to help FPS gamers find their optimal mouse sensitivity settings. Through a series of scientifically designed tests, we analyze your natural aiming patterns and provide personalized recommendations.</p>
+                        
+                        <h3>Core Features</h3>
+                        <ul>
+                            <li><strong>4-Test Analysis Suite:</strong> Comprehensive testing across different aiming scenarios</li>
+                            <li><strong>Game-Specific Optimization:</strong> Tailored recommendations for 8+ popular FPS games</li>
+                            <li><strong>AI-Powered Analysis:</strong> Advanced algorithms that learn from your performance patterns</li>
+                            <li><strong>Instant Results:</strong> Immediate feedback and recommendations</li>
+                            <li><strong>Equipment Recommendations:</strong> Mousepad and hardware suggestions</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Quick Start -->
+                <section id="quick-start" class="docs-section">
+                    <h2>Quick Start Guide</h2>
+                    <div class="docs-content-body">
+                        <div class="quick-start-steps">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h3>Visit the Platform</h3>
+                                    <p>Navigate to <a href="/app">AimHelper Pro Platform</a> to begin your analysis.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h3>Setup Your Profile</h3>
+                                    <p>Enter your current DPI, in-game sensitivity, and preferred FPS game.</p>
+                                    <code>Example: DPI: 800, Sensitivity: 1.0, Game: Valorant</code>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h3>Complete Tests</h3>
+                                    <p>Take all 4 performance tests: Circle Tracking, Grid Shot, Flick Test, and Consistency Test.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="step-item">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h3>Get Recommendations</h3>
+                                    <p>Review your optimized settings and implement gradually.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- System Requirements -->
+                <section id="system-requirements" class="docs-section">
+                    <h2>System Requirements</h2>
+                    <div class="docs-content-body">
+                        <h3>Supported Browsers</h3>
+                        <ul>
+                            <li>Google Chrome (recommended) - Version 90+</li>
+                            <li>Mozilla Firefox - Version 88+</li>
+                            <li>Safari - Version 14+</li>
+                            <li>Microsoft Edge - Version 90+</li>
+                        </ul>
+                        
+                        <h3>Hardware Requirements</h3>
+                        <ul>
+                            <li><strong>Mouse:</strong> Gaming mouse with consistent sensor (optical/laser)</li>
+                            <li><strong>Mousepad:</strong> Any size (recommendations provided after analysis)</li>
+                            <li><strong>Display:</strong> Any resolution supported (tests scale automatically)</li>
+                            <li><strong>Connection:</strong> Stable internet connection for platform access</li>
+                        </ul>
+                        
+                        <h3>Recommended Setup</h3>
+                        <ul>
+                            <li>Wired mouse for minimal input lag</li>
+                            <li>Consistent mouse grip and seating position</li>
+                            <li>Good lighting conditions</li>
+                            <li>Warm-up before testing for best results</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Profile Setup -->
+                <section id="profile-setup" class="docs-section">
+                    <h2>Profile Setup</h2>
+                    <div class="docs-content-body">
+                        <h3>Required Information</h3>
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <h4>Player Name/ID</h4>
+                                <p>Identifier for tracking your results and progress over time.</p>
+                            </div>
+                            
+                            <div class="info-card">
+                                <h4>Current Mouse DPI</h4>
+                                <p>Hardware DPI setting (usually 400-3200). Check your mouse software or manufacturer specifications.</p>
+                            </div>
+                            
+                            <div class="info-card">
+                                <h4>In-Game Sensitivity</h4>
+                                <p>Sensitivity multiplier from your FPS game settings (typically 0.1-10.0).</p>
+                            </div>
+                            
+                            <div class="info-card">
+                                <h4>Primary FPS Game</h4>
+                                <p>Your main competitive FPS game for optimized recommendations.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Tips for Accurate Setup</h3>
+                        <ul>
+                            <li>Use your actual gaming DPI, not the maximum DPI</li>
+                            <li>Enter the exact sensitivity you use in-game</li>
+                            <li>Choose the game you play most competitively</li>
+                            <li>Ensure mouse acceleration is disabled</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Test Suite -->
+                <section id="test-suite" class="docs-section">
+                    <h2>Test Suite Documentation</h2>
+                    <div class="docs-content-body">
+                        <div class="test-docs">
+                            <div class="test-doc-item">
+                                <h3>🔄 Circle Tracking Test</h3>
+                                <div class="test-details">
+                                    <p><strong>Purpose:</strong> Measures smooth tracking ability and micro-adjustments</p>
+                                    <p><strong>Duration:</strong> 30 seconds</p>
+                                    <p><strong>Mechanics:</strong> Follow a moving circular target with your cursor</p>
+                                    <p><strong>Metrics:</strong> Tracking accuracy, smoothness, prediction ability</p>
+                                    <p><strong>Tips:</strong> Focus on smooth mouse movements, predict target movement</p>
+                                </div>
+                            </div>
+                            
+                            <div class="test-doc-item">
+                                <h3>🎯 Grid Shot Test</h3>
+                                <div class="test-details">
+                                    <p><strong>Purpose:</strong> Tests precision clicking and target acquisition</p>
+                                    <p><strong>Duration:</strong> Variable (usually 45-60 seconds)</p>
+                                    <p><strong>Mechanics:</strong> Click targets that appear randomly on a grid</p>
+                                    <p><strong>Metrics:</strong> Click accuracy, reaction time, target acquisition speed</p>
+                                    <p><strong>Tips:</strong> Stay relaxed, focus on accuracy over speed initially</p>
+                                </div>
+                            </div>
+                            
+                            <div class="test-doc-item">
+                                <h3>⚡ Flick Test</h3>
+                                <div class="test-details">
+                                    <p><strong>Purpose:</strong> Evaluates quick target-to-target movements</p>
+                                    <p><strong>Duration:</strong> Variable (usually 25-35 seconds)</p>
+                                    <p><strong>Mechanics:</strong> Quickly move between targets at various distances</p>
+                                    <p><strong>Metrics:</strong> Flick accuracy, speed, distance consistency</p>
+                                    <p><strong>Tips:</strong> Use quick, decisive movements, don't overthink</p>
+                                </div>
+                            </div>
+                            
+                            <div class="test-doc-item">
+                                <h3>📊 Consistency Test</h3>
+                                <div class="test-details">
+                                    <p><strong>Purpose:</strong> Analyzes muscle memory and movement repeatability</p>
+                                    <p><strong>Duration:</strong> Variable (usually 20-40 seconds)</p>
+                                    <p><strong>Mechanics:</strong> Repeat the same movement pattern multiple times</p>
+                                    <p><strong>Metrics:</strong> Movement consistency, muscle memory accuracy</p>
+                                    <p><strong>Tips:</strong> Focus on reproducing identical movements</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Calculations -->
+                <section id="calculations" class="docs-section">
+                    <h2>Technical Calculations</h2>
+                    <div class="docs-content-body">
+                        <h3>Sensitivity Conversion Formula</h3>
+                        <div class="formula-block">
+                            <h4>cm/360° Calculation:</h4>
+                            <code>cm_per_360 = 360 / (DPI × Sensitivity) × 2.54</code>
+                            <p>Where 2.54 converts inches to centimeters</p>
+                        </div>
+                        
+                        <div class="formula-block">
+                            <h4>Optimal Sensitivity Calculation:</h4>
+                            <code>optimal_sensitivity = 360 / (DPI × (optimal_cm_per_360 / 2.54))</code>
+                            <p>Based on your best-performing test results</p>
+                        </div>
+                        
+                        <h3>Performance Scoring</h3>
+                        <div class="formula-block">
+                            <h4>Combined Score Formula:</h4>
+                            <code>score = (accuracy × weight_acc) + (reaction × weight_react) + (consistency × weight_cons)</code>
+                            <p>Where weights vary by game type</p>
+                        </div>
+                        
+                        <h3>Confidence Calculation</h3>
+                        <p>Confidence scores are based on:</p>
+                        <ul>
+                            <li>Number of completed tests (more tests = higher confidence)</li>
+                            <li>Performance consistency across tests</li>
+                            <li>Clear performance peaks at specific sensitivities</li>
+                            <li>Test variety completion (all 4 test types)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Game Profiles -->
+                <section id="game-profiles" class="docs-section">
+                    <h2>Game-Specific Profiles</h2>
+                    <div class="docs-content-body">
+                        <p>Each game has different aiming requirements and optimal sensitivity ranges:</p>
+                        
+                        <div class="game-profiles-grid">
+                            <div class="game-profile-card">
+                                <h4>Tactical Shooters</h4>
+                                <p><strong>Games:</strong> Valorant, CS:GO/CS2, Rainbow Six Siege</p>
+                                <p><strong>Focus:</strong> Precision and crosshair placement</p>
+                                <p><strong>Optimal Range:</strong> 20-50 cm/360°</p>
+                                <p><strong>Weighting:</strong> 50-60% Accuracy, 20-30% Reaction, 20% Consistency</p>
+                            </div>
+                            
+                            <div class="game-profile-card">
+                                <h4>Battle Royales</h4>
+                                <p><strong>Games:</strong> Apex Legends, Fortnite</p>
+                                <p><strong>Focus:</strong> Quick target acquisition and tracking</p>
+                                <p><strong>Optimal Range:</strong> 10-30 cm/360°</p>
+                                <p><strong>Weighting:</strong> 30-40% Accuracy, 40% Reaction, 20-30% Consistency</p>
+                            </div>
+                            
+                            <div class="game-profile-card">
+                                <h4>Hero Shooters</h4>
+                                <p><strong>Games:</strong> Overwatch 2, Marvel Rivals</p>
+                                <p><strong>Focus:</strong> Versatile aiming for different roles</p>
+                                <p><strong>Optimal Range:</strong> 18-35 cm/360°</p>
+                                <p><strong>Weighting:</strong> 35% Accuracy, 35% Reaction, 30% Consistency</p>
+                            </div>
+                            
+                            <div class="game-profile-card">
+                                <h4>Arcade Shooters</h4>
+                                <p><strong>Games:</strong> Call of Duty series</p>
+                                <p><strong>Focus:</strong> Fast reflexes and close-quarters combat</p>
+                                <p><strong>Optimal Range:</strong> 12-25 cm/360°</p>
+                                <p><strong>Weighting:</strong> 30% Accuracy, 50% Reaction, 20% Consistency</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- API Reference -->
+                <section id="api-reference" class="docs-section">
+                    <h2>API Reference</h2>
+                    <div class="docs-content-body">
+                        <div class="api-notice">
+                            <h3>🚧 API Documentation Coming Soon</h3>
+                            <p>We're working on comprehensive API documentation for developers who want to integrate with AimHelper Pro or build custom applications.</p>
+                            
+                            <h4>Planned API Endpoints:</h4>
+                            <ul>
+                                <li><code>POST /api/test-result</code> - Submit test results</li>
+                                <li><code>GET /api/user-results</code> - Retrieve user test history</li>
+                                <li><code>POST /api/optimize-sensitivity</code> - Get optimization recommendations</li>
+                                <li><code>GET /api/game-profiles</code> - Retrieve game-specific settings</li>
+                            </ul>
+                            
+                            <p>API documentation will include:</p>
+                            <ul>
+                                <li>Authentication methods</li>
+                                <li>Request/response formats</li>
+                                <li>Rate limiting information</li>
+                                <li>Example code in multiple languages</li>
+                                <li>SDKs for popular frameworks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Troubleshooting -->
+                <section id="troubleshooting" class="docs-section">
+                    <h2>Troubleshooting</h2>
+                    <div class="docs-content-body">
+                        <h3>Common Issues</h3>
+                        
+                        <div class="troubleshooting-item">
+                            <h4>Tests feel laggy or unresponsive</h4>
+                            <div class="troubleshooting-solution">
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Use a modern browser (Chrome recommended)</li>
+                                    <li>Close other demanding applications</li>
+                                    <li>Use a wired mouse instead of wireless</li>
+                                    <li>Update mouse drivers</li>
+                                    <li>Disable browser extensions temporarily</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="troubleshooting-item">
+                            <h4>Inconsistent results between tests</h4>
+                            <div class="troubleshooting-solution">
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Warm up before testing</li>
+                                    <li>Maintain consistent posture and grip</li>
+                                    <li>Test when alert and focused</li>
+                                    <li>Ensure consistent lighting conditions</li>
+                                    <li>Take breaks between test sessions</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="troubleshooting-item">
+                            <h4>Page won't load or crashes</h4>
+                            <div class="troubleshooting-solution">
+                                <p><strong>Solutions:</strong></p>
+                                <ul>
+                                    <li>Clear browser cache and cookies</li>
+                                    <li>Try incognito/private browsing mode</li>
+                                    <li>Disable ad blockers temporarily</li>
+                                    <li>Check internet connection stability</li>
+                                    <li>Try a different browser</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Navigation Footer -->
+                <div class="docs-navigation-footer">
+                    <div class="docs-nav-links">
+                        <a href="/help" class="btn btn--secondary">
+                            <span>❓ FAQ</span>
+                        </a>
+                        <a href="/contact" class="btn btn--secondary">
+                            <span>💬 Contact Support</span>
+                        </a>
+                        <a href="/app" class="btn btn--primary">
+                            <span>🎯 Try Platform</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .docs-layout {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .docs-sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            padding: var(--space-6);
+        }
+        
+        .docs-nav {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .nav-section-title {
+            color: var(--text-primary);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0 0 var(--space-3) 0;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-link {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            transition: var(--transition-base);
+            font-size: var(--font-size-sm);
+        }
+        
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-glass);
+        }
+        
+        .nav-link.active {
+            color: var(--text-accent);
+            background: var(--bg-glass-strong);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .docs-content {
+            flex: 1;
+            padding: var(--space-8) 0;
+        }
+        
+        .docs-section {
+            margin-bottom: var(--space-12);
+        }
+        
+        .docs-content-body {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .docs-content-body h2 {
+            color: var(--text-primary);
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            margin: var(--space-8) 0 var(--space-4) 0;
+            border-bottom: 1px solid var(--border-primary);
+            padding-bottom: var(--space-2);
+        }
+        
+        .docs-content-body h3 {
+            color: var(--text-primary);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin: var(--space-6) 0 var(--space-3) 0;
+        }
+        
+        .docs-content-body h4 {
+            color: var(--text-primary);
+            font-weight: var(--font-weight-semibold);
+            margin: var(--space-4) 0 var(--space-2) 0;
+        }
+        
+        .docs-content-body p {
+            margin: var(--space-3) 0;
+        }
+        
+        .docs-content-body ul, .docs-content-body ol {
+            margin: var(--space-3) 0;
+            padding-left: var(--space-5);
+        }
+        
+        .docs-content-body li {
+            margin: var(--space-1) 0;
+        }
+        
+        .docs-content-body code {
+            background: var(--bg-tertiary);
+            color: var(--text-accent);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-sm);
+            font-family: var(--font-family-mono);
+        }
+        
+        .formula-block {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        
+        .formula-block h4 {
+            margin: 0 0 var(--space-2) 0;
+            color: var(--text-primary);
+        }
+        
+        .formula-block code {
+            display: block;
+            background: var(--bg-primary);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            margin: var(--space-2) 0;
+        }
+        
+        .quick-start-steps {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .step-item {
+            display: flex;
+            gap: var(--space-4);
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: var(--bg-accent);
+            color: var(--text-on-accent);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            flex-shrink: 0;
+        }
+        
+        .step-content h3 {
+            margin: 0 0 var(--space-2) 0;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        
+        .info-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+        }
+        
+        .info-card h4 {
+            color: var(--text-accent);
+            margin: 0 0 var(--space-2) 0;
+        }
+        
+        .test-docs {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+        
+        .test-doc-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+        
+        .test-doc-item h3 {
+            margin: 0 0 var(--space-4) 0;
+            color: var(--text-primary);
+        }
+        
+        .test-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .game-profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        
+        .game-profile-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+        }
+        
+        .game-profile-card h4 {
+            color: var(--text-accent);
+            margin: 0 0 var(--space-3) 0;
+        }
+        
+        .api-notice {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+        }
+        
+        .api-notice h3 {
+            color: var(--text-primary);
+            margin: 0 0 var(--space-4) 0;
+        }
+        
+        .troubleshooting-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            margin: var(--space-4) 0;
+        }
+        
+        .troubleshooting-item h4 {
+            color: var(--text-primary);
+            margin: 0 0 var(--space-3) 0;
+        }
+        
+        .troubleshooting-solution p {
+            margin: 0 0 var(--space-2) 0;
+        }
+        
+        .docs-navigation-footer {
+            margin-top: var(--space-12);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--border-primary);
+        }
+        
+        .docs-nav-links {
+            display: flex;
+            gap: var(--space-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 1024px) {
+            .docs-sidebar {
+                display: none;
+            }
+            
+            .docs-content {
+                padding: var(--space-6) 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid,
+            .game-profiles-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .docs-nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .docs-nav-links .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Active navigation highlighting
+            const sections = document.querySelectorAll('.docs-section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function updateActiveNav() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNav);
+            updateActiveNav(); // Call once on load
+        });
+    </script>
+</body>
+</html>

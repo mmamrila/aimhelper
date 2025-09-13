@@ -794,6 +794,26 @@ app.get('/education', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/education.html'));
 });
 
+app.get('/how-it-works', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/how-it-works.html'));
+});
+
+app.get('/features', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/features.html'));
+});
+
+app.get('/help', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/help.html'));
+});
+
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/contact.html'));
+});
+
+app.get('/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/docs.html'));
+});
+
 // Serve static files after custom routes
 app.use(express.static(path.join(__dirname, '../public')));
 
