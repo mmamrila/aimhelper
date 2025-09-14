@@ -388,60 +388,75 @@
         });
 
         // Form handling
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const rememberMe = document.getElementById('rememberMe').checked;
-            
+
             // Clear previous alerts
             clearAlerts();
-            
+
             // Basic validation
             if (!email || !password) {
                 showAlert('Please fill in all fields', 'error');
                 return;
             }
-            
+
             // Show loading state
             const loginBtn = document.getElementById('loginBtn');
             const originalText = loginBtn.innerHTML;
             loginBtn.innerHTML = '<span>Signing In...</span>';
             loginBtn.disabled = true;
-            
-            // Simulate login process
-            setTimeout(() => {
-                // For demo purposes, any email/password combination works
-                if (email && password) {
+
+            try {
+                // Make login request to server
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        emailOrUsername: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
                     // Store user session
                     const userData = {
-                        email: email,
-                        name: email.split('@')[0],
+                        id: data.id,
+                        email: data.email,
+                        username: data.username,
+                        name: data.username || email.split('@')[0],
                         loginTime: Date.now(),
                         rememberMe: rememberMe
                     };
-                    
+
                     localStorage.setItem('aimhelper_user', JSON.stringify(userData));
                     localStorage.setItem('aimhelper_session', 'active');
-                    
+
                     showAlert('Login successful! Redirecting...', 'success');
-                    
-                    // Redirect based on user state
+
+                    // Redirect to dashboard or profile setup
                     setTimeout(() => {
-                        const profile = localStorage.getItem('aimhelper_profile');
-                        if (profile) {
-                            window.location.href = '/dashboard';
-                        } else {
-                            window.location.href = '/register?step=2'; // Skip to profile setup
-                        }
+                        window.location.href = '/app';
                     }, 1500);
                 } else {
-                    showAlert('Invalid email or password', 'error');
+                    // Show server error message
+                    showAlert(data.error || 'Login failed', 'error');
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;
                 }
-            }, 1000);
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('Network error. Please try again.', 'error');
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }
         });
         
         function showAlert(message, type) {
