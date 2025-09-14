@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensitivity Science - FPS Sensitivity Optimizer</title>
+    <title>Education - AimHelper Pro</title>
+    <meta name="description" content="Master the science of sensitivity and aim mechanics with professional guidance and interactive tools.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
-<body>
+<body class="page-category-info">
     <!-- Navigation -->
     <nav class="app-nav">
         <div class="container">
@@ -18,206 +32,368 @@
                 <div class="nav-actions">
                     <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
                     <a href="/features" class="nav-btn nav-btn--secondary">✨ Features</a>
-                    <a href="/app" class="nav-btn nav-btn--primary">🎯 Start Training</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary active">📚 Learn</a>
+                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
+                    <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
                 </div>
             </div>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <div class="container">
-        <div class="education-header">
-            <h1>🎯 The Science of Sensitivity</h1>
-            <p class="header-subtitle">Master the fundamentals of mouse sensitivity and aim mechanics</p>
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb">
+            <span class="category-icon">📚</span>
+            <span class="page-breadcrumb-current">Education</span>
         </div>
 
-        <div class="education-content">
-            <!-- Core Concepts -->
-            <section class="education-section">
-                <h2>📚 Core Concepts</h2>
-                <div class="concept-grid">
-                    <div class="concept-card">
-                        <div class="concept-icon">🖱️</div>
-                        <h3>DPI (Dots Per Inch)</h3>
-                        <p>Hardware sensitivity of your mouse sensor. Higher DPI means more cursor movement per inch of physical mouse movement.</p>
-                        <div class="concept-detail">
-                            <strong>Sweet Spot:</strong> 400-1600 DPI for most gaming mice
-                        </div>
-                    </div>
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-badge">
+                <span>🎯</span>
+                <span>Sensitivity Science & Training</span>
+            </div>
+            <h1 class="header-title">Master Your Aim</h1>
+            <p class="header-subtitle">Learn the science behind sensitivity optimization and aim mechanics</p>
+            <p class="header-description">Professional-grade education to unlock your competitive potential</p>
+        </header>
 
-                    <div class="concept-card">
-                        <div class="concept-icon">⚙️</div>
-                        <h3>In-Game Sensitivity</h3>
-                        <p>Software multiplier that affects how much your crosshair moves relative to mouse movement within the game.</p>
-                        <div class="concept-detail">
-                            <strong>Formula:</strong> Effective Sensitivity = DPI × In-Game Sensitivity
-                        </div>
-                    </div>
+        <!-- Core Concepts Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📚</span>
+                    Core Concepts
+                </h2>
+                <p class="section-subtitle">Fundamental principles every competitive player should know</p>
+            </div>
 
-                    <div class="concept-card">
-                        <div class="concept-icon">📏</div>
-                        <h3>cm/360° (eDPI)</h3>
-                        <p>Physical distance you need to move your mouse for a full 360° turn in-game. This is the universal measurement that matters most.</p>
-                        <div class="concept-detail">
-                            <strong>Calculation:</strong> (360 ÷ (DPI × Sensitivity)) × 2.54
-                        </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-icon">🖱️</div>
+                    <h3 class="card-title">DPI (Dots Per Inch)</h3>
+                    <p class="card-description">Hardware sensitivity of your mouse sensor. Higher DPI means more cursor movement per inch of physical movement.</p>
+                    <div class="card-highlight">
+                        <strong>Sweet Spot:</strong> 400-1600 DPI for most gaming scenarios
                     </div>
+                </div>
 
-                    <div class="concept-card">
-                        <div class="concept-icon">🎯</div>
-                        <h3>Pixel Skipping</h3>
-                        <p>When sensitivity is too low, your crosshair "jumps" over pixels instead of smoothly transitioning, affecting precision.</p>
-                        <div class="concept-detail">
-                            <strong>Prevention:</strong> Maintain reasonable DPI (400+ recommended)
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3 class="card-title">In-Game Sensitivity</h3>
+                    <p class="card-description">Software multiplier affecting crosshair movement relative to mouse movement within the game environment.</p>
+                    <div class="card-highlight">
+                        <strong>Formula:</strong> Effective DPI = DPI × In-Game Sensitivity
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📏</div>
+                    <h3 class="card-title">in/360° (eDPI)</h3>
+                    <p class="card-description">Physical distance needed for a full 360° turn. The universal measurement that matters most for consistency.</p>
+                    <div class="card-highlight">
+                        <strong>Calculation:</strong> 360 ÷ (DPI × Sensitivity)
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3 class="card-title">Pixel Skipping</h3>
+                    <p class="card-description">When sensitivity is too low, crosshairs "jump" over pixels instead of smooth transitions, affecting precision.</p>
+                    <div class="card-highlight">
+                        <strong>Prevention:</strong> Maintain reasonable DPI (400+ recommended)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sensitivity Ranges Section -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Professional Sensitivity Ranges
+                </h2>
+                <p class="section-subtitle">Understanding the three main sensitivity categories used by pros</p>
+            </div>
+
+            <div class="sensitivity-ranges">
+                <div class="range-card high-sens">
+                    <div class="range-badge">High Sensitivity</div>
+                    <div class="range-value">6-10 in/360°</div>
+                    <div class="range-content">
+                        <div class="range-pros">
+                            <h4>✅ Advantages</h4>
+                            <ul>
+                                <li>Lightning-fast flicks and reactions</li>
+                                <li>Minimal arm movement required</li>
+                                <li>Excellent for small mousepad setups</li>
+                                <li>Quick target acquisition</li>
+                            </ul>
+                        </div>
+                        <div class="range-cons">
+                            <h4>⚠️ Considerations</h4>
+                            <ul>
+                                <li>Requires precise hand control</li>
+                                <li>More difficult smooth tracking</li>
+                                <li>Higher skill ceiling for consistency</li>
+                            </ul>
+                        </div>
+                        <div class="range-ideal">
+                            <strong>Best for:</strong> Fast-paced games, wrist aiming, limited desk space
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Sensitivity Ranges -->
-            <section class="education-section">
-                <h2>📊 Professional Sensitivity Ranges</h2>
-                <div class="sensitivity-ranges">
-                    <div class="range-item high-sens">
-                        <div class="range-header">
-                            <span class="range-title">High Sensitivity</span>
-                            <span class="range-value">15-25 cm/360°</span>
+                <div class="range-card medium-sens featured">
+                    <div class="range-badge">Medium Sensitivity</div>
+                    <div class="range-value">10-14 in/360°</div>
+                    <div class="range-content">
+                        <div class="range-pros">
+                            <h4>✅ Advantages</h4>
+                            <ul>
+                                <li>Perfect balance of precision and speed</li>
+                                <li>Versatile for most game scenarios</li>
+                                <li>Easier to build muscle memory</li>
+                                <li>Most professional players' choice</li>
+                            </ul>
                         </div>
-                        <div class="range-description">
-                            <p><strong>Advantages:</strong> Quick flicks, fast target acquisition, less arm movement</p>
-                            <p><strong>Disadvantages:</strong> Harder to track smoothly, requires precise hand control</p>
-                            <p><strong>Best for:</strong> Small mousepad, wrist aiming, fast-paced games</p>
+                        <div class="range-cons">
+                            <h4>⚠️ Considerations</h4>
+                            <ul>
+                                <li>May not excel in extreme scenarios</li>
+                                <li>Requires moderate desk space</li>
+                            </ul>
                         </div>
-                    </div>
-
-                    <div class="range-item medium-sens">
-                        <div class="range-header">
-                            <span class="range-title">Medium Sensitivity</span>
-                            <span class="range-value">25-35 cm/360°</span>
-                        </div>
-                        <div class="range-description">
-                            <p><strong>Advantages:</strong> Balanced precision and speed, versatile for most games</p>
-                            <p><strong>Disadvantages:</strong> May not excel in extreme scenarios</p>
-                            <p><strong>Best for:</strong> Most FPS games, balanced arm/wrist aiming</p>
-                        </div>
-                    </div>
-
-                    <div class="range-item low-sens">
-                        <div class="range-header">
-                            <span class="range-title">Low Sensitivity</span>
-                            <span class="range-value">35-60 cm/360°</span>
-                        </div>
-                        <div class="range-description">
-                            <p><strong>Advantages:</strong> Superior precision, excellent tracking, consistent aim</p>
-                            <p><strong>Disadvantages:</strong> Slower flicks, requires large mousepad</p>
-                            <p><strong>Best for:</strong> Tactical shooters, arm aiming, large mousepad</p>
+                        <div class="range-ideal">
+                            <strong>Best for:</strong> Most FPS games, balanced arm/wrist aiming, beginners
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Optimization Tips -->
-            <section class="education-section">
-                <h2>💡 Optimization Tips</h2>
-                <div class="tips-grid">
-                    <div class="tip-card">
-                        <h3>🔄 Finding Your Baseline</h3>
-                        <ol>
-                            <li>Start with 30 cm/360° as a baseline</li>
-                            <li>Test for 1-2 weeks consistently</li>
-                            <li>Adjust in small increments (2-5 cm/360°)</li>
-                            <li>Focus on comfort and consistency</li>
-                        </ol>
-                    </div>
-
-                    <div class="tip-card">
-                        <h3>🧠 Muscle Memory Development</h3>
-                        <ol>
-                            <li>Stick to one sensitivity for at least 2 weeks</li>
-                            <li>Practice aim training daily (15-30 minutes)</li>
-                            <li>Focus on smooth, controlled movements</li>
-                            <li>Track your progress with consistent metrics</li>
-                        </ol>
-                    </div>
-
-                    <div class="tip-card">
-                        <h3>⚖️ DPI vs In-Game Balance</h3>
-                        <ol>
-                            <li>Use your mouse's native DPI when possible</li>
-                            <li>Avoid extremely low in-game sensitivity (&lt;0.1)</li>
-                            <li>Higher DPI reduces input lag slightly</li>
-                            <li>Most pros use 400-1600 DPI range</li>
-                        </ol>
-                    </div>
-
-                    <div class="tip-card">
-                        <h3>🖱️ Hardware Considerations</h3>
-                        <ol>
-                            <li>Ensure adequate mousepad space</li>
-                            <li>Use a consistent mouse surface</li>
-                            <li>Keep your mouse sensor clean</li>
-                            <li>Consider mouse weight for comfort</li>
-                        </ol>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Common Mistakes -->
-            <section class="education-section">
-                <h2>❌ Common Mistakes to Avoid</h2>
-                <div class="mistakes-list">
-                    <div class="mistake-item">
-                        <h3>Constantly Changing Sensitivity</h3>
-                        <p>Switching sensitivity frequently prevents muscle memory development. Commit to a setting for at least 2-3 weeks.</p>
-                    </div>
-
-                    <div class="mistake-item">
-                        <h3>Copying Pro Settings Exactly</h3>
-                        <p>Professional players' settings are optimized for their playstyle, hardware, and physical attributes. Use them as a starting point, not a rule.</p>
-                    </div>
-
-                    <div class="mistake-item">
-                        <h3>Ignoring Hardware Limitations</h3>
-                        <p>Your mousepad size, desk setup, and physical comfort should influence your sensitivity choice more than arbitrary numbers.</p>
-                    </div>
-
-                    <div class="mistake-item">
-                        <h3>Focusing Only on Flick Shots</h3>
-                        <p>Tracking and micro-adjustments are equally important. A balanced sensitivity helps with all aim scenarios.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Interactive Calculator -->
-            <section class="education-section">
-                <h2>🧮 Sensitivity Calculator</h2>
-                <div class="calculator-card">
-                    <div class="calculator-inputs">
-                        <div class="input-group">
-                            <label for="dpiInput">DPI:</label>
-                            <input type="number" id="dpiInput" min="100" max="10000" value="800">
+                <div class="range-card low-sens">
+                    <div class="range-badge">Low Sensitivity</div>
+                    <div class="range-value">14-24 in/360°</div>
+                    <div class="range-content">
+                        <div class="range-pros">
+                            <h4>✅ Advantages</h4>
+                            <ul>
+                                <li>Superior precision and accuracy</li>
+                                <li>Excellent for tracking targets</li>
+                                <li>Most consistent long-term</li>
+                                <li>Reduced hand fatigue</li>
+                            </ul>
                         </div>
-                        <div class="input-group">
-                            <label for="sensInput">In-Game Sensitivity:</label>
-                            <input type="number" id="sensInput" min="0.1" max="10" step="0.1" value="1.0">
+                        <div class="range-cons">
+                            <h4>⚠️ Considerations</h4>
+                            <ul>
+                                <li>Slower reaction times</li>
+                                <li>Requires large mousepad</li>
+                                <li>More arm movement needed</li>
+                            </ul>
                         </div>
-                    </div>
-                    <div class="calculator-results">
-                        <div class="result-item">
-                            <span class="result-label">Effective DPI:</span>
-                            <span class="result-value" id="edpiResult">800</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">cm/360°:</span>
-                            <span class="result-value" id="cm360Result">36.0 cm</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">Category:</span>
-                            <span class="result-value" id="categoryResult">Medium</span>
+                        <div class="range-ideal">
+                            <strong>Best for:</strong> Tactical shooters, arm aiming, precision-focused games
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- Interactive Calculator -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🧮</span>
+                    Sensitivity Calculator
+                </h2>
+                <p class="section-subtitle">Calculate your effective sensitivity and find your ideal range</p>
+            </div>
+
+            <div class="calculator-card">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label for="dpiInput" class="input-label">Mouse DPI</label>
+                        <input type="number" id="dpiInput" class="input-field" min="100" max="10000" value="800" placeholder="800">
+                    </div>
+                    <div class="input-group">
+                        <label for="sensInput" class="input-label">In-Game Sensitivity</label>
+                        <input type="number" id="sensInput" class="input-field" min="0.01" max="10" step="0.01" value="1.0" placeholder="1.0">
+                    </div>
+                </div>
+                <div class="calculator-results">
+                    <div class="result-card">
+                        <div class="result-label">Effective DPI</div>
+                        <div class="result-value" id="edpiResult">800</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">in/360°</div>
+                        <div class="result-value" id="in360Result">14.2 in</div>
+                    </div>
+                    <div class="result-card featured">
+                        <div class="result-label">Category</div>
+                        <div class="result-value" id="categoryResult">Medium</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Optimization Tips -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    Expert Optimization Tips
+                </h2>
+                <p class="section-subtitle">Professional strategies for finding and perfecting your sensitivity</p>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="tip-card">
+                    <div class="tip-icon">🎯</div>
+                    <h3 class="tip-title">Finding Your Baseline</h3>
+                    <div class="tip-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Start with 12 in/360° as baseline</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Test consistently for 1-2 weeks</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Adjust in small increments (1-2 in)</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">Focus on comfort over numbers</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🧠</div>
+                    <h3 class="tip-title">Building Muscle Memory</h3>
+                    <div class="tip-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Commit to 2+ weeks minimum</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Daily aim training (15-30 min)</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Focus on smooth movements</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">Track progress consistently</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">⚖️</div>
+                    <h3 class="tip-title">DPI Optimization</h3>
+                    <div class="tip-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Use mouse's native DPI</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Avoid extremely low sens (&lt;0.1)</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Higher DPI = lower input lag</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">Stay in 400-1600 DPI range</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🖱️</div>
+                    <h3 class="tip-title">Hardware Setup</h3>
+                    <div class="tip-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <span class="step-text">Ensure adequate mousepad space</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <span class="step-text">Maintain consistent surface</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <span class="step-text">Keep sensor clean</span>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <span class="step-text">Consider mouse weight comfort</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Mistakes -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">⚠️</span>
+                    Common Mistakes to Avoid
+                </h2>
+                <p class="section-subtitle">Learn from others' mistakes to accelerate your progress</p>
+            </div>
+
+            <div class="mistake-cards">
+                <div class="mistake-card">
+                    <div class="mistake-icon">🔄</div>
+                    <h3 class="mistake-title">Constantly Changing Sensitivity</h3>
+                    <p class="mistake-description">Switching sensitivity frequently prevents muscle memory development. Commit to a setting for at least 2-3 weeks to see real improvement.</p>
+                </div>
+
+                <div class="mistake-card">
+                    <div class="mistake-icon">👥</div>
+                    <h3 class="mistake-title">Copying Pro Settings Exactly</h3>
+                    <p class="mistake-description">Professional settings are optimized for their unique playstyle and hardware. Use pro configs as inspiration, not absolute rules.</p>
+                </div>
+
+                <div class="mistake-card">
+                    <div class="mistake-icon">🖥️</div>
+                    <h3 class="mistake-title">Ignoring Hardware Limitations</h3>
+                    <p class="mistake-description">Your mousepad size, desk setup, and physical comfort should heavily influence your sensitivity choice over arbitrary numbers.</p>
+                </div>
+
+                <div class="mistake-card">
+                    <div class="mistake-icon">🎯</div>
+                    <h3 class="mistake-title">Focusing Only on Flick Shots</h3>
+                    <p class="mistake-description">Tracking and micro-adjustments are equally important. Choose a balanced sensitivity that helps with all aim scenarios, not just one.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Section -->
+        <section class="content-section">
+            <div class="action-card">
+                <div class="action-content">
+                    <h2 class="action-title">Ready to Optimize Your Aim?</h2>
+                    <p class="action-description">Put your knowledge to practice with our scientific testing suite</p>
+                </div>
+                <div class="action-buttons">
+                    <a href="/register" class="btn btn-primary btn-lg">Start Your Journey</a>
+                    <a href="/features" class="btn btn-secondary btn-lg">View Features</a>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="education.js"></script>

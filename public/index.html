@@ -13,11 +13,14 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
-<body>
+<body class="page-category-home">
     <!-- Navigation -->
     <nav class="app-nav">
         <div class="container">
@@ -27,7 +30,7 @@
                     <span>AimHelper Pro</span>
                 </a>
                 <div class="nav-actions">
-                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/" class="nav-btn nav-btn--secondary active">🏠 Home</a>
                     <a href="/features" class="nav-btn nav-btn--secondary">✨ Features</a>
                     <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
                     <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
@@ -39,6 +42,11 @@
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb">
+            <span class="category-icon">🏠</span>
+            <span class="page-breadcrumb-current">Home</span>
+        </div>
         <!-- Header -->
         <header class="main-header">
             <div class="header-badge">

@@ -213,7 +213,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Email configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   // For development, use Ethereal (fake SMTP)
   host: process.env.SMTP_HOST || 'smtp.ethereal.email',
   port: process.env.SMTP_PORT || 587,
