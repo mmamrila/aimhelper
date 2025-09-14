@@ -377,7 +377,7 @@
                             <input type="checkbox" id="rememberMe" name="rememberMe">
                             <span>Remember me</span>
                         </label>
-                        <a href="#" class="forgot-password">Forgot password?</a>
+                        <a href="/forgot-password" class="forgot-password">Forgot password or username?</a>
                     </div>
 
                     <button type="submit" class="btn btn--primary btn--lg auth-submit" id="loginBtn">
@@ -506,11 +506,10 @@
             alertContainer.innerHTML = '';
         }
         
-        // Handle forgot password
-        document.querySelector('.forgot-password').addEventListener('click', function(e) {
-            e.preventDefault();
-            showAlert('Password reset functionality will be available soon', 'info');
-        });
+        // Handle reset success message
+        if (urlParams.has('reset') && urlParams.get('reset') === 'success') {
+            showAlert('Password has been reset successfully! You can now sign in with your new password.', 'success');
+        }
         
         // Auto-focus email field
         document.getElementById('email').focus();

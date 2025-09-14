@@ -10,6 +10,8 @@ const SQLiteStore = require('connect-sqlite3')(session);
 const { v4: uuidv4 } = require('uuid');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -210,6 +212,18 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
+// Email configuration
+const transporter = nodemailer.createTransporter({
+  // For development, use Ethereal (fake SMTP)
+  host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+  port: process.env.SMTP_PORT || 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER || 'ethereal.user@ethereal.email',
+    pass: process.env.SMTP_PASS || 'ethereal.password'
+  }
+});
+
 // Authentication middleware
 const requireAuth = (req, res, next) => {
   console.log('Auth check - Session:', req.session);
@@ -260,6 +274,17 @@ db.serialize(() => {
   db.run(`ALTER TABLE users DROP CONSTRAINT users_password_hash_NOT_NULL`, (err) => {
     // This might not work on all SQLite versions, but we handle it in the strategy
   });
+
+  // Password reset tokens table
+  db.run(`CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    used BOOLEAN DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  )`);
 
   // Test results linked to user IDs
   db.run(`CREATE TABLE IF NOT EXISTS test_results (
@@ -438,6 +463,263 @@ app.get('/api/auth/google/callback',
     res.redirect('/app');
   }
 );
+
+// Password reset request
+app.post('/api/auth/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    // Find user by email
+    db.get('SELECT id, email, username FROM users WHERE email = ?', [email], async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      // Always return success to prevent email enumeration attacks
+      if (!user) {
+        return res.json({ message: 'If an account with that email exists, we have sent password reset instructions.' });
+      }
+
+      // Generate secure reset token
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 3600000); // 1 hour from now
+
+      // Store reset token in database
+      db.run(
+        'INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)',
+        [user.id, resetToken, expiresAt.toISOString()],
+        async function(err) {
+          if (err) {
+            console.error('Error storing reset token:', err);
+            return res.status(500).json({ error: 'Failed to generate reset token' });
+          }
+
+          // Send password reset email
+          try {
+            const resetUrl = `${req.protocol}://${req.get('host')}/reset-password?token=${resetToken}`;
+
+            const mailOptions = {
+              from: process.env.FROM_EMAIL || 'noreply@aimhelperpro.com',
+              to: user.email,
+              subject: 'Reset Your AimHelper Pro Password',
+              html: `
+                <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0D1117; color: #F0F6FC; border-radius: 12px; overflow: hidden;">
+                  <div style="background: linear-gradient(135deg, #1A73E8 0%, #34A853 100%); padding: 40px 30px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 28px; color: white;">🎯 AimHelper Pro</h1>
+                    <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Password Reset Request</p>
+                  </div>
+                  <div style="padding: 40px 30px;">
+                    <h2 style="color: #F0F6FC; margin: 0 0 20px 0;">Reset Your Password</h2>
+                    <p style="color: #8B949E; line-height: 1.6; margin-bottom: 30px;">
+                      Hi <strong style="color: #F0F6FC;">${user.username}</strong>,<br><br>
+                      We received a request to reset your password for your AimHelper Pro account.
+                      Click the button below to create a new password.
+                    </p>
+                    <div style="text-align: center; margin: 40px 0;">
+                      <a href="${resetUrl}" style="display: inline-block; background: linear-gradient(135deg, #1A73E8 0%, #34A853 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Reset Password</a>
+                    </div>
+                    <p style="color: #8B949E; font-size: 14px; line-height: 1.6;">
+                      This link will expire in 1 hour for security reasons.<br><br>
+                      If you didn't request this password reset, you can safely ignore this email.
+                      Your password will remain unchanged.
+                    </p>
+                    <hr style="border: none; height: 1px; background: #21262D; margin: 30px 0;">
+                    <p style="color: #6E7681; font-size: 12px; text-align: center;">
+                      AimHelper Pro - Precision Aim Training<br>
+                      If the button doesn't work, copy and paste this link: ${resetUrl}
+                    </p>
+                  </div>
+                </div>
+              `
+            };
+
+            // For development, log the reset URL instead of sending email
+            if (process.env.NODE_ENV === 'development' || !process.env.SMTP_HOST) {
+              console.log('\n🔐 PASSWORD RESET LINK (Development Mode):');
+              console.log(`📧 Email: ${user.email}`);
+              console.log(`🔗 Reset URL: ${resetUrl}`);
+              console.log('⏰ Expires in 1 hour\n');
+
+              return res.json({
+                message: 'If an account with that email exists, we have sent password reset instructions.',
+                devNote: 'Check console for reset link (development mode)'
+              });
+            }
+
+            await transporter.sendMail(mailOptions);
+            res.json({ message: 'If an account with that email exists, we have sent password reset instructions.' });
+
+          } catch (emailError) {
+            console.error('Error sending email:', emailError);
+            res.status(500).json({ error: 'Failed to send password reset email' });
+          }
+        }
+      );
+    });
+
+  } catch (error) {
+    console.error('Password reset error:', error);
+    res.status(500).json({ error: 'Server error during password reset request' });
+  }
+});
+
+// Username recovery
+app.post('/api/auth/forgot-username', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    // Find user by email
+    db.get('SELECT username, email FROM users WHERE email = ?', [email], async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      // Always return success to prevent email enumeration attacks
+      if (!user) {
+        return res.json({ message: 'If an account with that email exists, we have sent the username.' });
+      }
+
+      // Send username recovery email
+      try {
+        const mailOptions = {
+          from: process.env.FROM_EMAIL || 'noreply@aimhelperpro.com',
+          to: user.email,
+          subject: 'Your AimHelper Pro Username',
+          html: `
+            <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0D1117; color: #F0F6FC; border-radius: 12px; overflow: hidden;">
+              <div style="background: linear-gradient(135deg, #1A73E8 0%, #34A853 100%); padding: 40px 30px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px; color: white;">🎯 AimHelper Pro</h1>
+                <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 16px;">Username Recovery</p>
+              </div>
+              <div style="padding: 40px 30px;">
+                <h2 style="color: #F0F6FC; margin: 0 0 20px 0;">Your Username</h2>
+                <p style="color: #8B949E; line-height: 1.6; margin-bottom: 20px;">
+                  You requested your username for your AimHelper Pro account.
+                </p>
+                <div style="background: #161B22; border: 1px solid #30363D; border-radius: 8px; padding: 20px; text-align: center; margin: 20px 0;">
+                  <p style="color: #8B949E; margin: 0 0 10px 0; font-size: 14px;">Your username is:</p>
+                  <p style="color: #F0F6FC; font-size: 24px; font-weight: 600; margin: 0;">${user.username}</p>
+                </div>
+                <p style="color: #8B949E; font-size: 14px; line-height: 1.6; text-align: center;">
+                  You can now use this username to sign in to your account.
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${req.protocol}://${req.get('host')}/login" style="display: inline-block; background: linear-gradient(135deg, #1A73E8 0%, #34A853 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Sign In Now</a>
+                </div>
+                <hr style="border: none; height: 1px; background: #21262D; margin: 30px 0;">
+                <p style="color: #6E7681; font-size: 12px; text-align: center;">
+                  AimHelper Pro - Precision Aim Training
+                </p>
+              </div>
+            </div>
+          `
+        };
+
+        // For development, log the username instead of sending email
+        if (process.env.NODE_ENV === 'development' || !process.env.SMTP_HOST) {
+          console.log('\n👤 USERNAME RECOVERY (Development Mode):');
+          console.log(`📧 Email: ${user.email}`);
+          console.log(`👤 Username: ${user.username}\n`);
+
+          return res.json({
+            message: 'If an account with that email exists, we have sent the username.',
+            devNote: 'Check console for username (development mode)'
+          });
+        }
+
+        await transporter.sendMail(mailOptions);
+        res.json({ message: 'If an account with that email exists, we have sent the username.' });
+
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+        res.status(500).json({ error: 'Failed to send username recovery email' });
+      }
+    });
+
+  } catch (error) {
+    console.error('Username recovery error:', error);
+    res.status(500).json({ error: 'Server error during username recovery' });
+  }
+});
+
+// Reset password with token
+app.post('/api/auth/reset-password', async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(400).json({ error: 'Token and new password are required' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+  }
+
+  try {
+    // Find valid, unused token
+    db.get(
+      `SELECT prt.*, u.id as user_id, u.email, u.username
+       FROM password_reset_tokens prt
+       JOIN users u ON prt.user_id = u.id
+       WHERE prt.token = ? AND prt.used = 0 AND prt.expires_at > datetime('now')`,
+      [token],
+      async (err, tokenData) => {
+        if (err) {
+          return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (!tokenData) {
+          return res.status(400).json({ error: 'Invalid or expired reset token' });
+        }
+
+        try {
+          // Hash new password
+          const saltRounds = 10;
+          const passwordHash = await bcrypt.hash(newPassword, saltRounds);
+
+          // Update password
+          db.run(
+            'UPDATE users SET password_hash = ? WHERE id = ?',
+            [passwordHash, tokenData.user_id],
+            function(err) {
+              if (err) {
+                return res.status(500).json({ error: 'Failed to update password' });
+              }
+
+              // Mark token as used
+              db.run(
+                'UPDATE password_reset_tokens SET used = 1 WHERE id = ?',
+                [tokenData.id],
+                (err) => {
+                  if (err) {
+                    console.error('Failed to mark token as used:', err);
+                  }
+                }
+              );
+
+              res.json({ message: 'Password has been reset successfully' });
+            }
+          );
+
+        } catch (hashError) {
+          console.error('Password hashing error:', hashError);
+          res.status(500).json({ error: 'Failed to process new password' });
+        }
+      }
+    );
+
+  } catch (error) {
+    console.error('Password reset error:', error);
+    res.status(500).json({ error: 'Server error during password reset' });
+  }
+});
 
 app.get('/api/auth/me', optionalAuth, (req, res) => {
   if (!req.isAuthenticated) {
@@ -934,6 +1216,14 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/register.html'));
+});
+
+app.get('/forgot-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/forgot-password.html'));
+});
+
+app.get('/reset-password', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/reset-password.html'));
 });
 
 app.get('/valorant-crosshair-test', (req, res) => {
