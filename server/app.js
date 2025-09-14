@@ -814,6 +814,22 @@ app.get('/docs', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/docs.html'));
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/register.html'));
+});
+
+app.get('/valorant-crosshair-test', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/valorant-crosshair-test.html'));
+});
+
+app.get('/apex-tracking-test', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/apex-tracking-test.html'));
+});
+
 // Serve static files after custom routes
 app.use(express.static(path.join(__dirname, '../public')));
 

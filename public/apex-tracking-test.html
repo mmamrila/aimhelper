@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Legends Close Tracking Test - AimHelper Pro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/app" class="nav-btn nav-btn--secondary">🏠 Back to Training</a>
+                    <a href="/dashboard" class="nav-btn nav-btn--secondary">📊 Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🔥 Apex Legends Close Tracking Test</h1>
+            <p class="test-description">Test your close-range tracking for fast-paced Apex Legends combat situations</p>
+        </div>
+
+        <div class="test-instructions" id="instructions">
+            <h2>Instructions</h2>
+            <p>Track the fast-moving targets as accurately as possible. This simulates close-range combat tracking.</p>
+            <p>Targets will move unpredictably with speed changes, testing your ability to adapt quickly.</p>
+            <p><strong>Game:</strong> Apex Legends | <strong>Settings:</strong> DPI: <span id="currentDPI"></span> | Sensitivity: <span id="currentSens"></span></p>
+            <button id="startBtn" class="start-btn">Start Test</button>
+        </div>
+
+        <div class="test-area" id="testArea" style="display: none;">
+            <canvas id="gameCanvas" width="1000" height="600"></canvas>
+            <div class="test-ui">
+                <div class="test-info">
+                    <p>Test: <span id="currentTestNum">1</span> / <span id="totalTests">5</span></p>
+                    <p>Time: <span id="timeDisplay">45</span>s</p>
+                    <p>Tracking: <span id="trackingDisplay">0</span>%</p>
+                </div>
+                <div class="sensitivity-info">
+                    <p>DPI: <span id="testDPI"></span></p>
+                    <p>Sensitivity: <span id="testSens"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-results" id="results" style="display: none;">
+            <h2>Apex Legends Close Tracking Results</h2>
+            <div id="resultsContent"></div>
+            <div class="results-actions">
+                <button id="retryBtn" class="retry-btn">Retry Test</button>
+                <button id="nextTestBtn" class="test-btn">Continue to Next Test →</button>
+                <a href="/dashboard" class="nav-btn nav-btn--secondary">View All Results</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="apex-tracking-test.js"></script>
+</body>
+</html>

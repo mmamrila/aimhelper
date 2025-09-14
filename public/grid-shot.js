@@ -26,7 +26,17 @@ let testData = {
     clicks: [],
     hits: 0,
     misses: 0,
-    totalTargets: 0
+    totalTargets: 0,
+    // Enhanced tracking data
+    overshoots: 0,
+    undershoots: 0,
+    corrections: 0,
+    movementPath: [],
+    velocityData: [],
+    lastCrosshairPos: { x: 400, y: 300 },
+    lastMoveTime: 0,
+    targetAcquisitionTimes: [],
+    clickPrecision: []
 };
 
 const TARGET_SIZE = 40;
@@ -97,7 +107,17 @@ function resetTestData() {
         clicks: [],
         hits: 0,
         misses: 0,
-        totalTargets: 0
+        totalTargets: 0,
+        // Enhanced tracking data
+        overshoots: 0,
+        undershoots: 0,
+        corrections: 0,
+        movementPath: [],
+        velocityData: [],
+        lastCrosshairPos: { x: 400, y: 300 },
+        lastMoveTime: Date.now(),
+        targetAcquisitionTimes: [],
+        clickPrecision: []
     };
 }
 
@@ -158,6 +178,27 @@ function spawnTarget() {
     setTimeout(spawnTarget, SPAWN_INTERVAL + Math.random() * 400);
 }
 
+function findTargetAcquisitionStart(target, clickTime) {
+    // Find when the player started moving toward this target
+    const targetRadius = 50; // Detection radius around target
+    let acquisitionStart = 0;
+
+    for (let i = testData.movementPath.length - 1; i >= 0; i--) {
+        const pos = testData.movementPath[i];
+        const distanceToTarget = Math.sqrt(
+            Math.pow(pos.x - target.x, 2) +
+            Math.pow(pos.y - target.y, 2)
+        );
+
+        if (distanceToTarget > targetRadius * 2) {
+            acquisitionStart = testData.startTime + pos.time;
+            break;
+        }
+    }
+
+    return acquisitionStart;
+}
+
 function updateTargets() {
     const now = Date.now();
     targets = targets.filter(target => {
@@ -205,14 +246,102 @@ function draw() {
 
 function handleMouseMove(event) {
     if (!isTestRunning) return;
-    
+
     const rect = canvas.getBoundingClientRect();
-    crosshair.x = event.clientX - rect.left;
-    crosshair.y = event.clientY - rect.top;
-    
+    const newX = event.clientX - rect.left;
+    const newY = event.clientY - rect.top;
+
     // Keep crosshair within canvas bounds
-    crosshair.x = Math.max(0, Math.min(canvas.width, crosshair.x));
-    crosshair.y = Math.max(0, Math.min(canvas.height, crosshair.y));
+    crosshair.x = Math.max(0, Math.min(canvas.width, newX));
+    crosshair.y = Math.max(0, Math.min(canvas.height, newY));
+
+    // Enhanced movement tracking
+    trackMovementData(crosshair.x, crosshair.y);
+}
+
+function trackMovementData(newX, newY) {
+    const now = Date.now();
+    const timeDelta = Math.max(1, now - testData.lastMoveTime);
+
+    // Calculate movement velocity
+    const movement = Math.sqrt(
+        Math.pow(newX - testData.lastCrosshairPos.x, 2) +
+        Math.pow(newY - testData.lastCrosshairPos.y, 2)
+    );
+    const velocity = movement / timeDelta * 1000; // pixels per second
+
+    // Record movement path
+    testData.movementPath.push({
+        x: newX,
+        y: newY,
+        time: now - testData.startTime,
+        targets: [...targets] // snapshot of current targets
+    });
+
+    // Record velocity data
+    testData.velocityData.push({
+        velocity: velocity,
+        time: now - testData.startTime,
+        movement: movement
+    });
+
+    // Detect corrections (sudden direction changes)
+    if (testData.velocityData.length > 3) {
+        const recentVelocities = testData.velocityData.slice(-4).map(v => v.velocity);
+        const velocityChange = Math.abs(velocity - recentVelocities[recentVelocities.length - 2]);
+        const avgVelocity = recentVelocities.reduce((a, b) => a + b) / recentVelocities.length;
+
+        if (velocityChange > avgVelocity * 1.5 && velocity > 100) {
+            testData.corrections++;
+        }
+    }
+
+    // Detect overshoots and undershoots when moving toward targets
+    if (targets.length > 0) {
+        analyzeTargetApproach(newX, newY);
+    }
+
+    testData.lastCrosshairPos = { x: newX, y: newY };
+    testData.lastMoveTime = now;
+}
+
+function analyzeTargetApproach(crosshairX, crosshairY) {
+    const closestTarget = targets.reduce((closest, target) => {
+        const distance = Math.sqrt(
+            Math.pow(crosshairX - target.x, 2) +
+            Math.pow(crosshairY - target.y, 2)
+        );
+        return distance < closest.distance ? { target, distance } : closest;
+    }, { distance: Infinity });
+
+    if (closestTarget.distance === Infinity) return;
+
+    const recentMovements = testData.movementPath.slice(-5);
+    if (recentMovements.length < 5) return;
+
+    // Calculate if we were approaching the target and then moved away (overshoot)
+    const distances = recentMovements.map(pos =>
+        Math.sqrt(Math.pow(pos.x - closestTarget.target.x, 2) + Math.pow(pos.y - closestTarget.target.y, 2))
+    );
+
+    const wasApproaching = distances[1] > distances[2] && distances[2] > distances[3];
+    const nowReceding = distances[3] < distances[4];
+
+    if (wasApproaching && nowReceding) {
+        const minDistance = Math.min(...distances);
+        if (distances[distances.length - 1] > minDistance * 1.3) {
+            testData.overshoots++;
+        }
+    }
+
+    // Detect undershoots (stopping short when moving slowly)
+    const currentVelocity = testData.velocityData[testData.velocityData.length - 1]?.velocity || 0;
+    if (currentVelocity < 50 && closestTarget.distance > closestTarget.target.radius * 1.5) {
+        const wasMovingToward = distances.length > 1 && distances[distances.length - 2] > distances[distances.length - 1];
+        if (wasMovingToward) {
+            testData.undershoots++;
+        }
+    }
 }
 
 function handleClick(event) {
@@ -238,8 +367,19 @@ function handleClick(event) {
             hit = true;
             hitTargetIndex = i;
             testData.hits++;
-            
+
             const reactionTime = clickTime - target.spawnTime;
+
+            // Record click precision (how close to center)
+            const precisionScore = Math.max(0, (target.radius - distance) / target.radius * 100);
+            testData.clickPrecision.push(precisionScore);
+
+            // Record target acquisition time
+            const acquisitionStartTime = findTargetAcquisitionStart(target, clickTime);
+            if (acquisitionStartTime > 0) {
+                testData.targetAcquisitionTimes.push(clickTime - acquisitionStartTime);
+            }
+
             testData.clicks.push({
                 x: clickX,
                 y: clickY,
@@ -248,9 +388,10 @@ function handleClick(event) {
                 reactionTime: reactionTime,
                 targetX: target.x,
                 targetY: target.y,
-                distance: distance
+                distance: distance,
+                precisionScore: precisionScore
             });
-            
+
             targets.splice(i, 1);
             break;
         }
@@ -285,17 +426,30 @@ function updateUI() {
 function endSingleTest(dpi, sensitivity) {
     isTestRunning = false;
     targets = [];
-    
-    const accuracy = testData.totalTargets > 0 ? 
+
+    const accuracy = testData.totalTargets > 0 ?
         (testData.hits / testData.totalTargets) * 100 : 0;
-    
+
     const hitClicks = testData.clicks.filter(c => c.hit);
-    const avgReactionTime = hitClicks.length > 0 ? 
+    const avgReactionTime = hitClicks.length > 0 ?
         hitClicks.reduce((sum, c) => sum + c.reactionTime, 0) / hitClicks.length : 1000;
-    
+
     const consistencyScore = calculateConsistency();
     const cmPer360 = (360 / (dpi * sensitivity)) * 2.54;
-    
+
+    // Enhanced measurements
+    const avgClickPrecision = testData.clickPrecision.length > 0 ?
+        testData.clickPrecision.reduce((a, b) => a + b) / testData.clickPrecision.length : 0;
+
+    const avgTargetAcquisitionTime = testData.targetAcquisitionTimes.length > 0 ?
+        testData.targetAcquisitionTimes.reduce((a, b) => a + b) / testData.targetAcquisitionTimes.length : 0;
+
+    const movementSmoothness = calculateMovementSmoothness();
+    const overshootRate = (testData.overshoots / testData.duration) * 1000;
+    const undershootRate = (testData.undershoots / testData.duration) * 1000;
+    const correctionRate = (testData.corrections / testData.duration) * 1000;
+    const flickAccuracy = calculateFlickAccuracy();
+
     const result = {
         dpi: dpi,
         sensitivity: sensitivity,
@@ -303,6 +457,14 @@ function endSingleTest(dpi, sensitivity) {
         accuracy: accuracy,
         avgReactionTime: avgReactionTime,
         consistencyScore: consistencyScore,
+        // Enhanced metrics for sensitivity optimization
+        avgClickPrecision: avgClickPrecision,
+        avgTargetAcquisitionTime: avgTargetAcquisitionTime,
+        movementSmoothness: movementSmoothness,
+        overshootRate: overshootRate,
+        undershootRate: undershootRate,
+        correctionRate: correctionRate,
+        flickAccuracy: flickAccuracy,
         score: testData.hits,
         totalTargets: testData.totalTargets
     };
@@ -330,6 +492,59 @@ function calculateConsistency() {
     return Math.max(0, 100 - (stdDev / avg) * 100);
 }
 
+function calculateMovementSmoothness() {
+    if (testData.velocityData.length < 10) return 0;
+
+    const velocities = testData.velocityData.map(v => v.velocity);
+    let smoothnessScore = 0;
+    let validSamples = 0;
+
+    // Calculate velocity changes - smoother movement has less dramatic changes
+    for (let i = 2; i < velocities.length - 1; i++) {
+        const velocityChange = Math.abs(velocities[i] - velocities[i - 1]);
+        const velocityChange2 = Math.abs(velocities[i + 1] - velocities[i]);
+
+        // Normalize based on average velocity
+        const avgVelocity = (velocities[i - 1] + velocities[i] + velocities[i + 1]) / 3;
+        if (avgVelocity > 10) {
+            const normalizedChange = (velocityChange + velocityChange2) / (2 * avgVelocity);
+            smoothnessScore += Math.max(0, 1 - normalizedChange);
+            validSamples++;
+        }
+    }
+
+    return validSamples > 0 ? (smoothnessScore / validSamples) * 100 : 0;
+}
+
+function calculateFlickAccuracy() {
+    if (testData.clicks.length < 5) return 0;
+
+    let flickAccuracySum = 0;
+    let validFlicks = 0;
+
+    // Analyze accuracy of quick flick movements
+    for (let i = 1; i < testData.clicks.length; i++) {
+        const currentClick = testData.clicks[i];
+        const previousClick = testData.clicks[i - 1];
+
+        const timeBetween = currentClick.time - previousClick.time;
+        const distance = Math.sqrt(
+            Math.pow(currentClick.x - previousClick.x, 2) +
+            Math.pow(currentClick.y - previousClick.y, 2)
+        );
+
+        // Consider it a flick if it was fast movement over distance
+        if (timeBetween < 1000 && distance > 100) {
+            if (currentClick.hit) {
+                flickAccuracySum += currentClick.precisionScore || 50;
+            }
+            validFlicks++;
+        }
+    }
+
+    return validFlicks > 0 ? flickAccuracySum / validFlicks : 0;
+}
+
 async function saveTestResult(result) {
     try {
         const response = await fetch('/api/test-result', {
@@ -345,7 +560,16 @@ async function saveTestResult(result) {
                 cmPer360: result.cmPer360,
                 accuracyPercentage: result.accuracy,
                 reactionTimeMs: result.avgReactionTime,
-                consistencyScore: result.consistencyScore
+                consistencyScore: result.consistencyScore,
+                // Enhanced sensitivity optimization metrics
+                avgClickPrecision: result.avgClickPrecision,
+                avgTargetAcquisitionTime: result.avgTargetAcquisitionTime,
+                movementSmoothness: result.movementSmoothness,
+                overshootRate: result.overshootRate,
+                undershootRate: result.undershootRate,
+                correctionRate: result.correctionRate,
+                flickAccuracy: result.flickAccuracy,
+                score: result.score
             })
         });
         

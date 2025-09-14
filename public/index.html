@@ -27,8 +27,11 @@
                     <span>AimHelper Pro</span>
                 </a>
                 <div class="nav-actions">
-                    <a href="/" class="nav-btn nav-btn--secondary">← Back to Home</a>
-                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Education Hub</a>
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/features" class="nav-btn nav-btn--secondary">✨ Features</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
+                    <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
                 </div>
             </div>
         </div>
@@ -48,53 +51,186 @@
         </header>
 
         <!-- Gaming Profile Setup Section -->
-        <section class="section">
-            <div class="section-header">
-                <h2 class="section-title">🎮 Gaming Profile Setup</h2>
-                <p class="section-description">Configure your gaming profile for personalized analysis and recommendations</p>
+        <section class="profile-setup-section">
+            <!-- Animated background elements -->
+            <div class="profile-bg-effects">
+                <div class="floating-orb orb-1"></div>
+                <div class="floating-orb orb-2"></div>
+                <div class="floating-orb orb-3"></div>
+                <div class="mesh-gradient"></div>
             </div>
-            
-            <form id="profileForm" class="form">
-                <div class="form-group">
-                    <label for="userId" class="form-label">🏷️ Player Name/ID</label>
-                    <input type="text" id="userId" class="form-input" required placeholder="Enter your gaming handle or username">
-                    <div class="form-help">This will be used to track your progress and save your results</div>
+
+            <div class="profile-setup-container">
+                <div class="profile-setup-header">
+                    <div class="profile-icon">
+                        <div class="icon-circle">
+                            <div class="icon-rings">
+                                <div class="ring ring-1"></div>
+                                <div class="ring ring-2"></div>
+                                <div class="ring ring-3"></div>
+                            </div>
+                            <div class="icon-core">
+                                <span class="icon-gaming">⚡</span>
+                                <div class="pulse-effect"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-header-text">
+                        <h2 class="profile-title">
+                            <span class="title-gradient">Gaming Profile</span>
+                            <span class="title-accent">Setup</span>
+                        </h2>
+                        <p class="profile-subtitle">Configure your gaming profile for precision analysis</p>
+                        <div class="title-underline"></div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="currentDPI" class="form-label">🖱️ Current Mouse DPI</label>
-                    <input type="number" id="currentDPI" class="form-input" required min="400" max="3200" value="800">
-                    <div class="form-help">Recommended range: 400-3200 DPI for optimal gaming performance</div>
+
+                <div class="profile-setup-form">
+                    <form id="profileForm" class="modern-form">
+                        <div class="form-grid">
+                            <div class="form-field" data-field="identity">
+                                <div class="field-card">
+                                    <div class="field-header">
+                                        <div class="field-icon-container">
+                                            <div class="field-icon">👤</div>
+                                            <div class="icon-glow"></div>
+                                        </div>
+                                        <label for="userId" class="field-label">Player Identity</label>
+                                    </div>
+                                    <div class="input-container">
+                                        <input type="text" id="userId" class="modern-input" required placeholder="Enter your gaming handle">
+                                        <div class="input-highlight"></div>
+                                        <div class="input-focus-ring"></div>
+                                        <div class="input-particles"></div>
+                                    </div>
+                                    <p class="field-hint">Used to track your progress and personalize recommendations</p>
+                                </div>
+                            </div>
+
+                            <div class="form-field" data-field="dpi">
+                                <div class="field-card">
+                                    <div class="field-header">
+                                        <div class="field-icon-container">
+                                            <div class="field-icon">🖱️</div>
+                                            <div class="icon-glow"></div>
+                                        </div>
+                                        <label for="currentDPI" class="field-label">Mouse DPI</label>
+                                    </div>
+                                    <div class="input-container">
+                                        <input type="number" id="currentDPI" class="modern-input" required min="400" max="3200" value="800">
+                                        <div class="input-highlight"></div>
+                                        <div class="input-focus-ring"></div>
+                                        <div class="input-particles"></div>
+                                        <div class="input-unit">DPI</div>
+                                    </div>
+                                    <p class="field-hint">Optimal range: 400-3200 DPI</p>
+                                    <div class="dpi-indicator">
+                                        <div class="dpi-bar">
+                                            <div class="dpi-fill"></div>
+                                            <div class="dpi-markers">
+                                                <span class="marker" data-value="400">400</span>
+                                                <span class="marker" data-value="800">800</span>
+                                                <span class="marker" data-value="1600">1600</span>
+                                                <span class="marker" data-value="3200">3200</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-field" data-field="sensitivity">
+                                <div class="field-card">
+                                    <div class="field-header">
+                                        <div class="field-icon-container">
+                                            <div class="field-icon">⚙️</div>
+                                            <div class="icon-glow"></div>
+                                        </div>
+                                        <label for="currentSensitivity" class="field-label">Game Sensitivity</label>
+                                    </div>
+                                    <div class="input-container">
+                                        <input type="number" id="currentSensitivity" class="modern-input" required min="0.1" max="10" step="0.01" value="1.0">
+                                        <div class="input-highlight"></div>
+                                        <div class="input-focus-ring"></div>
+                                        <div class="input-particles"></div>
+                                    </div>
+                                    <p class="field-hint">Your current in-game sensitivity setting</p>
+                                </div>
+                            </div>
+
+                            <div class="form-field form-field--select" data-field="game">
+                                <div class="field-card">
+                                    <div class="field-header">
+                                        <div class="field-icon-container">
+                                            <div class="field-icon">🎮</div>
+                                            <div class="icon-glow"></div>
+                                        </div>
+                                        <label for="preferredGame" class="field-label">Primary Game</label>
+                                    </div>
+                                    <div class="select-container">
+                                        <select id="preferredGame" class="modern-select">
+                                            <option value="valorant" data-icon="🎯">Valorant</option>
+                                            <option value="csgo" data-icon="💥">CS:GO / CS2</option>
+                                            <option value="apex" data-icon="🔥">Apex Legends</option>
+                                            <option value="overwatch" data-icon="⚡">Overwatch 2</option>
+                                            <option value="marvelrivals" data-icon="🦸">Marvel Rivals</option>
+                                            <option value="cod" data-icon="🔫">Call of Duty</option>
+                                            <option value="rainbow6" data-icon="🛡️">Rainbow Six Siege</option>
+                                            <option value="fortnite" data-icon="🏗️">Fortnite</option>
+                                            <option value="other" data-icon="🎮">Other FPS Game</option>
+                                        </select>
+                                        <div class="select-highlight"></div>
+                                        <div class="select-focus-ring"></div>
+                                        <div class="select-arrow">
+                                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <p class="field-hint">Game-specific optimization algorithms</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="profile-submit-btn">
+                                <span class="btn-text">Begin Analysis</span>
+                                <div class="btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="form-group">
-                    <label for="currentSensitivity" class="form-label">⚙️ Current In-Game Sensitivity</label>
-                    <input type="number" id="currentSensitivity" class="form-input" required min="0.1" max="10" step="0.01" value="1.0">
-                    <div class="form-help">Your current sensitivity value from your FPS game settings</div>
+
+                <!-- Features Preview -->
+                <div class="profile-features">
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <div class="feature-content">
+                                <h4>Advanced Analytics</h4>
+                                <p>Deep movement analysis</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-content">
+                                <h4>Precision Testing</h4>
+                                <p>12+ optimization metrics</p>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <div class="feature-content">
+                                <h4>Instant Results</h4>
+                                <p>Real-time recommendations</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="preferredGame" class="form-label">🎮 Primary FPS Game</label>
-                    <select id="preferredGame" class="form-select">
-                        <option value="valorant">Valorant</option>
-                        <option value="csgo">CS:GO / CS2</option>
-                        <option value="apex">Apex Legends</option>
-                        <option value="overwatch">Overwatch 2</option>
-                        <option value="marvelrivals">Marvel Rivals</option>
-                        <option value="cod">Call of Duty</option>
-                        <option value="rainbow6">Rainbow Six Siege</option>
-                        <option value="fortnite">Fortnite</option>
-                        <option value="other">Other FPS Game</option>
-                    </select>
-                    <div class="form-help">Select your main competitive FPS game for optimized recommendations</div>
-                </div>
-                
-                <div class="text-center">
-                    <button type="submit" class="btn btn--primary btn--lg">
-                        <span>🚀 Save Profile & Start Testing</span>
-                    </button>
-                </div>
-            </form>
+            </div>
         </section>
 
         <!-- Performance Testing Section -->

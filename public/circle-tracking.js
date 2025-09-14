@@ -35,7 +35,15 @@ let testData = {
     samples: [],
     totalDistance: 0,
     timeOnTarget: 0,
-    lastSampleTime: 0
+    lastSampleTime: 0,
+    // Enhanced tracking data
+    overshoots: 0,
+    undershoots: 0,
+    corrections: 0,
+    movementPath: [],
+    velocityData: [],
+    lastCrosshairPos: { x: 400, y: 300 },
+    lastTargetPos: { x: 400, y: 300 }
 };
 
 function initTest() {
@@ -99,14 +107,22 @@ function resetTestData() {
     target.angle = 0;
     crosshair.x = 400;
     crosshair.y = 300;
-    
+
     testData = {
         startTime: Date.now(),
         duration: 30000,
         samples: [],
         totalDistance: 0,
         timeOnTarget: 0,
-        lastSampleTime: Date.now()
+        lastSampleTime: Date.now(),
+        // Enhanced tracking data
+        overshoots: 0,
+        undershoots: 0,
+        corrections: 0,
+        movementPath: [],
+        velocityData: [],
+        lastCrosshairPos: { x: 400, y: 300 },
+        lastTargetPos: { x: 400, y: 300 }
     };
 }
 
@@ -178,24 +194,111 @@ function handleMouseMove(event) {
 function updateTestData() {
     const now = Date.now();
     const distance = Math.sqrt(
-        Math.pow(crosshair.x - target.x, 2) + 
+        Math.pow(crosshair.x - target.x, 2) +
         Math.pow(crosshair.y - target.y, 2)
     );
-    
+
     const isOnTarget = distance <= target.radius;
-    
+
+    // Calculate movement velocity
+    const crosshairMovement = Math.sqrt(
+        Math.pow(crosshair.x - testData.lastCrosshairPos.x, 2) +
+        Math.pow(crosshair.y - testData.lastCrosshairPos.y, 2)
+    );
+    const timeDelta = Math.max(1, now - testData.lastSampleTime);
+    const velocity = crosshairMovement / timeDelta * 1000; // pixels per second
+
+    // Calculate target movement for prediction analysis
+    const targetMovement = Math.sqrt(
+        Math.pow(target.x - testData.lastTargetPos.x, 2) +
+        Math.pow(target.y - testData.lastTargetPos.y, 2)
+    );
+
+    // Detect overshoots and undershoots
+    if (testData.samples.length > 5) {
+        analyzeOvershootUndershoot(crosshair.x, crosshair.y, target.x, target.y);
+    }
+
+    // Detect corrections (sudden direction changes)
+    if (testData.velocityData.length > 3) {
+        detectCorrections(velocity);
+    }
+
+    // Record movement path for efficiency analysis
+    testData.movementPath.push({
+        x: crosshair.x,
+        y: crosshair.y,
+        targetX: target.x,
+        targetY: target.y,
+        time: now - testData.startTime
+    });
+
+    // Record velocity data
+    testData.velocityData.push({
+        velocity: velocity,
+        distance: distance,
+        time: now - testData.startTime
+    });
+
     testData.samples.push({
         time: now - testData.startTime,
         distance: distance,
-        onTarget: isOnTarget
+        onTarget: isOnTarget,
+        velocity: velocity,
+        targetMovement: targetMovement
     });
-    
+
     if (isOnTarget) {
         testData.timeOnTarget += now - testData.lastSampleTime;
     }
-    
+
     testData.totalDistance += distance;
+
+    // Update last positions
+    testData.lastCrosshairPos = { x: crosshair.x, y: crosshair.y };
+    testData.lastTargetPos = { x: target.x, y: target.y };
     testData.lastSampleTime = now;
+}
+
+function analyzeOvershootUndershoot(crosshairX, crosshairY, targetX, targetY) {
+    const recentSamples = testData.samples.slice(-5);
+    if (recentSamples.length < 5) return;
+
+    // Check if crosshair was approaching target and then passed it
+    const distances = recentSamples.map(s => s.distance);
+    const wasApproaching = distances[1] > distances[2] && distances[2] > distances[3];
+    const nowReceding = distances[3] < distances[4];
+
+    if (wasApproaching && nowReceding) {
+        // Determine if it was overshoot (went past) or undershoot (fell short)
+        const currentDistance = Math.sqrt(Math.pow(crosshairX - targetX, 2) + Math.pow(crosshairY - targetY, 2));
+        const minDistance = Math.min(...distances);
+
+        if (currentDistance > minDistance * 1.5) {
+            testData.overshoots++;
+        }
+    }
+
+    // Check for undershoots (stopped short of target)
+    const velocity = recentSamples[recentSamples.length - 1].velocity;
+    if (velocity < 50 && distances[distances.length - 1] > target.radius * 1.2) {
+        const wasMovingToward = distances[1] > distances[2];
+        if (wasMovingToward) {
+            testData.undershoots++;
+        }
+    }
+}
+
+function detectCorrections(currentVelocity) {
+    const recentVelocities = testData.velocityData.slice(-4).map(v => v.velocity);
+
+    // Detect sudden velocity changes indicating corrections
+    const velocityChange = Math.abs(currentVelocity - recentVelocities[recentVelocities.length - 1]);
+    const avgVelocity = recentVelocities.reduce((a, b) => a + b) / recentVelocities.length;
+
+    if (velocityChange > avgVelocity * 2 && currentVelocity > 100) {
+        testData.corrections++;
+    }
 }
 
 function updateUI() {
@@ -212,13 +315,21 @@ function updateUI() {
 
 function endSingleTest(dpi, sensitivity) {
     isTestRunning = false;
-    
+
     const accuracy = (testData.timeOnTarget / testData.duration) * 100;
     const avgDistance = testData.totalDistance / testData.samples.length;
     const consistencyScore = calculateConsistency();
     const reactionTime = calculateReactionTime();
     const cmPer360 = (360 / (dpi * sensitivity)) * 2.54;
-    
+
+    // Enhanced measurements
+    const pathEfficiency = calculatePathEfficiency();
+    const movementSmoothness = calculateMovementSmoothness();
+    const overshootRate = (testData.overshoots / testData.duration) * 1000; // per second
+    const undershootRate = (testData.undershoots / testData.duration) * 1000; // per second
+    const correctionRate = (testData.corrections / testData.duration) * 1000; // per second
+    const predictionAccuracy = calculatePredictionAccuracy();
+
     const result = {
         dpi: dpi,
         sensitivity: sensitivity,
@@ -226,17 +337,106 @@ function endSingleTest(dpi, sensitivity) {
         accuracy: accuracy,
         avgDistance: avgDistance,
         consistencyScore: consistencyScore,
-        reactionTime: reactionTime
+        reactionTime: reactionTime,
+        // Enhanced metrics for sensitivity optimization
+        pathEfficiency: pathEfficiency,
+        movementSmoothness: movementSmoothness,
+        overshootRate: overshootRate,
+        undershootRate: undershootRate,
+        correctionRate: correctionRate,
+        predictionAccuracy: predictionAccuracy
     };
-    
+
     testResults.push(result);
     saveTestResult(result);
-    
+
     currentTest++;
-    
+
     setTimeout(() => {
         runNextTest();
     }, 2000);
+}
+
+function calculatePathEfficiency() {
+    if (testData.movementPath.length < 10) return 0;
+
+    let totalPathLength = 0;
+    let totalOptimalLength = 0;
+
+    for (let i = 1; i < testData.movementPath.length; i++) {
+        const current = testData.movementPath[i];
+        const previous = testData.movementPath[i - 1];
+
+        // Actual path length
+        const actualDistance = Math.sqrt(
+            Math.pow(current.x - previous.x, 2) +
+            Math.pow(current.y - previous.y, 2)
+        );
+        totalPathLength += actualDistance;
+
+        // Optimal path length (direct line to target)
+        const optimalDistance = Math.sqrt(
+            Math.pow(current.targetX - previous.x, 2) +
+            Math.pow(current.targetY - previous.y, 2)
+        );
+        totalOptimalLength += optimalDistance;
+    }
+
+    return totalOptimalLength > 0 ? (totalOptimalLength / totalPathLength) * 100 : 0;
+}
+
+function calculateMovementSmoothness() {
+    if (testData.velocityData.length < 10) return 0;
+
+    const velocities = testData.velocityData.map(v => v.velocity);
+    let smoothnessScore = 0;
+    let validSamples = 0;
+
+    // Calculate velocity changes - smoother movement has less dramatic changes
+    for (let i = 2; i < velocities.length - 1; i++) {
+        const velocityChange = Math.abs(velocities[i] - velocities[i - 1]);
+        const velocityChange2 = Math.abs(velocities[i + 1] - velocities[i]);
+
+        // Normalize based on average velocity
+        const avgVelocity = (velocities[i - 1] + velocities[i] + velocities[i + 1]) / 3;
+        if (avgVelocity > 10) {
+            const normalizedChange = (velocityChange + velocityChange2) / (2 * avgVelocity);
+            smoothnessScore += Math.max(0, 1 - normalizedChange);
+            validSamples++;
+        }
+    }
+
+    return validSamples > 0 ? (smoothnessScore / validSamples) * 100 : 0;
+}
+
+function calculatePredictionAccuracy() {
+    if (testData.samples.length < 20) return 0;
+
+    let predictionScore = 0;
+    let validPredictions = 0;
+
+    // Analyze how well the player predicts target movement
+    for (let i = 5; i < testData.samples.length - 5; i++) {
+        const sample = testData.samples[i];
+        const futureSample = testData.samples[i + 5];
+
+        // Where was the target going?
+        const targetVelocityX = futureSample.targetX - sample.targetX;
+        const targetVelocityY = futureSample.targetY - sample.targetY;
+
+        // Where did the player move?
+        const playerMovementX = testData.samples[i + 1].crosshairX - sample.crosshairX;
+        const playerMovementY = testData.samples[i + 1].crosshairY - sample.crosshairY;
+
+        if (Math.abs(targetVelocityX) > 5 || Math.abs(targetVelocityY) > 5) {
+            // Calculate how aligned player movement was with target movement
+            const alignment = Math.cos(Math.atan2(playerMovementY, playerMovementX) - Math.atan2(targetVelocityY, targetVelocityX));
+            predictionScore += Math.max(0, alignment);
+            validPredictions++;
+        }
+    }
+
+    return validPredictions > 0 ? (predictionScore / validPredictions) * 100 : 50;
 }
 
 function calculateConsistency() {
@@ -286,10 +486,17 @@ async function saveTestResult(result) {
                 cmPer360: result.cmPer360,
                 accuracyPercentage: result.accuracy,
                 reactionTimeMs: result.reactionTime,
-                consistencyScore: result.consistencyScore
+                consistencyScore: result.consistencyScore,
+                // Enhanced sensitivity optimization metrics
+                pathEfficiency: result.pathEfficiency,
+                movementSmoothness: result.movementSmoothness,
+                overshootRate: result.overshootRate,
+                undershootRate: result.undershootRate,
+                correctionRate: result.correctionRate,
+                predictionAccuracy: result.predictionAccuracy
             })
         });
-        
+
         if (!response.ok) {
             console.error('Failed to save test result');
         }

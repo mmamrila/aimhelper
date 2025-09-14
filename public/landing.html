@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Skip to main content link -->
@@ -18,19 +19,23 @@
     <div class="page-loader" id="pageLoader" aria-label="Loading page content">
         <div class="loader-spinner" role="status" aria-label="Loading"></div>
     </div>
-    
+
     <!-- Navigation -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-        <div class="nav-container">
-            <div class="brand">
-                <div class="logo">
-                    <div class="logo-icon" aria-hidden="true">⚡</div>
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
                     <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/features" class="nav-btn nav-btn--secondary">✨ Features</a>
+                    <a href="/how-it-works" class="nav-btn nav-btn--secondary">🔍 How It Works</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/help" class="nav-btn nav-btn--secondary">❓ Help</a>
+                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
+                    <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
                 </div>
-            </div>
-            <div class="nav-actions">
-                <button class="nav-btn secondary" id="loginBtn" aria-label="Sign in to your account">Sign In</button>
-                <button class="nav-btn primary" id="getStartedBtn" aria-label="Get started with AimHelper Pro">Get Started</button>
             </div>
         </div>
     </nav>
