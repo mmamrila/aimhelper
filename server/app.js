@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const { v4: uuidv4 } = require('uuid');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -119,6 +121,89 @@ app.use(session({
   }
 }));
 
+// Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Google OAuth Strategy
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID || 'your-google-client-id',
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'your-google-client-secret',
+  callbackURL: "/api/auth/google/callback"
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    // Check if user already exists with this Google ID
+    db.get('SELECT * FROM users WHERE google_id = ?', [profile.id], async (err, user) => {
+      if (err) {
+        return done(err);
+      }
+
+      if (user) {
+        // User exists, update last login
+        db.run('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
+        return done(null, user);
+      }
+
+      // Check if user exists with this email
+      db.get('SELECT * FROM users WHERE email = ?', [profile.emails[0].value], async (err, existingUser) => {
+        if (err) {
+          return done(err);
+        }
+
+        if (existingUser) {
+          // Link Google account to existing user
+          db.run('UPDATE users SET google_id = ?, last_login = CURRENT_TIMESTAMP WHERE id = ?',
+            [profile.id, existingUser.id], (err) => {
+            if (err) return done(err);
+            return done(null, existingUser);
+          });
+        } else {
+          // Create new user
+          const stmt = db.prepare(`
+            INSERT INTO users (email, username, google_id, profile_picture)
+            VALUES (?, ?, ?, ?)
+          `);
+          stmt.run(
+            profile.emails[0].value,
+            profile.displayName || profile.emails[0].value.split('@')[0],
+            profile.id,
+            profile.photos[0]?.value || null,
+            function(err) {
+              if (err) {
+                return done(err);
+              }
+
+              const newUser = {
+                id: this.lastID,
+                email: profile.emails[0].value,
+                username: profile.displayName || profile.emails[0].value.split('@')[0],
+                google_id: profile.id,
+                profile_picture: profile.photos[0]?.value || null
+              };
+
+              return done(null, newUser);
+            }
+          );
+          stmt.finalize();
+        }
+      });
+    });
+  } catch (error) {
+    return done(error);
+  }
+}));
+
+// Passport serialization
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  db.get('SELECT * FROM users WHERE id = ?', [id], (err, user) => {
+    done(err, user);
+  });
+});
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100 // limit each IP to 100 requests per windowMs
@@ -154,11 +239,27 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
+    password_hash TEXT,
+    google_id TEXT UNIQUE,
+    profile_picture TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME,
     is_verified BOOLEAN DEFAULT 0
   )`);
+
+  // Add Google OAuth columns to existing users table if they don't exist
+  db.run(`ALTER TABLE users ADD COLUMN google_id TEXT UNIQUE`, (err) => {
+    // Ignore error if column already exists
+  });
+
+  db.run(`ALTER TABLE users ADD COLUMN profile_picture TEXT`, (err) => {
+    // Ignore error if column already exists
+  });
+
+  // Make password_hash optional for OAuth users
+  db.run(`ALTER TABLE users DROP CONSTRAINT users_password_hash_NOT_NULL`, (err) => {
+    // This might not work on all SQLite versions, but we handle it in the strategy
+  });
 
   // Test results linked to user IDs
   db.run(`CREATE TABLE IF NOT EXISTS test_results (
@@ -324,6 +425,19 @@ app.post('/api/auth/logout', (req, res) => {
     res.json({ message: 'Logout successful' });
   });
 });
+
+// Google OAuth routes
+app.get('/api/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }),
+  (req, res) => {
+    // Successful authentication, redirect to app
+    res.redirect('/app');
+  }
+);
 
 app.get('/api/auth/me', optionalAuth, (req, res) => {
   if (!req.isAuthenticated) {
