@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Aim Training - AimHelper Pro</title>
+    <meta name="description" content="Professional aim training suite with Grid Shot, Flick Shot, Target Tracking, and Target Switching modes. Advanced analytics and comprehensive performance metrics.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        .test-arena {
+            background: linear-gradient(135deg,
+                var(--bg-primary) 0%,
+                var(--bg-secondary) 50%,
+                var(--bg-primary) 100%);
+            border: 2px solid var(--current-category-color, var(--brand-primary));
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .test-canvas {
+            display: block;
+            background: linear-gradient(45deg,
+                rgba(26, 115, 232, 0.05) 0%,
+                rgba(52, 168, 83, 0.03) 50%,
+                rgba(26, 115, 232, 0.02) 100%);
+            cursor: crosshair;
+            border-radius: var(--radius-lg);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .metric-card {
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--current-category-color, var(--border-primary));
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-value {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--text-primary));
+            display: block;
+            margin-bottom: var(--space-1);
+        }
+
+        .metric-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .performance-radar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+        }
+
+        .test-instructions-card {
+            background: var(--current-category-bg, var(--bg-glass));
+            border: 1px solid var(--current-category-color, var(--border-primary));
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .test-timer {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--current-category-color, var(--border-primary));
+            border-radius: var(--radius-base);
+            padding: var(--space-3) var(--space-4);
+            font-family: 'Inter', monospace;
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--text-primary));
+        }
+
+        .test-score {
+            position: absolute;
+            top: var(--space-4);
+            left: var(--space-4);
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--current-category-color, var(--border-primary));
+            border-radius: var(--radius-base);
+            padding: var(--space-3) var(--space-4);
+            font-family: 'Inter', monospace;
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--text-primary));
+        }
+
+        .crosshair {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--current-category-color, var(--brand-primary));
+        }
+
+        .crosshair::before {
+            width: 20px;
+            height: 2px;
+            top: 9px;
+            left: 0;
+        }
+
+        .crosshair::after {
+            width: 2px;
+            height: 20px;
+            top: 0;
+            left: 9px;
+        }
+
+        .target {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                var(--brand-accent) 0%,
+                var(--current-category-color, var(--brand-primary)) 70%,
+                transparent 100%);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 0 20px rgba(234, 67, 53, 0.4);
+            animation: targetPulse 2s ease-in-out infinite;
+        }
+
+        .target:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(234, 67, 53, 0.6);
+        }
+
+        .target.flick-target {
+            background: radial-gradient(circle,
+                rgba(255, 193, 7, 0.9) 0%,
+                rgba(255, 152, 0, 0.8) 70%,
+                transparent 100%);
+            box-shadow: 0 0 25px rgba(255, 193, 7, 0.5);
+        }
+
+        .target.tracking-target {
+            background: radial-gradient(circle,
+                rgba(76, 175, 80, 0.9) 0%,
+                rgba(67, 160, 71, 0.8) 70%,
+                transparent 100%);
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.5);
+            animation: trackingPulse 1s ease-in-out infinite;
+        }
+
+        .target.switch-target {
+            background: radial-gradient(circle,
+                rgba(156, 39, 176, 0.9) 0%,
+                rgba(142, 36, 170, 0.8) 70%,
+                transparent 100%);
+            box-shadow: 0 0 25px rgba(156, 39, 176, 0.5);
+        }
+
+        .target.switch-target.active {
+            background: radial-gradient(circle,
+                rgba(244, 67, 54, 0.9) 0%,
+                rgba(211, 47, 47, 0.8) 70%,
+                transparent 100%);
+            box-shadow: 0 0 30px rgba(244, 67, 54, 0.7);
+            animation: activePulse 0.5s ease-in-out infinite;
+        }
+
+        @keyframes trackingPulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 35px rgba(76, 175, 80, 0.8); }
+        }
+
+        @keyframes activePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .trail-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg,
+                rgba(76, 175, 80, 0.8) 0%,
+                rgba(76, 175, 80, 0.4) 50%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes targetPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(234, 67, 53, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(234, 67, 53, 0.6); }
+        }
+
+        .hit-effect {
+            position: absolute;
+            pointer-events: none;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--brand-secondary);
+            animation: hitFade 0.8s ease-out forwards;
+        }
+
+        @keyframes hitFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-30px) scale(1.2); }
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+        }
+
+        .difficulty-btn {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--border-primary);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .difficulty-btn.active {
+            background: var(--current-category-color, var(--brand-primary));
+            color: white;
+            border-color: var(--current-category-color, var(--brand-primary));
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+
+        .performance-breakdown {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .comparison-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .recent-scores-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-base);
+            background: var(--bg-tertiary);
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) var(--space-3);
+            border-bottom: 1px solid var(--border-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        .score-item:last-child {
+            border-bottom: none;
+        }
+
+        .score-player {
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .score-value {
+            color: var(--current-category-color, var(--brand-primary));
+            font-weight: var(--font-weight-bold);
+        }
+
+        .share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .share-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .share-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .share-preview {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-base);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            font-family: monospace;
+            font-size: var(--font-size-sm);
+            text-align: left;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            margin-top: var(--space-6);
+        }
+
+        .plan-status {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-badge.free {
+            background: rgba(158, 158, 158, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(158, 158, 158, 0.2);
+        }
+
+        .plan-badge.pro {
+            background: rgba(26, 115, 232, 0.1);
+            color: var(--brand-primary);
+            border: 1px solid rgba(26, 115, 232, 0.2);
+        }
+
+        .plan-badge.team {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--brand-secondary);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+        }
+
+        .upgrade-prompt {
+            margin-top: var(--space-2);
+            font-size: var(--font-size-xs);
+        }
+
+        .upgrade-prompt a {
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .upgrade-prompt a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="page-category-test">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <button id="exitTest" class="nav-btn nav-btn--danger">✖️ Exit Test</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Test Header -->
+        <header class="main-header">
+            <div class="header-badge">
+                <span>🎯</span>
+                <span>Professional Aim Training Suite</span>
+            </div>
+            <h1 class="header-title">Advanced Aim Training</h1>
+            <p class="header-subtitle">Grid Shot, Flick Shot, Target Tracking & Target Switching with comprehensive analytics</p>
+        </header>
+
+        <!-- Test Setup -->
+        <section id="testSetup" class="content-section">
+            <div class="test-instructions-card">
+                <h2 class="converter-title">
+                    <span class="section-icon">📋</span>
+                    Test Instructions
+                </h2>
+                <div class="converter-subtitle">
+                    <div id="testDescription">
+                        <p>Click targets as they appear to test your precision and reaction time. Each target must be eliminated before it disappears.</p>
+                        <ul style="text-align: left; margin-top: var(--space-4); color: var(--text-secondary);">
+                            <li><strong>Duration:</strong> 60 seconds</li>
+                            <li><strong>Targets:</strong> Randomly positioned circles</li>
+                            <li><strong>Objective:</strong> Maximize accuracy and speed</li>
+                            <li><strong>Scoring:</strong> Based on hits, accuracy, and reaction time</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="converter-card">
+                <div class="converter-header">
+                    <h3 class="converter-title">
+                        <span class="section-icon">⚙️</span>
+                        Test Configuration
+                    </h3>
+                </div>
+
+                <div class="converter-row">
+                    <div class="converter-input-group">
+                        <label class="converter-label">Test Mode</label>
+                        <select id="testMode" class="converter-select">
+                            <option value="gridshot" selected>Grid Shot - Static targets</option>
+                            <option value="flick">Flick Shot - Large movement training</option>
+                            <option value="track">Target Tracking - Moving targets</option>
+                            <option value="switch">Target Switching - Multiple targets</option>
+                        </select>
+                    </div>
+
+                    <div class="converter-input-group">
+                        <label class="converter-label">Test Duration</label>
+                        <select id="testDuration" class="converter-select">
+                            <option value="30">30 seconds</option>
+                            <option value="60" selected>60 seconds</option>
+                            <option value="120">2 minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="converter-row">
+                    <div class="converter-input-group">
+                        <label class="converter-label">Difficulty Level</label>
+                        <div class="difficulty-selector">
+                            <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                            <button class="difficulty-btn active" data-difficulty="medium">Medium</button>
+                            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+                            <button class="difficulty-btn" data-difficulty="extreme">Extreme</button>
+                        </div>
+                    </div>
+
+                    <div class="converter-input-group">
+                        <label class="converter-label">Target Size</label>
+                        <select id="targetSize" class="converter-select">
+                            <option value="large">Large (60px)</option>
+                            <option value="medium" selected>Medium (40px)</option>
+                            <option value="small">Small (25px)</option>
+                            <option value="tiny">Tiny (15px)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="converter-actions">
+                    <button id="startTest" class="btn btn-primary btn-lg">
+                        <span id="startButtonText">🚀 Start Grid Shot</span>
+                    </button>
+                    <div id="planStatus" class="plan-status" style="margin-top: var(--space-3); text-align: center;">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Arena -->
+        <section id="testArena" class="content-section" style="display: none;">
+            <div class="test-arena">
+                <canvas id="gameCanvas" class="test-canvas" width="1200" height="800"></canvas>
+                <div class="test-timer" id="timerDisplay">60</div>
+                <div class="test-score" id="scoreDisplay">Score: 0</div>
+                <div class="crosshair" id="crosshair"></div>
+            </div>
+        </section>
+
+        <!-- Live Metrics -->
+        <section id="liveMetrics" class="content-section" style="display: none;">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-value" id="liveAccuracy">0%</span>
+                    <span class="metric-label">Accuracy</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="liveKPS">0.0</span>
+                    <span class="metric-label">Kills/Sec</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="liveReaction">0</span>
+                    <span class="metric-label">Avg Reaction (ms)</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value" id="liveStreak">0</span>
+                    <span class="metric-label">Best Streak</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Results -->
+        <section id="testResults" class="content-section" style="display: none;">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Performance Results
+                </h2>
+                <p class="section-subtitle">Comprehensive analysis of your Grid Shot performance</p>
+            </header>
+
+            <div class="results-grid">
+                <div class="performance-breakdown">
+                    <h3 class="converter-title">Performance Metrics</h3>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-value" id="finalScore">0</span>
+                            <span class="metric-label">Final Score</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value" id="totalHits">0</span>
+                            <span class="metric-label">Total Hits</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value" id="finalAccuracy">0%</span>
+                            <span class="metric-label">Accuracy</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value" id="avgReactionTime">0ms</span>
+                            <span class="metric-label">Avg Reaction</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value" id="killsPerSecond">0.0</span>
+                            <span class="metric-label">Kills Per Second</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-value" id="consistency">0%</span>
+                            <span class="metric-label">Consistency</span>
+                        </div>
+                    </div>
+
+                    <div class="performance-radar" style="margin-top: var(--space-6);">
+                        <h4 style="margin-bottom: var(--space-4);">Performance Breakdown</h4>
+                        <canvas id="radarChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+
+                <div class="comparison-section">
+                    <h3 class="converter-title">Pro Comparison</h3>
+
+                    <div class="pro-comparison">
+                        <div class="pro-stat">
+                            <div class="pro-label">Your Rank</div>
+                            <div class="pro-value" id="playerRank">Calculating...</div>
+                        </div>
+                        <div class="pro-stat">
+                            <div class="pro-label">Percentile</div>
+                            <div class="pro-value" id="playerPercentile">-</div>
+                        </div>
+                    </div>
+
+                    <div class="leaderboard-preview">
+                        <h4 style="margin: var(--space-4) 0 var(--space-2) 0; color: var(--text-secondary);">Recent Scores</h4>
+                        <div id="recentScores" class="recent-scores-list">
+                            <!-- Dynamic content -->
+                        </div>
+                        <button id="viewFullLeaderboard" class="btn btn-ghost" style="width: 100%; margin-top: var(--space-2);">
+                            <span>🏆 View Full Leaderboard</span>
+                        </button>
+                    </div>
+
+                    <div class="converter-actions" style="margin-top: var(--space-6);">
+                        <button id="retryTest" class="btn btn-secondary">
+                            <span>🔄 Retry Test</span>
+                        </button>
+                        <button id="nextTest" class="btn btn-primary">
+                            <span>➡️ Next Test</span>
+                        </button>
+                        <button id="saveResults" class="btn btn-accent">
+                            <span>💾 Save Results</span>
+                        </button>
+                        <button id="shareResults" class="btn btn-secondary">
+                            <span>📤 Share Score</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="share-modal">
+        <div class="share-content">
+            <h3 class="converter-title">Share Your Score</h3>
+            <p class="converter-subtitle">Share your Grid Shot performance with friends!</p>
+
+            <div class="share-preview" id="sharePreview">
+                <!-- Dynamic content -->
+            </div>
+
+            <div class="share-buttons">
+                <button id="copyScore" class="btn btn-primary">
+                    <span>📋 Copy Text</span>
+                </button>
+                <button id="tweetScore" class="btn btn-secondary">
+                    <span>🐦 Tweet</span>
+                </button>
+                <button id="closeShare" class="btn btn-ghost">
+                    <span>❌ Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="share-modal">
+        <div class="share-content" style="max-width: 700px;">
+            <h3 class="converter-title">Global Leaderboard</h3>
+            <p class="converter-subtitle">Top Grid Shot scores from around the world</p>
+
+            <div style="max-height: 400px; overflow-y: auto; margin: var(--space-4) 0;">
+                <div id="fullLeaderboard" class="recent-scores-list">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <div class="share-buttons">
+                <button id="refreshLeaderboard" class="btn btn-primary">
+                    <span>🔄 Refresh</span>
+                </button>
+                <button id="closeLeaderboard" class="btn btn-ghost">
+                    <span>❌ Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plan Limitation Modal -->
+    <div id="planLimitModal" class="share-modal">
+        <div class="share-content">
+            <h3 class="converter-title">🎯 Test Limit Reached</h3>
+            <p class="converter-subtitle">You've reached your daily test limit for the Free plan.</p>
+
+            <div class="share-preview" style="text-align: left;">
+                <p><strong>Free Plan:</strong> 3 tests per day</p>
+                <p><strong>Pro Plan:</strong> Unlimited tests + advanced features</p>
+                <br>
+                <p>Upgrade to Pro to continue training without limits!</p>
+            </div>
+
+            <div class="share-buttons">
+                <button id="upgradeToPro" class="btn btn-primary">
+                    <span>⚡ Upgrade to Pro</span>
+                </button>
+                <button id="viewPricing" class="btn btn-secondary">
+                    <span>💳 View All Plans</span>
+                </button>
+                <button id="closePlanLimit" class="btn btn-ghost">
+                    <span>❌ Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="pricing.js"></script>
+    <script src="ui-system.js"></script>
+    <script src="help-system.js"></script>
+    <script src="advanced-aim-trainer.js"></script>
+</body>
+</html>

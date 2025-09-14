@@ -1,0 +1,549 @@
+/**
+ * AimHelper Pro - UI/UX Polish & Enhancements
+ * Modern design system with animations and micro-interactions
+ */
+
+/* Enhanced Loading States */
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-50px);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05) translateY(-10px);
+    }
+    70% {
+        transform: scale(0.98) translateY(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-secondary) 25%,
+        var(--bg-hover) 50%,
+        var(--bg-secondary) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-base);
+}
+
+.loading-state {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading-state::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--brand-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced Button Interactions */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 8px 25px rgba(52, 168, 83, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-accent:hover {
+    box-shadow: 0 8px 25px rgba(234, 67, 53, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Card Animations */
+.converter-card,
+.analytics-card,
+.metric-card,
+.stat-card,
+.pricing-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInScale 0.5s ease-out;
+}
+
+.converter-card:hover,
+.analytics-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card:hover,
+.stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Staggered Animation for Lists */
+.metrics-grid > *,
+.stats-grid > *,
+.pricing-grid > *,
+.analytics-grid > * {
+    animation: slideInUp 0.6s ease-out backwards;
+}
+
+.metrics-grid > *:nth-child(1) { animation-delay: 0.1s; }
+.metrics-grid > *:nth-child(2) { animation-delay: 0.2s; }
+.metrics-grid > *:nth-child(3) { animation-delay: 0.3s; }
+.metrics-grid > *:nth-child(4) { animation-delay: 0.4s; }
+.metrics-grid > *:nth-child(5) { animation-delay: 0.5s; }
+.metrics-grid > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Enhanced Form Interactions */
+.converter-input,
+.converter-select,
+.username-input {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.converter-input:focus,
+.converter-select:focus,
+.username-input:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.15);
+}
+
+.converter-input-group {
+    position: relative;
+}
+
+.converter-input-group::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--brand-primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.converter-input-group:focus-within::after {
+    transform: scaleX(1);
+}
+
+/* Enhanced Navigation */
+.nav-btn {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: currentColor;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.nav-btn:hover::after,
+.nav-btn.active::after {
+    width: 80%;
+}
+
+.nav-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Progress Bars with Animation */
+.progress-fill {
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Enhanced Modals */
+.share-modal,
+.premium-overlay {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.share-content {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Tooltip System */
+.tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip::before,
+.tooltip::after {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.tooltip::before {
+    content: attr(data-tooltip);
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-tooltip, #1a1a1a);
+    color: white;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-base);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip::after {
+    content: '';
+    bottom: 140%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--bg-tooltip, #1a1a1a);
+}
+
+.tooltip:hover::before,
+.tooltip:hover::after {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Enhanced Tables and Lists */
+.leaderboard-item,
+.timeline-item,
+.feed-item,
+.score-item {
+    transition: all 0.3s ease;
+    border-radius: var(--radius-base);
+    margin: 0 calc(var(--space-2) * -1);
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+}
+
+.leaderboard-item:hover,
+.timeline-item:hover,
+.feed-item:hover {
+    background: var(--bg-hover);
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Status Indicators */
+.plan-badge,
+.plan-badge-large,
+.challenge-status,
+.achievement-badge {
+    animation: slideInRight 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-badge::before,
+.plan-badge-large::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.plan-badge:hover::before,
+.plan-badge-large:hover::before {
+    left: 100%;
+}
+
+/* Micro-interactions for Icons */
+.section-icon,
+.nav-logo {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.section-header:hover .section-icon,
+.nav-brand:hover .nav-logo {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Enhanced Charts */
+.chart-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-base);
+}
+
+.chart-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(26, 115, 232, 0.02) 0%,
+        rgba(52, 168, 83, 0.02) 50%,
+        rgba(234, 67, 53, 0.02) 100%
+    );
+    pointer-events: none;
+}
+
+/* Enhanced Scrollbars */
+.recent-scores-list::-webkit-scrollbar,
+.timeline-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.recent-scores-list::-webkit-scrollbar-track,
+.timeline-list::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+}
+
+.recent-scores-list::-webkit-scrollbar-thumb,
+.timeline-list::-webkit-scrollbar-thumb {
+    background: var(--brand-primary);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.recent-scores-list::-webkit-scrollbar-thumb:hover,
+.timeline-list::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary-dark);
+}
+
+/* Focus Indicators for Accessibility */
+.btn:focus-visible,
+.converter-input:focus-visible,
+.converter-select:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+/* Enhanced Typography */
+.header-title {
+    background: linear-gradient(
+        135deg,
+        var(--text-primary) 0%,
+        var(--current-category-color, var(--brand-primary)) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: slideInUp 0.8s ease-out;
+}
+
+.section-title {
+    transition: color 0.3s ease;
+}
+
+.section-header:hover .section-title {
+    color: var(--current-category-color, var(--brand-primary));
+}
+
+/* Enhanced Target Animations */
+.target {
+    animation: targetAppear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes targetAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Enhanced Crosshair */
+.crosshair {
+    transition: all 0.1s ease;
+    filter: drop-shadow(0 0 4px rgba(26, 115, 232, 0.5));
+}
+
+/* Performance Optimizations */
+.test-canvas {
+    will-change: transform;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+    .converter-card,
+    .analytics-card {
+        transform: none !important;
+    }
+
+    .converter-card:hover,
+    .analytics-card:hover {
+        transform: none !important;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .btn:hover {
+        transform: none !important;
+    }
+
+    .metric-card:hover,
+    .stat-card:hover {
+        transform: scale(1.02);
+    }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+    .tooltip::before {
+        --bg-tooltip: #2d2d2d;
+    }
+
+    .btn::before {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .chart-container::before {
+        opacity: 0.5;
+    }
+}
