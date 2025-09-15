@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="accessibility.css">
     <link rel="stylesheet" href="onboarding.css">
+    <link rel="stylesheet" href="performance-utils.css">
 
     <!-- Category Navigation Script -->
     <script src="category-navigation.js"></script>
@@ -438,9 +439,9 @@
     </nav>
 
     <div class="container">
-        <main id="main-content">
+        <main id="main-content" class="critical-content">
         <!-- Test Header -->
-        <header class="main-header">
+        <header class="main-header critical-path">
             <div class="header-badge">
                 <span>🎯</span>
                 <span>Professional Aim Training Suite</span>
@@ -450,7 +451,7 @@
         </header>
 
         <!-- Test Setup -->
-        <section id="testSetup" class="content-section">
+        <section id="testSetup" class="content-section critical-path">
             <div class="test-instructions-card">
                 <h2 class="converter-title">
                     <span class="section-icon">📋</span>
@@ -532,9 +533,9 @@
         </section>
 
         <!-- Test Arena -->
-        <section id="testArena" class="content-section" style="display: none;">
-            <div class="test-arena">
-                <canvas id="gameCanvas" class="test-canvas" width="1200" height="800"></canvas>
+        <section id="testArena" class="content-section below-fold" style="display: none;">
+            <div class="test-arena gpu-accelerated">
+                <canvas id="gameCanvas" class="test-canvas optimized-canvas" width="1200" height="800"></canvas>
                 <div class="test-timer" id="timerDisplay">60</div>
                 <div class="test-score" id="scoreDisplay">Score: 0</div>
                 <div class="crosshair" id="crosshair"></div>
@@ -542,7 +543,7 @@
         </section>
 
         <!-- Live Metrics -->
-        <section id="liveMetrics" class="content-section" style="display: none;">
+        <section id="liveMetrics" class="content-section below-fold" style="display: none;">
             <div class="metrics-grid">
                 <div class="metric-card">
                     <span class="metric-value" id="liveAccuracy">0%</span>
@@ -564,7 +565,7 @@
         </section>
 
         <!-- Test Results -->
-        <section id="testResults" class="content-section" style="display: none;">
+        <section id="testResults" class="content-section below-fold" style="display: none;">
             <header class="section-header">
                 <h2 class="section-title">
                     <span class="section-icon">📊</span>
@@ -733,6 +734,59 @@
     <script src="help-system.js"></script>
     <script src="accessibility.js"></script>
     <script src="onboarding.js"></script>
+    <script src="performance-optimizer.js"></script>
     <script src="advanced-aim-trainer.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered successfully:', registration.scope);
+
+                        // Listen for updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    if (window.uiSystem) {
+                                        window.uiSystem.showInfo(
+                                            'Update Available',
+                                            'A new version of AimHelper Pro is ready. Refresh to update.',
+                                            {
+                                                actions: [
+                                                    {
+                                                        text: 'Refresh Now',
+                                                        action: () => window.location.reload()
+                                                    }
+                                                ]
+                                            }
+                                        );
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Initialize performance optimization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mark page as loaded for deferred animations
+            setTimeout(() => {
+                document.body.classList.add('loaded');
+            }, 100);
+
+            // Optimize for current page
+            if (window.performanceOptimizer) {
+                window.performanceOptimizer.optimizeFor('training');
+            }
+        });
+    </script>
 </body>
 </html>
