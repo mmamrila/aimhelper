@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile - AimHelper Pro</title>
+    <meta name="description" content="View your aim training statistics, progress tracking, and performance history.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg,
+                var(--current-category-bg, var(--bg-glass)) 0%,
+                var(--bg-primary) 100%);
+            border: 2px solid var(--current-category-color, var(--brand-primary));
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg,
+                var(--current-category-color, var(--brand-primary)),
+                var(--brand-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            margin: 0 auto var(--space-4) auto;
+            border: 4px solid white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--brand-primary));
+            display: block;
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recent-tests {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--border-secondary);
+            transition: background 0.2s ease;
+        }
+
+        .test-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .test-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+        }
+
+        .test-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .test-details {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .test-score {
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--brand-primary));
+            font-size: var(--font-size-lg);
+        }
+
+        .progress-chart {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+        }
+
+        .username-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-2);
+        }
+
+        .username-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-base);
+            padding: var(--space-2) var(--space-3);
+            color: var(--text-primary);
+            font-size: var(--font-size-base);
+        }
+
+        .btn-edit {
+            padding: var(--space-2) var(--space-3);
+            background: var(--current-category-color, var(--brand-primary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .plan-info {
+            margin: var(--space-4) 0;
+            text-align: center;
+        }
+
+        .plan-badge-large {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--space-3);
+        }
+
+        .plan-badge-large.free {
+            background: rgba(158, 158, 158, 0.15);
+            color: var(--text-secondary);
+            border: 2px solid rgba(158, 158, 158, 0.3);
+        }
+
+        .plan-badge-large.pro {
+            background: rgba(26, 115, 232, 0.15);
+            color: var(--brand-primary);
+            border: 2px solid rgba(26, 115, 232, 0.3);
+        }
+
+        .plan-badge-large.team {
+            background: rgba(52, 168, 83, 0.15);
+            color: var(--brand-secondary);
+            border: 2px solid rgba(52, 168, 83, 0.3);
+        }
+
+        .plan-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            margin-top: var(--space-3);
+        }
+
+        .trial-info {
+            background: linear-gradient(135deg,
+                rgba(26, 115, 232, 0.1) 0%,
+                rgba(26, 115, 232, 0.05) 100%);
+            border: 1px solid rgba(26, 115, 232, 0.2);
+            border-radius: var(--radius-base);
+            padding: var(--space-3);
+            margin-top: var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .section-actions {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+    </style>
+</head>
+<body class="page-category-profile">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/grid-shot-enhanced" class="nav-btn nav-btn--secondary">🎯 Tests</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">👤</div>
+            <h1 class="header-title" id="profileName">Anonymous Player</h1>
+            <div class="username-edit">
+                <input type="text" id="usernameInput" class="username-input" placeholder="Enter username">
+                <button id="updateUsername" class="btn-edit">Update</button>
+            </div>
+            <div id="planInfo" class="plan-info">
+                <!-- Dynamic plan information -->
+            </div>
+            <p class="header-subtitle">Aim training statistics and progress</p>
+        </div>
+
+        <!-- Overall Stats -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Overall Statistics
+                </h2>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value" id="totalTests">0</span>
+                    <span class="stat-label">Tests Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="bestScore">0</span>
+                    <span class="stat-label">Best Score</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="avgAccuracy">0%</span>
+                    <span class="stat-label">Average Accuracy</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="avgReaction">0ms</span>
+                    <span class="stat-label">Avg Reaction Time</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="totalHours">0.0h</span>
+                    <span class="stat-label">Total Practice Time</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="leaderboardRank">-</span>
+                    <span class="stat-label">Global Rank</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Tests -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Recent Test Results
+                </h2>
+            </header>
+
+            <div class="recent-tests">
+                <div id="recentTestsList">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Chart -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">📈</span>
+                    Progress Tracking
+                </h2>
+                <div class="section-actions">
+                    <a href="/analytics" class="btn btn-secondary">
+                        <span>📊 View Advanced Analytics</span>
+                    </a>
+                </div>
+            </header>
+
+            <div class="progress-chart">
+                <canvas id="progressChart" width="800" height="400"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>

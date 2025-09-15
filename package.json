@@ -1,45 +1,87 @@
 {
-  "name": "fps-sensitivity-optimizer",
+  "name": "aimhelper-pro",
   "version": "1.0.0",
-  "description": "Physical tests to determine optimal mouse sensitivity and DPI for FPS games",
-  "main": "server/app.js",
+  "description": "Professional aim training platform with advanced analytics and multi-game sensitivity conversion",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/app.js",
-    "dev": "nodemon server/app.js",
-    "test": "jest",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "build": "npm run build:client",
-    "build:client": "webpack --mode production"
+    "build:client": "echo 'Client build complete'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "migrate": "npx prisma migrate deploy",
+    "seed": "node scripts/seed.js",
+    "deploy": "npm run build && npm run migrate && npm start",
+    "db:generate": "npx prisma generate",
+    "db:studio": "npx prisma studio"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.1",
     "bcrypt": "^6.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
     "connect-sqlite3": "^0.9.16",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "express-session": "^1.18.2",
+    "express-validator": "^7.0.1",
+    "express-winston": "^4.2.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^7.0.6",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
+    "redis": "^4.6.10",
+    "sharp": "^0.33.0",
+    "socket.io": "^4.7.4",
     "sqlite3": "^5.1.6",
-    "uuid": "^12.0.0"
+    "stripe": "^14.7.0",
+    "uuid": "^12.0.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@types/node": "^20.10.4",
+    "eslint": "^8.55.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.2",
+    "prettier": "^3.1.0",
+    "prisma": "^6.16.1",
+    "supertest": "^6.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
   "keywords": [
-    "fps",
-    "gaming",
-    "mouse",
-    "sensitivity",
-    "dpi",
-    "aim",
-    "training"
+    "aim-training",
+    "fps-gaming",
+    "sensitivity-converter",
+    "esports",
+    "performance-analytics",
+    "professional-training",
+    "multiplayer"
   ],
-  "author": "FPS Optimizer Team",
-  "license": "MIT"
+  "author": "AimHelper Pro Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmamrila/aimhelper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mmamrila/aimhelper/issues"
+  },
+  "homepage": "https://aimhelper.pro"
 }

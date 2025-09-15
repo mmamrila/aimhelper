@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensitivity Converter - AimHelper Pro</title>
+    <meta name="description" content="Professional mouse sensitivity converter for FPS games. Convert between 50+ games including Valorant, CS2, Apex Legends, and more.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body class="page-category-info">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary active">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
+                    <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb">
+            <span class="category-icon">🔄</span>
+            <span class="page-breadcrumb-current">Sensitivity Converter</span>
+        </div>
+
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-badge">
+                <span>🔄</span>
+                <span>Multi-Game Sensitivity Converter</span>
+            </div>
+            <h1 class="header-title">Convert Your Sensitivity</h1>
+            <p class="header-subtitle">Maintain consistent aim across 50+ FPS games</p>
+            <p class="header-description">Professional-grade conversion using exact game multipliers and yaw values</p>
+        </header>
+
+        <!-- Sensitivity Converter Section -->
+        <section class="content-section">
+            <div class="converter-container">
+                <!-- Quick Convert Section -->
+                <div class="converter-card featured">
+                    <div class="converter-header">
+                        <h2 class="converter-title">
+                            <span class="section-icon">⚡</span>
+                            Quick Convert
+                        </h2>
+                        <p class="converter-subtitle">Convert between your most played games instantly</p>
+                    </div>
+
+                    <div class="converter-form">
+                        <div class="converter-row">
+                            <div class="converter-input-group">
+                                <label class="converter-label" data-tooltip="The game you're converting FROM - your current sensitivity">From Game</label>
+                                <select id="fromGame" class="converter-select">
+                                    <option value="valorant" data-multiplier="0.07">Valorant</option>
+                                    <option value="cs2" data-multiplier="0.022" selected>CS2 / CS:GO</option>
+                                    <option value="apex" data-multiplier="0.022">Apex Legends</option>
+                                    <option value="overwatch" data-multiplier="0.0066">Overwatch 2</option>
+                                    <option value="fortnite" data-multiplier="0.005555">Fortnite</option>
+                                    <option value="rainbow6" data-multiplier="0.00573">Rainbow Six Siege</option>
+                                    <option value="cod" data-multiplier="0.022">Call of Duty</option>
+                                    <option value="pubg" data-multiplier="0.00555">PUBG</option>
+                                </select>
+                            </div>
+
+                            <div class="converter-swap">
+                                <button id="swapGames" class="swap-button" title="Swap games">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M7 16L3 12L7 8M17 8L21 12L17 16M14 4L10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="converter-input-group">
+                                <label class="converter-label" data-tooltip="The game you're converting TO - get your new sensitivity">To Game</label>
+                                <select id="toGame" class="converter-select">
+                                    <option value="valorant" data-multiplier="0.07" selected>Valorant</option>
+                                    <option value="cs2" data-multiplier="0.022">CS2 / CS:GO</option>
+                                    <option value="apex" data-multiplier="0.022">Apex Legends</option>
+                                    <option value="overwatch" data-multiplier="0.0066">Overwatch 2</option>
+                                    <option value="fortnite" data-multiplier="0.005555">Fortnite</option>
+                                    <option value="rainbow6" data-multiplier="0.00573">Rainbow Six Siege</option>
+                                    <option value="cod" data-multiplier="0.022">Call of Duty</option>
+                                    <option value="pubg" data-multiplier="0.00555">PUBG</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="converter-row">
+                            <div class="converter-input-group">
+                                <label class="converter-label" data-tooltip="Your current in-game sensitivity setting">Your Sensitivity</label>
+                                <input type="number" id="inputSensitivity" class="converter-input" step="0.001" min="0.001" max="50" value="1.0" placeholder="Enter sensitivity">
+                            </div>
+
+                            <div class="converter-input-group">
+                                <label class="converter-label" data-tooltip="Your mouse DPI setting (dots per inch) - commonly 400, 800, 1600, or 3200">Mouse DPI</label>
+                                <input type="number" id="inputDPI" class="converter-input" min="100" max="10000" value="800" placeholder="Enter DPI">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="converter-results">
+                        <div class="result-section">
+                            <div class="result-card primary">
+                                <div class="result-label">Converted Sensitivity</div>
+                                <div class="result-value" id="convertedSensitivity">3.182</div>
+                                <div class="result-game" id="resultGameName">for Valorant</div>
+                            </div>
+
+                            <div class="result-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-label">Effective DPI</div>
+                                    <div class="metric-value" id="effectiveDPI">800</div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <div class="metric-label">in/360°</div>
+                                    <div class="metric-value" id="inches360">11.8</div>
+                                </div>
+
+                                <div class="metric-card">
+                                    <div class="metric-label">cm/360°</div>
+                                    <div class="metric-value" id="cm360">30.0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="converter-actions">
+                        <button id="copyResult" class="btn btn-secondary">
+                            <span>📋 Copy Result</span>
+                        </button>
+                        <button id="saveSettings" class="btn btn-primary">
+                            <span>💾 Save to Profile</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Calculator Section -->
+                <div class="converter-card">
+                    <div class="converter-header">
+                        <h3 class="converter-title">
+                            <span class="section-icon">🧮</span>
+                            Advanced Calculator
+                        </h3>
+                        <p class="converter-subtitle">Professional calculations with all parameters</p>
+                    </div>
+
+                    <div class="advanced-grid">
+                        <div class="advanced-input-group">
+                            <label class="advanced-label">FOV (Field of View)</label>
+                            <input type="number" id="inputFOV" class="advanced-input" min="60" max="180" value="90" placeholder="90">
+                            <div class="input-hint">Affects sensitivity feel in some games</div>
+                        </div>
+
+                        <div class="advanced-input-group">
+                            <label class="advanced-label">Aspect Ratio</label>
+                            <select id="aspectRatio" class="advanced-select">
+                                <option value="16:9" selected>16:9</option>
+                                <option value="16:10">16:10</option>
+                                <option value="4:3">4:3</option>
+                                <option value="21:9">21:9</option>
+                            </select>
+                            <div class="input-hint">Monitor aspect ratio</div>
+                        </div>
+
+                        <div class="advanced-input-group">
+                            <label class="advanced-label">Windows Sensitivity</label>
+                            <input type="number" id="windowsSens" class="advanced-input" min="1" max="11" value="6" placeholder="6">
+                            <div class="input-hint">Windows pointer speed (6/11 recommended)</div>
+                        </div>
+
+                        <div class="advanced-input-group">
+                            <label class="advanced-label">Mouse Hz</label>
+                            <select id="mouseHz" class="advanced-select">
+                                <option value="125">125 Hz</option>
+                                <option value="250">250 Hz</option>
+                                <option value="500">500 Hz</option>
+                                <option value="1000" selected>1000 Hz</option>
+                                <option value="2000">2000 Hz</option>
+                                <option value="4000">4000 Hz</option>
+                                <option value="8000">8000 Hz</option>
+                            </select>
+                            <div class="input-hint">Mouse polling rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Games Grid -->
+                <div class="converter-card">
+                    <div class="converter-header">
+                        <h3 class="converter-title">
+                            <span class="section-icon">🎮</span>
+                            All Supported Games
+                        </h3>
+                        <p class="converter-subtitle">Click any game to convert to it instantly</p>
+                    </div>
+
+                    <div class="games-grid" id="gamesGrid">
+                        <!-- Generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Pro Player Database Preview -->
+                <div class="converter-card">
+                    <div class="converter-header">
+                        <h3 class="converter-title">
+                            <span class="section-icon">🏆</span>
+                            Pro Player Database
+                        </h3>
+                        <p class="converter-subtitle">See how your settings compare to professionals</p>
+                    </div>
+
+                    <div class="pro-comparison" id="proComparison">
+                        <div class="pro-stat">
+                            <div class="pro-label">Your eDPI Rank</div>
+                            <div class="pro-value" id="edpiRank">Medium (Top 45%)</div>
+                        </div>
+                        <div class="pro-stat">
+                            <div class="pro-label">Similar Pro Players</div>
+                            <div class="pro-value" id="similarPros">TenZ, s1mple, Aspas</div>
+                        </div>
+                        <div class="pro-upgrade">
+                            <button class="btn btn-accent">🔓 Unlock Full Database</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="ui-system.js"></script>
+    <script src="converter.js"></script>
+</body>
+</html>

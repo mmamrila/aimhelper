@@ -14,7 +14,19 @@
       "Bash(netstat:*)",
       "Bash(curl:*)",
       "Bash(pkill:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(for file in register.html forgot-password.html reset-password.html)",
+      "Bash(do sed -i \"s/<body>/<body class=\"\"page-category-auth\"\">/\" \"$file\")",
+      "Bash(done)",
+      "Bash(for:*)",
+      "Bash(do echo \"Processing $file\")",
+      "WebFetch(domain:www.mouse-sensitivity.com)",
+      "WebFetch(domain:aimlabs.com)",
+      "WebFetch(domain:aiming.pro)",
+      "Bash(npm run:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(python:*)",
+      "Bash(cmd /c:*)"
     ],
     "deny": [],
     "ask": []

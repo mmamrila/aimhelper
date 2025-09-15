@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - AimHelper Pro</title>
+    <meta name="description" content="Choose the perfect plan for your aim training journey. Free and premium tiers available.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        .pricing-hero {
+            background: linear-gradient(135deg,
+                var(--current-category-bg, var(--bg-glass)) 0%,
+                var(--bg-primary) 100%);
+            border: 2px solid var(--current-category-color, var(--brand-primary));
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--brand-primary);
+            background: linear-gradient(135deg,
+                var(--bg-card) 0%,
+                var(--current-category-bg, var(--bg-glass)) 100%);
+        }
+
+        .pricing-card.featured::before {
+            content: "Most Popular";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand-primary);
+            color: white;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .plan-name {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .plan-price {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-black);
+            color: var(--current-category-color, var(--brand-primary));
+            margin-bottom: var(--space-1);
+        }
+
+        .plan-period {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: var(--space-2);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: var(--space-6);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--border-tertiary);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+        }
+
+        .feature-icon.included {
+            background: var(--brand-secondary);
+            color: white;
+        }
+
+        .feature-icon.not-included {
+            background: var(--bg-tertiary);
+            color: var(--text-tertiary);
+        }
+
+        .feature-text {
+            flex: 1;
+            font-size: var(--font-size-sm);
+        }
+
+        .feature-text.not-included {
+            color: var(--text-tertiary);
+            text-decoration: line-through;
+        }
+
+        .plan-cta {
+            width: 100%;
+            padding: var(--space-4);
+            border: 2px solid var(--brand-primary);
+            border-radius: var(--radius-lg);
+            background: transparent;
+            color: var(--brand-primary);
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .plan-cta.primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .plan-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .plan-cta.primary:hover {
+            background: var(--brand-primary-dark);
+        }
+
+        .comparison-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            margin-bottom: var(--space-8);
+        }
+
+        .comparison-header {
+            background: var(--current-category-bg, var(--bg-glass));
+            padding: var(--space-6);
+            text-align: center;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 0;
+        }
+
+        .comparison-row {
+            display: contents;
+        }
+
+        .comparison-cell {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-tertiary);
+            border-right: 1px solid var(--border-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comparison-cell:last-child {
+            border-right: none;
+        }
+
+        .comparison-cell.feature-name {
+            justify-content: flex-start;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .faq-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+        }
+
+        .faq-item {
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-secondary);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .money-back-guarantee {
+            background: linear-gradient(135deg,
+                rgba(52, 168, 83, 0.1) 0%,
+                rgba(52, 168, 83, 0.05) 100%);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+            margin-top: var(--space-4);
+        }
+    </style>
+</head>
+<body class="page-category-pricing">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/profile" class="nav-btn nav-btn--secondary">👤 Profile</a>
+                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Pricing Hero -->
+        <div class="pricing-hero">
+            <div class="header-badge">
+                <span>💳</span>
+                <span>Flexible Pricing Plans</span>
+            </div>
+            <h1 class="header-title">Choose Your Training Level</h1>
+            <p class="header-subtitle">Start free, upgrade when you're ready to unlock your full potential</p>
+        </div>
+
+        <!-- Pricing Cards -->
+        <section class="content-section">
+            <div class="pricing-grid">
+                <!-- Free Tier -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Free Trainer</h3>
+                        <div class="plan-price">$0</div>
+                        <div class="plan-period">Forever</div>
+                        <p class="plan-description">Perfect for getting started with aim training</p>
+                    </div>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Basic Grid Shot test</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Sensitivity converter (18+ games)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Basic performance metrics</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Personal progress tracking</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">3 tests per day</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon not-included">✗</span>
+                            <span class="feature-text not-included">Advanced test scenarios</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon not-included">✗</span>
+                            <span class="feature-text not-included">Pro analytics dashboard</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon not-included">✗</span>
+                            <span class="feature-text not-included">Custom training routines</span>
+                        </li>
+                    </ul>
+
+                    <button class="plan-cta" onclick="startFreeTrial()">
+                        Get Started Free
+                    </button>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card featured">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Pro Gamer</h3>
+                        <div class="plan-price">$9.99</div>
+                        <div class="plan-period">per month</div>
+                        <p class="plan-description">Everything you need to compete at the highest level</p>
+                    </div>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Everything in Free</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Unlimited tests</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Advanced test scenarios (Flick, Track, Switch)</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Pro analytics dashboard</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Custom training routines</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Heat maps & advanced metrics</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Pro player comparison</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Priority support</span>
+                        </li>
+                    </ul>
+
+                    <button class="plan-cta primary" onclick="upgradeToPro()">
+                        Start 7-Day Free Trial
+                    </button>
+
+                    <div class="money-back-guarantee">
+                        <small>💚 30-day money-back guarantee</small>
+                    </div>
+                </div>
+
+                <!-- Team Tier -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Team Coach</h3>
+                        <div class="plan-price">$29.99</div>
+                        <div class="plan-period">per month</div>
+                        <p class="plan-description">Perfect for coaches and esports teams</p>
+                    </div>
+
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Everything in Pro</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Up to 10 team members</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Team performance dashboard</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Custom team challenges</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Progress reports & analytics</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">API access for integrations</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">Dedicated coach support</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon included">✓</span>
+                            <span class="feature-text">White-label options</span>
+                        </li>
+                    </ul>
+
+                    <button class="plan-cta" onclick="contactTeamSales()">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Comparison Table -->
+        <section class="content-section">
+            <div class="comparison-table">
+                <div class="comparison-header">
+                    <h2 class="section-title">Feature Comparison</h2>
+                    <p class="section-subtitle">Compare all features across our plans</p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name"><strong>Feature</strong></div>
+                        <div class="comparison-cell"><strong>Free</strong></div>
+                        <div class="comparison-cell"><strong>Pro</strong></div>
+                        <div class="comparison-cell"><strong>Team</strong></div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Tests per day</div>
+                        <div class="comparison-cell">3</div>
+                        <div class="comparison-cell">Unlimited</div>
+                        <div class="comparison-cell">Unlimited</div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Test scenarios</div>
+                        <div class="comparison-cell">Grid Shot only</div>
+                        <div class="comparison-cell">All scenarios</div>
+                        <div class="comparison-cell">All scenarios</div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Analytics depth</div>
+                        <div class="comparison-cell">Basic</div>
+                        <div class="comparison-cell">Advanced</div>
+                        <div class="comparison-cell">Advanced + Team</div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Heat maps</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Custom routines</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+
+                    <div class="comparison-row">
+                        <div class="comparison-cell feature-name">Team management</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✗</div>
+                        <div class="comparison-cell">✓</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">❓</span>
+                    Frequently Asked Questions
+                </h2>
+            </header>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <h3 class="faq-question">Can I upgrade or downgrade anytime?</h3>
+                    <p class="faq-answer">Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and you'll be charged pro-rata for any upgrades.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">What's included in the free trial?</h3>
+                    <p class="faq-answer">The 7-day free trial includes full access to all Pro features. No credit card required to start. After the trial, you can choose to continue with Pro or downgrade to Free.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Do you offer refunds?</h3>
+                    <p class="faq-answer">Yes! We offer a 30-day money-back guarantee for all paid plans. If you're not satisfied, contact us for a full refund within 30 days of your purchase.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">How does team billing work?</h3>
+                    <p class="faq-answer">Team plans are billed monthly and include up to 10 team members. Additional members can be added for $2.99 per month each. Team admins can manage billing and member access.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3 class="faq-question">Is my data secure?</h3>
+                    <p class="faq-answer">Absolutely. We use industry-standard encryption for all data transmission and storage. Your training data and personal information are never shared with third parties.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="pricing.js"></script>
+</body>
+</html>

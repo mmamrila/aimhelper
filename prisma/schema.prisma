@@ -1,0 +1,424 @@
+// AimHelper Pro - Database Schema
+// Comprehensive data model for professional aim training platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  username          String    @unique
+  passwordHash      String?   // Optional for OAuth users
+  emailVerified     Boolean   @default(false)
+  emailVerifiedAt   DateTime?
+
+  // Account status
+  isActive          Boolean   @default(true)
+  isBanned          Boolean   @default(false)
+  bannedReason      String?
+  bannedUntil       DateTime?
+
+  // Subscription info
+  plan              String    @default("free") // free, pro, team
+  planStartDate     DateTime?
+  planEndDate       DateTime?
+
+  // OAuth providers
+  googleId          String?   @unique
+  discordId         String?   @unique
+
+  // Timestamps
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lastLoginAt       DateTime?
+
+  // Relations
+  profile           UserProfile?
+  stats             UserStats?
+  subscription      Subscription?
+  trainingResults   TrainingResult[]
+  sensitivityData   SensitivityData[]
+  achievements      UserAchievement[]
+  friendships       Friendship[] @relation("UserFriendships")
+  receivedFriendships Friendship[] @relation("ReceivedFriendships")
+  hostedSessions    MultiplayerSession[] @relation("SessionHost")
+  participatedSessions MultiplayerParticipant[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+
+  // Display information
+  displayName     String?
+  avatar          String?
+  bio             String?
+  country         String?
+  timezone        String?
+
+  // Gaming preferences
+  mainGame        String?
+  experience      String?   // beginner, intermediate, advanced, expert
+  goals           String?   // JSON array of goals
+
+  // Mouse settings
+  mouseDPI        Int?      @default(800)
+  mouseSensitivity Float?   @default(1.0)
+  windowsSens     Int?      @default(6)
+  mouseHz         Int?      @default(1000)
+  mouseModel      String?
+  mousepad        String?
+
+  // Display settings
+  resolution      String?
+  refreshRate     Int?
+  aspectRatio     String?   @default("16:9")
+
+  // Privacy settings
+  showStats       Boolean   @default(true)
+  showProfile     Boolean   @default(true)
+  allowFriends    Boolean   @default(true)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model UserStats {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+
+  // Session statistics
+  totalSessions   Int       @default(0)
+  totalPlayTime   Int       @default(0) // in seconds
+
+  // Performance metrics
+  bestScore       Int       @default(0)
+  averageAccuracy Float     @default(0.0)
+  totalShots      Int       @default(0)
+  totalHits       Int       @default(0)
+
+  // Skill ratings
+  precisionRating Int       @default(800)  // Elo-style rating
+  speedRating     Int       @default(800)
+  consistencyRating Int     @default(800)
+
+  // Streaks
+  currentStreak   Int       @default(0)
+  longestStreak   Int       @default(0)
+
+  // Achievements
+  achievementPoints Int     @default(0)
+  unlockedAchievements Int  @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
+
+// Training and Performance
+model TrainingResult {
+  id              String    @id @default(cuid())
+  userId          String
+
+  // Test configuration
+  testMode        String    // gridshot, flick, tracking, switching
+  difficulty      String    // easy, medium, hard, extreme
+  duration        Int       // in seconds
+  targetSize      String    // large, medium, small, tiny
+
+  // Performance metrics
+  score           Int
+  accuracy        Float
+  totalShots      Int
+  totalHits       Int
+  totalMisses     Int
+
+  // Timing metrics
+  averageReactionTime Float
+  killsPerSecond  Float
+  consistency     Float
+  streakBest      Int
+
+  // Advanced metrics
+  flickDistance   String?   // JSON array for flick mode
+  trackingAccuracy Float?   // for tracking mode
+  switchSpeed     String?   // JSON array for switching mode
+
+  // Raw data for analysis
+  hitPositions    String?   // JSON array of hit coordinates
+  missPositions   String?   // JSON array of miss coordinates
+  timingData      String?   // JSON array of detailed timing
+
+  // Context
+  deviceInfo      String?   // JSON object with device/browser info
+  sessionId       String?   // For multiplayer sessions
+
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  session         MultiplayerSession? @relation(fields: [sessionId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([testMode, score])
+  @@index([createdAt, score])
+  @@map("training_results")
+}
+
+model SensitivityData {
+  id              String    @id @default(cuid())
+  userId          String
+
+  // Game information
+  fromGame        String
+  toGame          String
+
+  // Settings
+  originalSens    Float
+  convertedSens   Float
+  mouseDPI        Int
+  windowsSens     Int       @default(6)
+
+  // Verification
+  isVerified      Boolean   @default(false)
+  verifiedBy      String?   // userId who verified
+
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, fromGame, toGame])
+  @@map("sensitivity_data")
+}
+
+// Social and Multiplayer
+model Friendship {
+  id              String    @id @default(cuid())
+  requesterId     String
+  addresseeId     String
+  status          String    @default("pending") // pending, accepted, blocked
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  requester       User      @relation("UserFriendships", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee       User      @relation("ReceivedFriendships", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@map("friendships")
+}
+
+model MultiplayerSession {
+  id              String    @id @default(cuid())
+  hostId          String
+
+  // Session configuration
+  name            String
+  description     String?
+  testMode        String
+  difficulty      String
+  duration        Int
+  maxPlayers      Int       @default(8)
+  isPrivate       Boolean   @default(false)
+  password        String?
+
+  // Session state
+  status          String    @default("waiting") // waiting, active, completed, cancelled
+
+  // Timing
+  scheduledStart  DateTime?
+  actualStart     DateTime?
+  endTime         DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  host            User      @relation("SessionHost", fields: [hostId], references: [id], onDelete: Cascade)
+  participants    MultiplayerParticipant[]
+  results         TrainingResult[]
+
+  @@index([status, scheduledStart])
+  @@map("multiplayer_sessions")
+}
+
+model MultiplayerParticipant {
+  id              String    @id @default(cuid())
+  sessionId       String
+  userId          String
+
+  // Participation details
+  joinedAt        DateTime  @default(now())
+  leftAt          DateTime?
+  isReady         Boolean   @default(false)
+
+  session         MultiplayerSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+  @@map("multiplayer_participants")
+}
+
+// Achievements and Gamification
+model Achievement {
+  id              String    @id @default(cuid())
+
+  // Achievement details
+  name            String    @unique
+  description     String
+  icon            String?
+  category        String    // accuracy, speed, consistency, social, special
+
+  // Requirements
+  requirement     String    // JSON object describing requirements
+  points          Int       @default(10)
+  rarity          String    @default("common") // common, rare, epic, legendary
+
+  // Status
+  isActive        Boolean   @default(true)
+  isHidden        Boolean   @default(false)
+
+  createdAt       DateTime  @default(now())
+
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id              String    @id @default(cuid())
+  userId          String
+  achievementId   String
+
+  // Progress tracking
+  progress        Float     @default(0.0) // 0.0 to 1.0
+  isCompleted     Boolean   @default(false)
+  completedAt     DateTime?
+
+  // Context
+  dataSnapshot    String?   // JSON object with relevant data when achieved
+
+  createdAt       DateTime  @default(now())
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement     Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// Subscription and Payments
+model Subscription {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+
+  // Stripe information
+  stripeCustomerId String?  @unique
+  stripeSubscriptionId String? @unique
+  stripePriceId   String?
+
+  // Subscription details
+  plan            String    // free, pro, team
+  status          String    // active, cancelled, past_due, incomplete
+
+  // Billing
+  currentPeriodStart DateTime?
+  currentPeriodEnd DateTime?
+  cancelAtPeriodEnd Boolean @default(false)
+  cancelledAt     DateTime?
+
+  // Usage tracking
+  featuresUsed    String?   // JSON object tracking feature usage
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+// System and Admin
+model SystemSettings {
+  id              String    @id @default(cuid())
+  key             String    @unique
+  value           String
+  description     String?
+  category        String?
+
+  updatedAt       DateTime  @updatedAt
+  updatedBy       String?
+
+  @@map("system_settings")
+}
+
+model AuditLog {
+  id              String    @id @default(cuid())
+
+  // Event details
+  event           String    // login, register, payment, etc.
+  description     String?
+
+  // Context
+  userId          String?
+  ipAddress       String?
+  userAgent       String?
+  metadata        String?   // JSON object with additional data
+
+  // Classification
+  severity        String    @default("info") // debug, info, warn, error, critical
+  category        String?   // auth, payment, training, admin
+
+  createdAt       DateTime  @default(now())
+
+  @@index([event, createdAt])
+  @@index([userId, createdAt])
+  @@map("audit_logs")
+}
+
+// Analytics and Insights
+model GlobalStats {
+  id              String    @id @default(cuid())
+  date            DateTime  @unique
+
+  // Daily metrics
+  activeUsers     Int       @default(0)
+  newUsers        Int       @default(0)
+  totalSessions   Int       @default(0)
+  averageSessionDuration Float @default(0.0)
+
+  // Performance metrics
+  averageAccuracy Float     @default(0.0)
+  averageScore    Float     @default(0.0)
+  totalShots      Int       @default(0)
+  totalHits       Int       @default(0)
+
+  // Game mode popularity
+  gridshotSessions Int      @default(0)
+  flickSessions   Int       @default(0)
+  trackingSessions Int      @default(0)
+  switchingSessions Int     @default(0)
+
+  // Revenue metrics
+  revenue         Float     @default(0.0)
+  newSubscriptions Int      @default(0)
+  cancelledSubscriptions Int @default(0)
+
+  createdAt       DateTime  @default(now())
+
+  @@map("global_stats")
+}

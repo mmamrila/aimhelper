@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - AimHelper Pro</title>
+    <meta name="description" content="Join the AimHelper Pro community. Connect with other gamers, share achievements, and participate in challenges.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        .community-hero {
+            background: linear-gradient(135deg,
+                var(--current-category-bg, var(--bg-glass)) 0%,
+                var(--bg-primary) 100%);
+            border: 2px solid var(--current-category-color, var(--brand-primary));
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .community-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-6) 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card-elevated);
+            border: 1px solid var(--current-category-color, var(--border-primary));
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--brand-primary));
+            display: block;
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .community-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .community-feed {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .feed-item {
+            display: flex;
+            gap: var(--space-4);
+            padding: var(--space-4) 0;
+            border-bottom: 1px solid var(--border-tertiary);
+            transition: background 0.2s ease;
+        }
+
+        .feed-item:hover {
+            background: var(--bg-hover);
+            margin: 0 calc(var(--space-4) * -1);
+            padding-left: var(--space-4);
+            padding-right: var(--space-4);
+            border-radius: var(--radius-base);
+        }
+
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+
+        .feed-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--brand-primary), var(--brand-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .feed-content {
+            flex: 1;
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-1);
+        }
+
+        .feed-username {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .feed-action {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .feed-time {
+            color: var(--text-tertiary);
+            font-size: var(--font-size-sm);
+        }
+
+        .feed-details {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-1);
+        }
+
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            background: linear-gradient(45deg, var(--brand-secondary), var(--brand-primary));
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            margin-top: var(--space-2);
+        }
+
+        .discord-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .discord-widget {
+            background: linear-gradient(135deg, #5865F2 0%, #3B4EE8 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            color: white;
+            text-align: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .discord-logo {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--space-2);
+        }
+
+        .discord-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: var(--space-4) 0;
+            padding: var(--space-4) 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .discord-stat {
+            text-align: center;
+        }
+
+        .discord-stat-number {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            display: block;
+        }
+
+        .discord-stat-label {
+            font-size: var(--font-size-sm);
+            opacity: 0.9;
+        }
+
+        .discord-join-btn {
+            background: white;
+            color: #5865F2;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-base);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .discord-join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenges-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            grid-column: 1 / -1;
+        }
+
+        .challenge-card {
+            background: var(--bg-hover);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+            transition: all 0.2s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--brand-primary);
+        }
+
+        .challenge-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .challenge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .challenge-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .challenge-status {
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+        }
+
+        .challenge-status.active {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--brand-secondary);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+        }
+
+        .challenge-status.completed {
+            background: rgba(26, 115, 232, 0.1);
+            color: var(--brand-primary);
+            border: 1px solid rgba(26, 115, 232, 0.2);
+        }
+
+        .challenge-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+            line-height: 1.5;
+        }
+
+        .challenge-progress {
+            margin-bottom: var(--space-3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+            border-radius: var(--radius-full);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-top: var(--space-1);
+        }
+
+        .challenge-rewards {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .reward-badge {
+            background: linear-gradient(45deg, var(--brand-accent), #ff6b6b);
+            color: white;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .leaderboard-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--border-tertiary);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-rank {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--current-category-color, var(--brand-primary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+        }
+
+        .leaderboard-rank.gold {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+        }
+
+        .leaderboard-rank.silver {
+            background: linear-gradient(45deg, #C0C0C0, #A0A0A0);
+        }
+
+        .leaderboard-rank.bronze {
+            background: linear-gradient(45deg, #CD7F32, #B8860B);
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .leaderboard-score {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .leaderboard-value {
+            font-weight: var(--font-weight-bold);
+            color: var(--brand-primary);
+        }
+
+        .social-actions {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: var(--space-3);
+            border: 1px solid var(--border-primary);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: var(--current-category-color, var(--brand-primary));
+            color: white;
+            border-color: var(--current-category-color, var(--brand-primary));
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="page-category-community">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/analytics" class="nav-btn nav-btn--secondary">📊 Analytics</a>
+                    <a href="/profile" class="nav-btn nav-btn--secondary">👤 Profile</a>
+                    <a href="/pricing" class="nav-btn nav-btn--secondary">💳 Pricing</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Community Hero -->
+        <div class="community-hero">
+            <div class="header-badge">
+                <span>👥</span>
+                <span>Gaming Community Hub</span>
+            </div>
+            <h1 class="header-title">Join the AimHelper Pro Community</h1>
+            <p class="header-subtitle">Connect with gamers, share achievements, and improve together</p>
+
+            <div class="community-stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalUsers">15,247</span>
+                    <span class="stat-label">Active Players</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalTests">2.1M</span>
+                    <span class="stat-label">Tests Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="avgImprovement">34%</span>
+                    <span class="stat-label">Avg Improvement</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="discordMembers">8,450</span>
+                    <span class="stat-label">Discord Members</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Feed & Discord -->
+        <section class="content-section">
+            <div class="community-grid">
+                <!-- Community Feed -->
+                <div class="community-feed">
+                    <h3 class="converter-title">
+                        <span class="section-icon">📰</span>
+                        Community Feed
+                    </h3>
+                    <div id="communityFeed">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Discord Section -->
+                <div class="discord-section">
+                    <div class="discord-widget">
+                        <div class="discord-logo">💬</div>
+                        <h3>Join Our Discord</h3>
+                        <p>Connect with the community, get tips, and participate in events!</p>
+
+                        <div class="discord-stats">
+                            <div class="discord-stat">
+                                <span class="discord-stat-number">8.4K</span>
+                                <span class="discord-stat-label">Members</span>
+                            </div>
+                            <div class="discord-stat">
+                                <span class="discord-stat-number">1.2K</span>
+                                <span class="discord-stat-label">Online</span>
+                            </div>
+                        </div>
+
+                        <a href="#" id="joinDiscord" class="discord-join-btn">
+                            Join Discord Server
+                        </a>
+                    </div>
+
+                    <!-- Leaderboard Preview -->
+                    <div class="leaderboard-preview">
+                        <h4 style="margin-bottom: var(--space-4); color: var(--text-primary);">🏆 Top Players</h4>
+                        <div id="leaderboardPreview">
+                            <!-- Dynamic content -->
+                        </div>
+                        <div class="social-actions">
+                            <a href="/analytics" class="social-btn">📊 Full Leaderboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Challenges -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Community Challenges
+                </h2>
+                <p class="section-subtitle">Compete in weekly challenges and earn exclusive rewards</p>
+            </header>
+
+            <div class="challenges-section">
+                <div id="challengesList">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Features -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">🤝</span>
+                    Connect & Share
+                </h2>
+            </header>
+
+            <div class="social-actions" style="max-width: 600px; margin: 0 auto;">
+                <a href="#" id="shareAchievement" class="social-btn">🏆 Share Achievement</a>
+                <a href="#" id="findFriends" class="social-btn">👥 Find Friends</a>
+                <a href="#" id="createGroup" class="social-btn">📱 Create Group</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="pricing.js"></script>
+    <script src="community.js"></script>
+</body>
+</html>

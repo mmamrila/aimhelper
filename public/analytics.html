@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Analytics - AimHelper Pro</title>
+    <meta name="description" content="Deep dive into your aim training performance with advanced analytics, heat maps, and professional insights.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Category Navigation Script -->
+    <script src="category-navigation.js"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        .analytics-hero {
+            background: linear-gradient(135deg,
+                var(--current-category-bg, var(--bg-glass)) 0%,
+                var(--bg-primary) 100%);
+            border: 2px solid var(--current-category-color, var(--brand-primary));
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .analytics-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            position: relative;
+        }
+
+        .analytics-card.premium {
+            border-color: var(--brand-primary);
+            position: relative;
+        }
+
+        .analytics-card.premium::before {
+            content: "Pro Feature";
+            position: absolute;
+            top: -8px;
+            right: var(--space-4);
+            background: var(--brand-primary);
+            color: white;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: var(--space-4) 0;
+        }
+
+        .chart-container.large {
+            height: 400px;
+        }
+
+        .heatmap-container {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-base);
+            padding: var(--space-4);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heatmap-canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-base);
+        }
+
+        .metrics-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+
+        .metric-item {
+            text-align: center;
+            padding: var(--space-3);
+            background: var(--bg-hover);
+            border-radius: var(--radius-base);
+        }
+
+        .metric-value-large {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--current-category-color, var(--brand-primary));
+            display: block;
+            margin-bottom: var(--space-1);
+        }
+
+        .metric-trend {
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-1);
+        }
+
+        .metric-trend.positive {
+            color: var(--brand-secondary);
+        }
+
+        .metric-trend.negative {
+            color: var(--brand-accent);
+        }
+
+        .metric-trend.neutral {
+            color: var(--text-secondary);
+        }
+
+        .time-filter {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-4);
+            justify-content: center;
+        }
+
+        .time-filter button {
+            padding: var(--space-2) var(--space-4);
+            border: 1px solid var(--border-primary);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .time-filter button.active {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        .performance-insights {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-tertiary);
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            flex-shrink: 0;
+        }
+
+        .insight-icon.positive {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--brand-secondary);
+        }
+
+        .insight-icon.warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .insight-icon.negative {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--brand-accent);
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .insight-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-lg);
+            z-index: 10;
+        }
+
+        .premium-message {
+            text-align: center;
+            color: white;
+            padding: var(--space-6);
+        }
+
+        .premium-message h3 {
+            margin-bottom: var(--space-2);
+        }
+
+        .premium-message p {
+            margin-bottom: var(--space-4);
+            opacity: 0.9;
+        }
+
+        .upgrade-btn {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-base);
+            font-weight: var(--font-weight-semibold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upgrade-btn:hover {
+            background: var(--brand-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .session-timeline {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            grid-column: 1 / -1;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-tertiary);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-score {
+            font-weight: var(--font-weight-bold);
+            color: var(--brand-primary);
+            min-width: 80px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body class="page-category-analytics">
+    <!-- Navigation -->
+    <nav class="app-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <div class="nav-logo">⚡</div>
+                    <span>AimHelper Pro</span>
+                </a>
+                <div class="nav-actions">
+                    <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <a href="/profile" class="nav-btn nav-btn--secondary">👤 Profile</a>
+                    <a href="/pricing" class="nav-btn nav-btn--secondary">💳 Pricing</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Analytics Hero -->
+        <div class="analytics-hero">
+            <div class="header-badge">
+                <span>📊</span>
+                <span>Advanced Performance Analytics</span>
+            </div>
+            <h1 class="header-title">Deep Performance Insights</h1>
+            <p class="header-subtitle">Analyze your aim training with professional-grade metrics and visualizations</p>
+
+            <div class="time-filter">
+                <button id="filter7d" class="active">Last 7 Days</button>
+                <button id="filter30d">Last 30 Days</button>
+                <button id="filter90d">Last 90 Days</button>
+                <button id="filterAll">All Time</button>
+            </div>
+        </div>
+
+        <!-- Main Analytics Grid -->
+        <section class="content-section">
+            <div class="analytics-grid">
+                <!-- Performance Trends -->
+                <div class="analytics-card">
+                    <h3 class="converter-title">
+                        <span class="section-icon">📈</span>
+                        Performance Trends
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="trendsChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="metrics-breakdown">
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="avgScore">0</span>
+                            <span class="metric-label">Avg Score</span>
+                            <div class="metric-trend neutral" id="scoreTrend">No data</div>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="avgAccuracy">0%</span>
+                            <span class="metric-label">Avg Accuracy</span>
+                            <div class="metric-trend neutral" id="accuracyTrend">No data</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accuracy Heat Map -->
+                <div class="analytics-card premium">
+                    <h3 class="converter-title">
+                        <span class="section-icon">🎯</span>
+                        Accuracy Heat Map
+                    </h3>
+                    <div class="chart-container">
+                        <div class="heatmap-container">
+                            <canvas id="heatmapCanvas" width="400" height="300" class="heatmap-canvas"></canvas>
+                        </div>
+                    </div>
+                    <p style="font-size: var(--font-size-sm); color: var(--text-secondary); text-align: center;">
+                        Shows where you tend to miss targets most frequently
+                    </p>
+                    <div id="heatmapOverlay" class="premium-overlay">
+                        <div class="premium-message">
+                            <h3>🔥 Heat Map Analysis</h3>
+                            <p>Visualize your accuracy patterns and identify weak spots in your aim</p>
+                            <button class="upgrade-btn" onclick="window.location.href='/pricing'">
+                                Upgrade to Pro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reaction Time Analysis -->
+                <div class="analytics-card">
+                    <h3 class="converter-title">
+                        <span class="section-icon">⚡</span>
+                        Reaction Time Analysis
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="reactionChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="metrics-breakdown">
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="bestReaction">0ms</span>
+                            <span class="metric-label">Best Time</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="avgReaction">0ms</span>
+                            <span class="metric-label">Average</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="consistency">0%</span>
+                            <span class="metric-label">Consistency</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Zone Analysis -->
+                <div class="analytics-card premium">
+                    <h3 class="converter-title">
+                        <span class="section-icon">🎪</span>
+                        Target Zone Analysis
+                    </h3>
+                    <div class="chart-container">
+                        <canvas id="zoneChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="metrics-breakdown">
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="centerHits">0%</span>
+                            <span class="metric-label">Center Zone</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-value-large" id="edgeHits">0%</span>
+                            <span class="metric-label">Edge Zone</span>
+                        </div>
+                    </div>
+                    <div id="zoneOverlay" class="premium-overlay">
+                        <div class="premium-message">
+                            <h3>🎪 Zone Analysis</h3>
+                            <p>Understand your accuracy distribution across different target zones</p>
+                            <button class="upgrade-btn" onclick="window.location.href='/pricing'">
+                                Upgrade to Pro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Insights -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">💡</span>
+                    Performance Insights
+                </h2>
+                <p class="section-subtitle">AI-powered analysis of your training performance</p>
+            </header>
+
+            <div class="performance-insights">
+                <div id="insightsList">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Session Timeline -->
+        <section class="content-section">
+            <header class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">⏱️</span>
+                    Session Timeline
+                </h2>
+                <p class="section-subtitle">Detailed breakdown of your recent training sessions</p>
+            </header>
+
+            <div class="session-timeline">
+                <div id="timelineList">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="pricing.js"></script>
+    <script src="analytics.js"></script>
+</body>
+</html>
