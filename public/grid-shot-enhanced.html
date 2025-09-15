@@ -13,6 +13,8 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="accessibility.css">
+    <link rel="stylesheet" href="onboarding.css">
 
     <!-- Category Navigation Script -->
     <script src="category-navigation.js"></script>
@@ -417,7 +419,7 @@
 </head>
 <body class="page-category-test">
     <!-- Navigation -->
-    <nav class="app-nav">
+    <nav class="app-nav" id="navigation" role="navigation" aria-label="Main navigation">
         <div class="container">
             <div class="nav-content">
                 <a href="/" class="nav-brand">
@@ -428,6 +430,7 @@
                     <a href="/" class="nav-btn nav-btn--secondary">🏠 Home</a>
                     <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
                     <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
+                    <button id="accessibilityToggle" class="nav-btn nav-btn--ghost" title="Toggle accessibility panel (Ctrl+Shift+A)">♿ Accessibility</button>
                     <button id="exitTest" class="nav-btn nav-btn--danger">✖️ Exit Test</button>
                 </div>
             </div>
@@ -435,6 +438,7 @@
     </nav>
 
     <div class="container">
+        <main id="main-content">
         <!-- Test Header -->
         <header class="main-header">
             <div class="header-badge">
@@ -647,6 +651,7 @@
                 </div>
             </div>
         </section>
+        </main>
     </div>
 
     <!-- Share Modal -->
@@ -726,6 +731,8 @@
     <script src="pricing.js"></script>
     <script src="ui-system.js"></script>
     <script src="help-system.js"></script>
+    <script src="accessibility.js"></script>
+    <script src="onboarding.js"></script>
     <script src="advanced-aim-trainer.js"></script>
 </body>
 </html>

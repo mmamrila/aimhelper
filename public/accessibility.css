@@ -1,0 +1,617 @@
+/**
+ * AimHelper Pro - Accessibility Styles
+ * Comprehensive accessibility CSS including high contrast, large text, and reduced motion
+ */
+
+/* Skip Links */
+.skip-links {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.skip-link {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    background: var(--brand-primary);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.skip-link:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    left: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Focus Indicator Enhancements */
+#focus-indicator {
+    box-sizing: border-box;
+    border-width: 3px !important;
+    border-style: solid !important;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-tertiary: #cccccc;
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #333333;
+    --bg-card: #2d2d2d;
+    --bg-card-elevated: #404040;
+    --border-primary: #666666;
+    --border-secondary: #555555;
+    --border-tertiary: #444444;
+    --brand-primary: #4285f4;
+    --brand-secondary: #34a853;
+    --brand-accent: #ea4335;
+    --brand-warning: #fbbc04;
+}
+
+.high-contrast .target {
+    border: 3px solid #ffffff !important;
+    background: radial-gradient(circle, #ea4335 0%, #d33b2c 70%, transparent 100%) !important;
+    box-shadow: 0 0 20px #ea4335, inset 0 0 0 2px #ffffff !important;
+}
+
+.high-contrast .target.flick-target {
+    background: radial-gradient(circle, #fbbc04 0%, #f9ab00 70%, transparent 100%) !important;
+    box-shadow: 0 0 20px #fbbc04, inset 0 0 0 2px #ffffff !important;
+}
+
+.high-contrast .target.tracking-target {
+    background: radial-gradient(circle, #34a853 0%, #2e7d32 70%, transparent 100%) !important;
+    box-shadow: 0 0 20px #34a853, inset 0 0 0 2px #ffffff !important;
+}
+
+.high-contrast .target.switch-target {
+    background: radial-gradient(circle, #9c27b0 0%, #7b1fa2 70%, transparent 100%) !important;
+    box-shadow: 0 0 20px #9c27b0, inset 0 0 0 2px #ffffff !important;
+}
+
+.high-contrast .target.switch-target.active {
+    background: radial-gradient(circle, #ea4335 0%, #d33b2c 70%, transparent 100%) !important;
+    box-shadow: 0 0 30px #ea4335, inset 0 0 0 3px #ffffff !important;
+}
+
+.high-contrast .btn {
+    border: 2px solid currentColor !important;
+    font-weight: 700 !important;
+}
+
+.high-contrast .btn:focus {
+    outline: 3px solid #4285f4 !important;
+    outline-offset: 2px !important;
+}
+
+/* Large Text Mode */
+.large-text {
+    font-size: 125% !important;
+}
+
+.large-text .header-title {
+    font-size: calc(var(--font-size-4xl) * 1.25) !important;
+}
+
+.large-text .header-subtitle {
+    font-size: calc(var(--font-size-lg) * 1.25) !important;
+}
+
+.large-text .converter-title {
+    font-size: calc(var(--font-size-xl) * 1.25) !important;
+}
+
+.large-text .converter-subtitle {
+    font-size: calc(var(--font-size-base) * 1.25) !important;
+}
+
+.large-text .btn {
+    padding: calc(var(--space-3) * 1.25) calc(var(--space-4) * 1.25) !important;
+    font-size: calc(var(--font-size-base) * 1.25) !important;
+}
+
+.large-text .metric-value {
+    font-size: calc(var(--font-size-2xl) * 1.25) !important;
+}
+
+.large-text .metric-label {
+    font-size: calc(var(--font-size-sm) * 1.25) !important;
+}
+
+/* Reduced Motion Mode */
+.reduced-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+}
+
+.reduced-motion .target {
+    animation: none !important;
+}
+
+.reduced-motion .crosshair {
+    transition: none !important;
+}
+
+.reduced-motion .hit-effect {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* Screen Reader Mode Enhancements */
+.screen-reader-mode .target::after {
+    content: "Target " attr(data-target-number, "") " " attr(data-target-type, "");
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.screen-reader-mode .test-timer::after {
+    content: "seconds remaining";
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.screen-reader-mode .test-score::after {
+    content: "points";
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Accessibility Panel */
+.accessibility-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-primary);
+    z-index: 10000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+}
+
+.accessibility-panel[aria-hidden="false"] {
+    transform: translateX(0);
+}
+
+.accessibility-panel-content {
+    padding: var(--space-6);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.accessibility-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+.accessibility-header h2 {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    color: var(--text-primary);
+}
+
+.close-panel {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: var(--space-2);
+    border-radius: var(--radius-base);
+    transition: all 0.2s ease;
+}
+
+.close-panel:hover,
+.close-panel:focus {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    outline: 2px solid var(--brand-primary);
+}
+
+.accessibility-controls {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.control-group {
+    margin-bottom: var(--space-8);
+}
+
+.control-group h3 {
+    font-size: var(--font-size-lg);
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-tertiary);
+}
+
+.accessibility-toggle {
+    display: block;
+    position: relative;
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-base);
+    background: var(--bg-tertiary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.accessibility-toggle:hover {
+    background: var(--bg-card-elevated);
+    border-color: var(--border-primary);
+}
+
+.accessibility-toggle:focus-within {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+.accessibility-toggle input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 24px;
+    position: relative;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+    margin-right: var(--space-3);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    top: 1px;
+    left: 1px;
+    transition: all 0.2s ease;
+}
+
+.accessibility-toggle input[type="checkbox"]:checked + .toggle-slider {
+    background: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.accessibility-toggle input[type="checkbox"]:checked + .toggle-slider::before {
+    transform: translateX(24px);
+    background: white;
+}
+
+.toggle-label {
+    display: block;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+}
+
+.toggle-description {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Shortcuts Modal */
+.shortcuts-list {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: var(--space-4);
+}
+
+.shortcut-category {
+    margin-bottom: var(--space-6);
+}
+
+.shortcut-category h3 {
+    color: var(--brand-primary);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+.shortcuts-grid {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-base);
+    transition: all 0.2s ease;
+}
+
+.shortcut-item:hover {
+    background: var(--bg-card-elevated);
+    border-color: var(--border-primary);
+}
+
+.shortcut-keys {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-sm);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 60px;
+    justify-content: center;
+}
+
+.shortcut-description {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    flex: 1;
+    margin-left: var(--space-4);
+}
+
+/* High Contrast Mode Overrides for Accessibility Features */
+.high-contrast .accessibility-panel {
+    background: #000000;
+    border-left-color: #666666;
+}
+
+.high-contrast .accessibility-toggle {
+    background: #1a1a1a;
+    border-color: #666666;
+}
+
+.high-contrast .accessibility-toggle:hover {
+    background: #2d2d2d;
+    border-color: #888888;
+}
+
+.high-contrast .toggle-slider {
+    background: #333333;
+    border-color: #666666;
+}
+
+.high-contrast .toggle-slider::before {
+    background: #cccccc;
+}
+
+.high-contrast .accessibility-toggle input[type="checkbox"]:checked + .toggle-slider {
+    background: #4285f4;
+    border-color: #4285f4;
+}
+
+.high-contrast .accessibility-toggle input[type="checkbox"]:checked + .toggle-slider::before {
+    background: #ffffff;
+}
+
+.high-contrast .shortcut-keys {
+    background: #2d2d2d;
+    border-color: #666666;
+    color: #ffffff;
+}
+
+/* Mobile Accessibility */
+@media (max-width: 768px) {
+    .accessibility-panel {
+        width: 100vw;
+        transform: translateX(100vw);
+    }
+
+    .accessibility-panel[aria-hidden="false"] {
+        transform: translateX(0);
+    }
+
+    .shortcut-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .shortcut-description {
+        margin-left: 0;
+    }
+
+    .shortcuts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Focus Enhancements for Better Visibility */
+*:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+.btn:focus {
+    outline: 3px solid var(--brand-primary);
+    outline-offset: 2px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 1px;
+    border-color: var(--brand-primary);
+}
+
+/* Enhanced Focus for High Contrast Mode */
+.high-contrast *:focus {
+    outline: 3px solid #4285f4;
+    outline-offset: 2px;
+}
+
+.high-contrast .btn:focus {
+    outline: 4px solid #4285f4;
+    outline-offset: 3px;
+}
+
+/* Reduced Motion for Focus Indicator */
+.reduced-motion #focus-indicator {
+    transition: none !important;
+}
+
+/* Screen Reader Only Text */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Enhanced Button States for Accessibility */
+.btn[disabled],
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn[aria-pressed="true"] {
+    background: var(--brand-primary);
+    color: white;
+    border-color: var(--brand-primary);
+}
+
+/* Improved Table Accessibility */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+}
+
+th,
+td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-secondary);
+}
+
+/* Enhanced Form Labels */
+label {
+    display: block;
+    margin-bottom: var(--space-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+}
+
+.form-group {
+    margin-bottom: var(--space-4);
+}
+
+.form-error {
+    color: var(--brand-accent);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-1);
+}
+
+/* Color-only Information Accessibility */
+.status-indicator {
+    position: relative;
+    padding-left: var(--space-6);
+}
+
+.status-indicator::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: var(--space-4);
+    height: var(--space-4);
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.status-success::after {
+    content: '✓';
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-error::after {
+    content: '✗';
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-warning::after {
+    content: '!';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
