@@ -435,7 +435,7 @@ function endSingleTest(dpi, sensitivity) {
         hitClicks.reduce((sum, c) => sum + c.reactionTime, 0) / hitClicks.length : 1000;
 
     const consistencyScore = calculateConsistency();
-    const cmPer360 = (360 / (dpi * sensitivity)) * 2.54;
+    const inchesPer360 = 10080 / (dpi * sensitivity);
 
     // Enhanced measurements
     const avgClickPrecision = testData.clickPrecision.length > 0 ?
@@ -453,7 +453,7 @@ function endSingleTest(dpi, sensitivity) {
     const result = {
         dpi: dpi,
         sensitivity: sensitivity,
-        cmPer360: cmPer360,
+        inchesPer360: inchesPer360,
         accuracy: accuracy,
         avgReactionTime: avgReactionTime,
         consistencyScore: consistencyScore,
@@ -557,7 +557,7 @@ async function saveTestResult(result) {
                 testType: 'grid-shot',
                 dpi: result.dpi,
                 inGameSensitivity: result.sensitivity,
-                cmPer360: result.cmPer360,
+                inchesPer360: result.inchesPer360,
                 accuracyPercentage: result.accuracy,
                 reactionTimeMs: result.avgReactionTime,
                 consistencyScore: result.consistencyScore,
@@ -596,7 +596,7 @@ function showResults() {
             <h3>Best Performance</h3>
             <p><strong>DPI:</strong> ${bestResult.dpi}</p>
             <p><strong>Sensitivity:</strong> ${bestResult.sensitivity}</p>
-            <p><strong>cm/360°:</strong> ${bestResult.cmPer360.toFixed(1)} cm</p>
+            <p><strong>in/360°:</strong> ${bestResult.inchesPer360.toFixed(1)} in</p>
             <p><strong>Accuracy:</strong> ${bestResult.accuracy.toFixed(1)}%</p>
             <p><strong>Score:</strong> ${bestResult.score}/${bestResult.totalTargets}</p>
             <p><strong>Avg Reaction:</strong> ${bestResult.avgReactionTime.toFixed(0)}ms</p>

@@ -60,7 +60,7 @@ function processResults(results) {
             allResults[result.test_type].push({
                 dpi: result.dpi,
                 sensitivity: result.in_game_sensitivity,
-                cmPer360: result.cm_per_360,
+                inchesPer360: result.inches_per_360,
                 accuracy: result.accuracy_percentage,
                 reactionTime: result.reaction_time_ms,
                 consistency: result.consistency_score,

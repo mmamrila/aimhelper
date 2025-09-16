@@ -428,7 +428,7 @@ class DiscordIntegration {
     getAimTips(skillLevel) {
         const tips = {
             beginner: [
-                { title: 'Lower Your Sensitivity', description: 'Start with 20-40cm/360° for better control' },
+                { title: 'Lower Your Sensitivity', description: 'Start with 8-16in/360° for better control' },
                 { title: 'Proper Posture', description: 'Keep your arm on the desk, wrist straight' },
                 { title: 'Crosshair Placement', description: 'Keep crosshair at head level when moving' }
             ],

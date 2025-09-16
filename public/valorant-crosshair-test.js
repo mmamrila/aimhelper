@@ -334,12 +334,12 @@ function endSingleTest(dpi, sensitivity) {
     const crosshairStabilityScore = calculateStabilityScore();
     const movementSmoothness = calculateMovementSmoothness();
     const correctionRate = (testData.corrections / testData.duration) * 1000;
-    const cmPer360 = (360 / (dpi * sensitivity)) * 2.54;
+    const inchesPer360 = 10080 / (dpi * sensitivity);
 
     const result = {
         dpi: dpi,
         sensitivity: sensitivity,
-        cmPer360: cmPer360,
+        inchesPer360: inchesPer360,
         precision: precision,
         avgHorizontalDeviation: avgHorizontalDeviation,
         avgVerticalDeviation: avgVerticalDeviation,
@@ -417,7 +417,7 @@ async function saveTestResult(result) {
                 testType: 'valorant-crosshair-placement',
                 dpi: result.dpi,
                 inGameSensitivity: result.sensitivity,
-                cmPer360: result.cmPer360,
+                inchesPer360: result.inchesPer360,
                 accuracyPercentage: result.precision,
                 // Valorant-specific metrics
                 avgHorizontalDeviation: result.avgHorizontalDeviation,
@@ -451,7 +451,7 @@ function showResults() {
             <div class="optimal-settings">
                 <p><strong>DPI:</strong> ${bestResult.dpi}</p>
                 <p><strong>Sensitivity:</strong> ${bestResult.sensitivity}</p>
-                <p><strong>cm/360:</strong> ${bestResult.cmPer360.toFixed(1)}cm</p>
+                <p><strong>in/360:</strong> ${bestResult.inchesPer360.toFixed(1)}in</p>
                 <p><strong>Optimization Score:</strong> ${bestResult.valorantOptimizationScore.toFixed(1)}/100</p>
             </div>
             <div class="performance-breakdown">

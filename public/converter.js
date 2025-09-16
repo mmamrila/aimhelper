@@ -224,14 +224,13 @@ class SensitivityConverter {
         // Calculate metrics
         const effectiveDPI = dpi * sensitivity;
         const inches360 = this.calculateInches360(dpi, sensitivity);
-        const cm360 = inches360 * 2.54;
 
         // Update display
         this.elements.convertedSensitivity.textContent = convertedSens.toFixed(3);
         this.elements.resultGameName.textContent = `for ${GAMES_DATABASE[toGame]?.name || toGame}`;
         this.elements.effectiveDPI.textContent = Math.round(effectiveDPI);
         this.elements.inches360.textContent = inches360.toFixed(1);
-        this.elements.cm360.textContent = cm360.toFixed(1);
+        this.elements.cm360.textContent = inches360.toFixed(1);
 
         // Update pro comparison
         this.updateProComparison(effectiveDPI);
@@ -246,10 +245,10 @@ class SensitivityConverter {
     }
 
     calculateInches360(dpi, sensitivity) {
-        // Using established gaming formula: 360° / (DPI × sensitivity) × conversion_factor
-        // Based on research: 800 DPI × 1.0 sens ≈ 11.8 inches (standard gaming calculation)
-        const conversionFactor = 24000 / 2.54; // Derived from empirical gaming data
-        return conversionFactor / (dpi * sensitivity);
+        // Correct gaming formula for inches/360: uses mouse DPI and in-game sensitivity
+        // Standard calculation: 800 DPI × 1.0 sens = ~12.6 inches for 360° turn
+        // Formula: inches = counts_per_360 / DPI, where counts_per_360 ≈ 10,080 for most games
+        return 10080 / (dpi * sensitivity);
     }
 
     swapGames() {

@@ -309,7 +309,7 @@ class TrainingInsights {
                 },
                 {
                     title: 'Sensitivity Settings',
-                    description: 'Start with lower sensitivity (20-40cm/360°). This provides more control for precise aiming at the cost of some speed.'
+                    description: 'Start with lower sensitivity (8-16in/360°). This provides more control for precise aiming at the cost of some speed.'
                 },
                 {
                     title: 'Warm-up Routine',

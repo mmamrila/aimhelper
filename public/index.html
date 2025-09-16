@@ -16,6 +16,9 @@
 
     <!-- Category Navigation Script -->
     <script src="category-navigation.js"></script>
+
+    <!-- Professional Icon System -->
+    <script src="icons.js"></script>
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
@@ -26,17 +29,17 @@
         <div class="container">
             <div class="nav-content">
                 <a href="/" class="nav-brand">
-                    <div class="nav-logo">⚡</div>
+                    <div class="nav-logo"></div>
                     <span>AimHelper Pro</span>
                 </a>
                 <div class="nav-actions">
-                    <a href="/" class="nav-btn nav-btn--secondary active">🏠 Home</a>
-                    <a href="/converter" class="nav-btn nav-btn--secondary">🔄 Converter</a>
-                    <a href="/education" class="nav-btn nav-btn--secondary">📚 Learn</a>
-                    <a href="/analytics" class="nav-btn nav-btn--secondary">📊 Analytics</a>
-                    <a href="/community" class="nav-btn nav-btn--secondary">👥 Community</a>
-                    <a href="/profile" class="nav-btn nav-btn--secondary">👤 Profile</a>
-                    <a href="/pricing" class="nav-btn nav-btn--secondary">💳 Pricing</a>
+                    <a href="/" class="nav-btn nav-btn--secondary active">Home</a>
+                    <a href="/converter" class="nav-btn nav-btn--secondary">Converter</a>
+                    <a href="/education" class="nav-btn nav-btn--secondary">Learn</a>
+                    <a href="/analytics" class="nav-btn nav-btn--secondary">Analytics</a>
+                    <a href="/community" class="nav-btn nav-btn--secondary">Community</a>
+                    <a href="/profile" class="nav-btn nav-btn--secondary">Profile</a>
+                    <a href="/pricing" class="nav-btn nav-btn--secondary">Pricing</a>
                     <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
                     <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
                 </div>
@@ -48,13 +51,13 @@
     <div class="container">
         <!-- Breadcrumb -->
         <div class="page-breadcrumb">
-            <span class="category-icon">🏠</span>
+            <span class="category-icon"></span>
             <span class="page-breadcrumb-current">Home</span>
         </div>
         <!-- Header -->
         <header class="main-header">
             <div class="header-badge">
-                <span>🎯</span>
+                <span class="icon"></span>
                 <span>Professional Aim Analysis Platform</span>
             </div>
             <h1 class="header-title">AimHelper Pro</h1>
@@ -328,7 +331,7 @@
                     <div class="setting-value" id="displaySens">1.0</div>
                 </div>
                 <div class="setting-item">
-                    <div class="setting-label">cm/360°</div>
+                    <div class="setting-label">in/360°</div>
                     <div class="setting-value" id="displayCm">-</div>
                 </div>
                 <div class="setting-item">
@@ -387,9 +390,9 @@
             document.getElementById('displaySens').textContent = data.currentSensitivity;
             document.getElementById('displayGame').textContent = getGameDisplayName(data.preferredGame);
             
-            // Calculate cm/360
-            const cm360 = calculateCm360(data.currentDPI, data.currentSensitivity);
-            document.getElementById('displayCm').textContent = cm360 + ' cm';
+            // Calculate in/360
+            const in360 = calculateIn360(data.currentDPI, data.currentSensitivity);
+            document.getElementById('displayCm').textContent = in360 + ' in';
         }
         
         function getGameDisplayName(gameValue) {
@@ -407,11 +410,10 @@
             return gameNames[gameValue] || gameValue;
         }
         
-        function calculateCm360(dpi, sensitivity) {
-            // Standard calculation for cm/360
-            const inches360 = 360 / (dpi * sensitivity);
-            const cm360 = inches360 * 2.54;
-            return Math.round(cm360 * 100) / 100;
+        function calculateIn360(dpi, sensitivity) {
+            // Standard calculation for inches/360
+            const inches360 = 10080 / (dpi * sensitivity);
+            return Math.round(inches360 * 100) / 100;
         }
         
         function showSuccessMessage() {

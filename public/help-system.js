@@ -484,12 +484,12 @@ class HelpSystem {
                             <p><strong>eDPI (effective DPI)</strong> = Mouse DPI × In-game Sensitivity</p>
                             <p>This value represents your true sensitivity across all games.</p>
 
-                            <h3>cm/360° Explained:</h3>
-                            <p>This shows how many centimeters you need to move your mouse for a full 360° turn. Lower values = higher sensitivity.</p>
+                            <h3>in/360° Explained:</h3>
+                            <p>This shows how many inches you need to move your mouse for a full 360° turn. Lower values = higher sensitivity.</p>
 
                             <h3>Pro Tips:</h3>
                             <ul>
-                                <li>Most pro players use 20-50 cm/360°</li>
+                                <li>Most pro players use 8-20 in/360°</li>
                                 <li>Lower sensitivity = better precision</li>
                                 <li>Higher sensitivity = faster target switching</li>
                                 <li>Find the balance that works for your playstyle</li>

@@ -328,12 +328,12 @@ function endSingleTest() {
     const consistencyScore = calculateFinalConsistency();
     const avgMovementTime = calculateAverageMovementTime();
     const accuracyScore = calculateAverageAccuracy();
-    const cmPer360 = (360 / (currentDPI * currentSens)) * 2.54;
+    const inchesPer360 = 10080 / (currentDPI * currentSens);
     
     const result = {
         dpi: currentDPI,
         sensitivity: currentSens,
-        cmPer360: cmPer360,
+        inchesPer360: inchesPer360,
         consistencyScore: consistencyScore,
         avgMovementTime: avgMovementTime,
         accuracyScore: accuracyScore,
@@ -432,7 +432,7 @@ async function saveTestResult(result) {
                 testType: 'consistency-test',
                 dpi: result.dpi,
                 inGameSensitivity: result.sensitivity,
-                cmPer360: result.cmPer360,
+                inchesPer360: result.inchesPer360,
                 accuracyPercentage: result.accuracyScore,
                 reactionTimeMs: result.avgMovementTime,
                 consistencyScore: result.consistencyScore
@@ -460,7 +460,7 @@ function showResults() {
             <h3>Best Consistency Performance</h3>
             <p><strong>DPI:</strong> ${bestResult.dpi}</p>
             <p><strong>Sensitivity:</strong> ${bestResult.sensitivity}</p>
-            <p><strong>cm/360°:</strong> ${bestResult.cmPer360.toFixed(1)} cm</p>
+            <p><strong>in/360°:</strong> ${bestResult.inchesPer360.toFixed(1)} in</p>
             <p><strong>Consistency Score:</strong> ${bestResult.consistencyScore.toFixed(1)}%</p>
             <p><strong>Avg Movement Time:</strong> ${bestResult.avgMovementTime.toFixed(0)}ms</p>
             <p><strong>Accuracy:</strong> ${bestResult.accuracyScore.toFixed(1)}%</p>

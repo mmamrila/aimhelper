@@ -447,7 +447,7 @@
                     <div class="setting-card">
                         <div class="setting-label">Distance</div>
                         <div class="setting-value" id="cm360">41.5</div>
-                        <div class="setting-unit">cm/360°</div>
+                        <div class="setting-unit">in/360°</div>
                     </div>
                 </div>
             </div>
@@ -660,12 +660,12 @@
                 }
 
                 const trueSens = Math.round(dpi * optimalSens);
-                const cm360 = Math.round((2.54 * 360) / (dpi * optimalSens * 0.022) * 10) / 10;
+                const in360 = Math.round((10080) / (dpi * optimalSens) * 10) / 10;
 
                 document.getElementById('optimalDPI').textContent = dpi;
                 document.getElementById('optimalSens').textContent = optimalSens.toFixed(2);
                 document.getElementById('trueSens').textContent = trueSens;
-                document.getElementById('cm360').textContent = cm360;
+                document.getElementById('cm360').textContent = in360;
                 document.getElementById('confidenceLevel').textContent = `${confidence} Confidence`;
             }
 
@@ -763,7 +763,7 @@
                         dpi: document.getElementById('optimalDPI').textContent,
                         sensitivity: document.getElementById('optimalSens').textContent,
                         trueSens: document.getElementById('trueSens').textContent,
-                        cm360: document.getElementById('cm360').textContent
+                        in360: document.getElementById('cm360').textContent
                     },
                     exportDate: new Date().toISOString()
                 };

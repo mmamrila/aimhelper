@@ -325,8 +325,8 @@ function updateCurrentSettings() {
     dpiElement.textContent = currentDPI;
     sensElement.textContent = currentSensitivity;
     
-    const cmPer360 = calculateCmPer360(currentDPI, currentSensitivity);
-    cmElement.textContent = cmPer360.toFixed(1) + ' cm';
+    const inchesPer360 = calculateInchesPer360(currentDPI, currentSensitivity);
+    cmElement.textContent = inchesPer360.toFixed(1) + ' in';
     
     // Reset animation
     setTimeout(() => {
@@ -366,10 +366,9 @@ function showSuccessMessage(message) {
     }, 4000);
 }
 
-function calculateCmPer360(dpi, sensitivity) {
-    const inchesPerRevolution = 360 / (dpi * sensitivity);
-    const cmPerRevolution = inchesPerRevolution * 2.54;
-    return cmPerRevolution;
+function calculateInchesPer360(dpi, sensitivity) {
+    const inchesPerRevolution = 10080 / (dpi * sensitivity);
+    return inchesPerRevolution;
 }
 
 function startTest(testType) {
@@ -460,7 +459,7 @@ function showOptimizationResults(optimization) {
         <div class="recommendation">
             <p><strong>DPI:</strong> ${optimization.dpi}</p>
             <p><strong>Sensitivity:</strong> ${optimization.sensitivity}</p>
-            <p><strong>cm/360°:</strong> ${optimization.cmPer360} cm</p>
+            <p><strong>in/360°:</strong> ${optimization.inchesPer360} in</p>
             <p><strong>Confidence:</strong> ${optimization.confidence}%</p>
             <p><strong>Performance Score:</strong> ${optimization.topPerformanceScore}/100</p>
         </div>

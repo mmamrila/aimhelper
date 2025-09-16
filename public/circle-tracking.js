@@ -320,7 +320,7 @@ function endSingleTest(dpi, sensitivity) {
     const avgDistance = testData.totalDistance / testData.samples.length;
     const consistencyScore = calculateConsistency();
     const reactionTime = calculateReactionTime();
-    const cmPer360 = (360 / (dpi * sensitivity)) * 2.54;
+    const inchesPer360 = 10080 / (dpi * sensitivity);
 
     // Enhanced measurements
     const pathEfficiency = calculatePathEfficiency();
@@ -333,7 +333,7 @@ function endSingleTest(dpi, sensitivity) {
     const result = {
         dpi: dpi,
         sensitivity: sensitivity,
-        cmPer360: cmPer360,
+        inchesPer360: inchesPer360,
         accuracy: accuracy,
         avgDistance: avgDistance,
         consistencyScore: consistencyScore,
@@ -483,7 +483,7 @@ async function saveTestResult(result) {
                 testType: 'circle-tracking',
                 dpi: result.dpi,
                 inGameSensitivity: result.sensitivity,
-                cmPer360: result.cmPer360,
+                inchesPer360: result.inchesPer360,
                 accuracyPercentage: result.accuracy,
                 reactionTimeMs: result.reactionTime,
                 consistencyScore: result.consistencyScore,
@@ -520,7 +520,7 @@ function showResults() {
             <h3>Best Performance</h3>
             <p><strong>DPI:</strong> ${bestResult.dpi}</p>
             <p><strong>Sensitivity:</strong> ${bestResult.sensitivity}</p>
-            <p><strong>cm/360°:</strong> ${bestResult.cmPer360.toFixed(1)} cm</p>
+            <p><strong>in/360°:</strong> ${bestResult.inchesPer360.toFixed(1)} in</p>
             <p><strong>Accuracy:</strong> ${bestResult.accuracy.toFixed(1)}%</p>
             <p><strong>Consistency:</strong> ${bestResult.consistencyScore.toFixed(1)}%</p>
         </div>
@@ -531,7 +531,7 @@ function showResults() {
                 <tr>
                     <th>DPI</th>
                     <th>Sens</th>
-                    <th>cm/360°</th>
+                    <th>in/360°</th>
                     <th>Accuracy</th>
                     <th>Consistency</th>
                 </tr>
@@ -539,7 +539,7 @@ function showResults() {
                     <tr>
                         <td>${r.dpi}</td>
                         <td>${r.sensitivity}</td>
-                        <td>${r.cmPer360.toFixed(1)}</td>
+                        <td>${r.inchesPer360.toFixed(1)}</td>
                         <td>${r.accuracy.toFixed(1)}%</td>
                         <td>${r.consistencyScore.toFixed(1)}%</td>
                     </tr>

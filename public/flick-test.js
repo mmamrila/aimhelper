@@ -300,12 +300,12 @@ function endSingleTest() {
         hitAttempts.reduce((sum, a) => sum + a.reactionTime, 0) / hitAttempts.length : 1000;
     
     const consistencyScore = calculateConsistency();
-    const cmPer360 = (360 / (currentDPI * currentSens)) * 2.54;
+    const inchesPer360 = 10080 / (currentDPI * currentSens);
     
     const result = {
         dpi: currentDPI,
         sensitivity: currentSens,
-        cmPer360: cmPer360,
+        inchesPer360: inchesPer360,
         accuracy: accuracy,
         avgReactionTime: avgReactionTime,
         consistencyScore: consistencyScore,
@@ -348,7 +348,7 @@ async function saveTestResult(result) {
                 testType: 'flick-test',
                 dpi: result.dpi,
                 inGameSensitivity: result.sensitivity,
-                cmPer360: result.cmPer360,
+                inchesPer360: result.inchesPer360,
                 accuracyPercentage: result.accuracy,
                 reactionTimeMs: result.avgReactionTime,
                 consistencyScore: result.consistencyScore
@@ -378,7 +378,7 @@ function showResults() {
             <h3>Best Performance</h3>
             <p><strong>DPI:</strong> ${bestResult.dpi}</p>
             <p><strong>Sensitivity:</strong> ${bestResult.sensitivity}</p>
-            <p><strong>cm/360°:</strong> ${bestResult.cmPer360.toFixed(1)} cm</p>
+            <p><strong>in/360°:</strong> ${bestResult.inchesPer360.toFixed(1)} in</p>
             <p><strong>Accuracy:</strong> ${bestResult.accuracy.toFixed(1)}% (${bestResult.successfulFlicks}/${bestResult.totalFlicks})</p>
             <p><strong>Avg Reaction:</strong> ${bestResult.avgReactionTime.toFixed(0)}ms</p>
             <p><strong>Consistency:</strong> ${bestResult.consistencyScore.toFixed(1)}%</p>

@@ -585,7 +585,7 @@
                             <div class="setting-value" id="currentSens">1.0</div>
                         </div>
                         <div class="setting-row">
-                            <div class="setting-label">cm/360°</div>
+                            <div class="setting-label">in/360°</div>
                             <div class="setting-value" id="currentCm360">-</div>
                         </div>
                         <div class="setting-row">
@@ -643,8 +643,8 @@
                 document.getElementById('currentGame').textContent = getGameDisplayName(data.preferredGame || 'valorant');
                 
                 // Calculate and display cm/360
-                const cm360 = calculateCm360(data.currentDPI || 800, data.currentSensitivity || 1.0);
-                document.getElementById('currentCm360').textContent = cm360 + ' cm';
+                const in360 = calculateIn360(data.currentDPI || 800, data.currentSensitivity || 1.0);
+                document.getElementById('currentCm360').textContent = in360 + ' in';
             }
         }
         
@@ -699,10 +699,9 @@
             return gameNames[gameValue] || gameValue;
         }
         
-        function calculateCm360(dpi, sensitivity) {
-            const inches360 = 360 / (dpi * sensitivity);
-            const cm360 = inches360 * 2.54;
-            return Math.round(cm360 * 100) / 100;
+        function calculateIn360(dpi, sensitivity) {
+            const inches360 = 10080 / (dpi * sensitivity);
+            return Math.round(inches360 * 100) / 100;
         }
         
         // Event handlers

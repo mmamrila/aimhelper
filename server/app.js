@@ -20,29 +20,29 @@ const PORT = process.env.PORT || 3000;
 const gameProfiles = {
   'valorant': {
     name: 'Valorant',
-    optimalRange: { min: 20, max: 40 }, // cm/360
+    optimalRange: { min: 8, max: 16 }, // inches/360
     testWeights: { accuracy: 0.5, reaction: 0.3, consistency: 0.2 },
     dpiRecommendation: { min: 400, max: 1600 },
     description: 'Tactical shooter requiring high precision and micro-adjustments',
-    mousepadSize: 'Large (45cm+) recommended for crosshair placement',
+    mousepadSize: 'Large (18"+) recommended for crosshair placement',
     testDuration: { gridShot: 45, flickTest: 25, consistency: 30 }
   },
   'csgo': {
-    name: 'CS:GO', 
-    optimalRange: { min: 25, max: 50 },
+    name: 'CS:GO',
+    optimalRange: { min: 10, max: 20 },
     testWeights: { accuracy: 0.6, reaction: 0.2, consistency: 0.2 },
     dpiRecommendation: { min: 400, max: 800 },
     description: 'Competitive FPS focused on precision aiming and crosshair placement',
-    mousepadSize: 'Extra Large (60cm+) for low sensitivity precision',
+    mousepadSize: 'Extra Large (24"+) for low sensitivity precision',
     testDuration: { gridShot: 60, flickTest: 30, consistency: 40 }
   },
   'apex': {
     name: 'Apex Legends',
-    optimalRange: { min: 15, max: 30 },
+    optimalRange: { min: 6, max: 12 },
     testWeights: { accuracy: 0.4, reaction: 0.4, consistency: 0.2 },
     dpiRecommendation: { min: 800, max: 1600 },
     description: 'Fast-paced BR requiring quick target acquisition and tracking',
-    mousepadSize: 'Large (45cm) for balanced aim and movement',
+    mousepadSize: 'Large (18") for balanced aim and movement',
     testDuration: { gridShot: 45, flickTest: 35, consistency: 25 }
   },
   'overwatch': {
@@ -818,7 +818,7 @@ app.post('/api/user-profile', requireAuth, (req, res) => {
 
 // API Routes
 app.post('/api/test-result', optionalAuth, (req, res) => {
-  const { testType, dpi, inGameSensitivity, cmPer360, accuracyPercentage, reactionTimeMs, consistencyScore } = req.body;
+  const { testType, dpi, inGameSensitivity, inchesPer360, accuracyPercentage, reactionTimeMs, consistencyScore } = req.body;
   
   // Use authenticated user ID or allow anonymous submissions with null user_id
   const userId = req.isAuthenticated ? req.userId : null;
@@ -827,7 +827,7 @@ app.post('/api/test-result', optionalAuth, (req, res) => {
     (user_id, test_type, dpi, in_game_sensitivity, cm_per_360, accuracy_percentage, reaction_time_ms, consistency_score) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
   
-  stmt.run(userId, testType, dpi, inGameSensitivity, cmPer360, accuracyPercentage, reactionTimeMs, consistencyScore, function(err) {
+  stmt.run(userId, testType, dpi, inGameSensitivity, inchesPer360, accuracyPercentage, reactionTimeMs, consistencyScore, function(err) {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -899,7 +899,7 @@ app.post('/api/optimize-sensitivity', optionalAuth, async (req, res) => {
     const optimization = calculateOptimalSensitivity(testResults, userPreferredDPI, gameProfile);
     
     // Add game-specific equipment recommendations
-    optimization.mousepadRecommendation = generateGameSpecificMousepadRecommendation(optimization.cmPer360, gameProfile);
+    optimization.mousepadRecommendation = generateGameSpecificMousepadRecommendation(optimization.inchesPer360, gameProfile);
     optimization.gameProfile = {
       name: gameProfile.name,
       description: gameProfile.description,
@@ -925,7 +925,7 @@ app.post('/api/optimize-sensitivity', optionalAuth, async (req, res) => {
     const optimization = calculateOptimalSensitivity(rows, userPreferredDPI, gameProfile);
     
     // Add game-specific equipment recommendations and reasoning
-    optimization.mousepadRecommendation = generateGameSpecificMousepadRecommendation(optimization.cmPer360, gameProfile);
+    optimization.mousepadRecommendation = generateGameSpecificMousepadRecommendation(optimization.inchesPer360, gameProfile);
     optimization.reasoning = generateGameSpecificReasoning(rows, optimization, gameProfile);
     optimization.gameProfile = {
       name: gameProfile.name,
@@ -938,7 +938,7 @@ app.post('/api/optimize-sensitivity', optionalAuth, async (req, res) => {
        mousepad_recommendation, reasoning, test_session_id) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
     
-    stmt.run(req.userId, optimization.dpi, optimization.sensitivity, optimization.cmPer360, 
+    stmt.run(req.userId, optimization.dpi, optimization.sensitivity, optimization.inchesPer360, 
              optimization.confidence, optimization.mousepadRecommendation, optimization.reasoning, 
              Date.now().toString(), function(err) {
       if (err) {
@@ -975,37 +975,37 @@ function calculateOptimalSensitivity(testResults, userPreferredDPI, gameProfile 
   
   const topResults = weightedResults.slice(0, Math.min(5, weightedResults.length));
   
-  // Calculate optimal cm/360 from best performing tests
-  const avgCmPer360 = topResults.reduce((sum, r) => sum + r.cm_per_360, 0) / topResults.length;
-  
-  // Calculate optimal sensitivity based on user's EXACT preferred DPI and optimal cm/360
-  // Formula: sensitivity = 360 / (DPI * (cm/360 / 2.54))
-  const optimalSensitivity = 360 / (userDPI * (avgCmPer360 / 2.54));
-  
+  // Calculate optimal inches/360 from best performing tests
+  const avgInchesPer360 = topResults.reduce((sum, r) => sum + r.inches_per_360, 0) / topResults.length;
+
+  // Calculate optimal sensitivity based on user's EXACT preferred DPI and optimal inches/360
+  // Formula: sensitivity = 10080 / (DPI * inches/360)
+  const optimalSensitivity = 10080 / (userDPI * avgInchesPer360);
+
   const confidence = Math.min(100, (topResults.length / testResults.length) * 100);
-  
+
   return {
     dpi: userDPI,  // ALWAYS keep user's exact input DPI - never change it
     sensitivity: Math.round(optimalSensitivity * 100) / 100,
-    cmPer360: Math.round(avgCmPer360 * 100) / 100,
+    inchesPer360: Math.round(avgInchesPer360 * 100) / 100,
     confidence: Math.round(confidence),
     topPerformanceScore: Math.round(topResults[0].combinedScore)
   };
 }
 
-function generateGameSpecificMousepadRecommendation(cmPer360, gameProfile) {
+function generateGameSpecificMousepadRecommendation(inchesPer360, gameProfile) {
   // Use game-specific mousepad recommendation if available
   if (gameProfile && gameProfile.mousepadSize) {
     return {
       size: gameProfile.mousepadSize,
-      reasoning: `For ${gameProfile.name}: ${gameProfile.description}. With your ${cmPer360.toFixed(1)}cm/360° setting, ${gameProfile.mousepadSize.toLowerCase()} provides optimal space for ${gameProfile.name}'s gameplay requirements.`,
+      reasoning: `For ${gameProfile.name}: ${gameProfile.description}. With your ${inchesPer360.toFixed(1)}in/360° setting, ${gameProfile.mousepadSize.toLowerCase()} provides optimal space for ${gameProfile.name}'s gameplay requirements.`,
       gameSpecific: true,
-      products: getGameSpecificMousepadProducts(gameProfile.name, cmPer360)
+      products: getGameSpecificMousepadProducts(gameProfile.name, inchesPer360)
     };
   }
-  
+
   // Fall back to generic recommendation
-  return generateMousepadRecommendation(cmPer360);
+  return generateMousepadRecommendation(inchesPer360);
 }
 
 function generateGameSpecificReasoning(testResults, optimization, gameProfile) {
@@ -1015,8 +1015,8 @@ function generateGameSpecificReasoning(testResults, optimization, gameProfile) {
   reasoning += `${gameProfile.description}\n\n`;
   
   reasoning += `📊 **Optimized for ${gameProfile.name}'s Requirements:**\n`;
-  reasoning += `• Target Range: ${gameProfile.optimalRange.min}-${gameProfile.optimalRange.max} cm/360°\n`;
-  reasoning += `• Your Optimized Setting: ${optimization.cmPer360.toFixed(1)} cm/360°\n`;
+  reasoning += `• Target Range: ${gameProfile.optimalRange.min}-${gameProfile.optimalRange.max} in/360°\n`;
+  reasoning += `• Your Optimized Setting: ${optimization.inchesPer360.toFixed(1)} in/360°\n`;
   reasoning += `• Weighting: ${Math.round(gameProfile.testWeights.accuracy * 100)}% Accuracy, ${Math.round(gameProfile.testWeights.reaction * 100)}% Reaction, ${Math.round(gameProfile.testWeights.consistency * 100)}% Consistency\n\n`;
   
   const avgAccuracy = testResults.reduce((sum, r) => sum + r.accuracy_percentage, 0) / testResults.length;
