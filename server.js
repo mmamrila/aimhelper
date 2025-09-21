@@ -116,6 +116,23 @@ app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// JSON parsing error handler - CRITICAL for security
+app.use((error, req, res, next) => {
+    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+        logger.warn('Malformed JSON request detected', {
+            error: error.message,
+            body: error.body,
+            ip: req.ip,
+            userAgent: req.get('User-Agent')
+        });
+        return res.status(400).json({
+            error: 'Invalid JSON format in request body',
+            code: 'MALFORMED_JSON'
+        });
+    }
+    next(error);
+});
+
 // Logging middleware
 app.use(expressWinston.logger({
     winstonInstance: logger,
@@ -132,7 +149,24 @@ if (!IS_PRODUCTION) {
     app.use(morgan('dev'));
 }
 
-// Rate limiting
+// Rate limiting with Redis store for production scaling
+let rateLimitStore;
+try {
+    // Use Redis store if available, fallback to memory store
+    if (RedisService.isConnected) {
+        const RedisStore = require('rate-limit-redis');
+        rateLimitStore = new RedisStore({
+            client: RedisService.client,
+            prefix: 'rl:',
+        });
+        logger.info('Using Redis for rate limiting');
+    } else {
+        logger.warn('Redis not available, using memory store for rate limiting');
+    }
+} catch (error) {
+    logger.warn('Failed to setup Redis rate limiting, using memory store');
+}
+
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: IS_PRODUCTION ? 100 : 1000, // Limit each IP to 100 requests per windowMs in production
@@ -142,6 +176,7 @@ const limiter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
+    store: rateLimitStore, // Use Redis store if available
 });
 
 app.use('/api/', limiter);

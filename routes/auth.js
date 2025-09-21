@@ -278,13 +278,12 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = new Date(Date.now() + 3600000); // 1 hour
 
-    // Store reset token (you might want to create a separate table for this)
+    // Store reset token
     await DatabaseService.prisma.user.update({
         where: { id: user.id },
         data: {
-            // Note: You'll need to add these fields to your User model
-            // resetPasswordToken: resetToken,
-            // resetPasswordExpiry: resetTokenExpiry
+            resetPasswordToken: resetToken,
+            resetPasswordExpiry: resetTokenExpiry
         }
     });
 
@@ -329,11 +328,10 @@ router.post('/reset-password', asyncHandler(async (req, res) => {
     }
 
     // Find user with valid reset token
-    // Note: This requires adding reset token fields to your User model
     const user = await DatabaseService.prisma.user.findFirst({
         where: {
-            // resetPasswordToken: token,
-            // resetPasswordExpiry: { gte: new Date() }
+            resetPasswordToken: token,
+            resetPasswordExpiry: { gte: new Date() }
         }
     });
 
@@ -352,8 +350,8 @@ router.post('/reset-password', asyncHandler(async (req, res) => {
         where: { id: user.id },
         data: {
             passwordHash,
-            // resetPasswordToken: null,
-            // resetPasswordExpiry: null
+            resetPasswordToken: null,
+            resetPasswordExpiry: null
         }
     });
 

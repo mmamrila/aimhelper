@@ -27,7 +27,10 @@
       "Bash(npx prisma migrate dev:*)",
       "Bash(python:*)",
       "Bash(cmd /c:*)",
-      "Bash(do echo -n \"$test: \")"
+      "Bash(do echo -n \"$test: \")",
+      "Bash(cat:*)",
+      "Bash(npx prisma:*)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
