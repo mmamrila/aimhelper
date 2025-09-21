@@ -88,19 +88,6 @@ class PricingManager {
         }
     }
 
-    contactTeamSales() {
-        // Simulate contact form or redirect
-        const message = `Hi! I'm interested in the Team Coach plan for my esports team. Please contact me with more information.
-
-Current team size: [Please specify]
-Organization: [Team/Organization name]
-Additional requirements: [Any special needs]
-
-Looking forward to hearing from you!`;
-
-        const mailtoLink = `mailto:sales@aimhelper.pro?subject=Team%20Coach%20Plan%20Inquiry&body=${encodeURIComponent(message)}`;
-        window.open(mailtoLink);
-    }
 
     upgradeToPlan(plan) {
         const previousPlan = this.currentPlan;
@@ -145,7 +132,6 @@ Looking forward to hearing from you!`;
                 analytics: 'basic',
                 heatmaps: false,
                 customRoutines: false,
-                teamFeatures: false,
                 prioritySupport: false
             },
             pro: {
@@ -154,18 +140,7 @@ Looking forward to hearing from you!`;
                 analytics: 'advanced',
                 heatmaps: true,
                 customRoutines: true,
-                teamFeatures: false,
                 prioritySupport: true
-            },
-            team: {
-                testsPerDay: -1,
-                testTypes: ['gridshot', 'flick', 'track', 'switch'],
-                analytics: 'advanced',
-                heatmaps: true,
-                customRoutines: true,
-                teamFeatures: true,
-                prioritySupport: true,
-                teamMembers: 10
             }
         };
 
@@ -175,8 +150,7 @@ Looking forward to hearing from you!`;
     showPaymentModal(plan) {
         // Simulate payment modal (in real app, integrate with Stripe/PayPal)
         const planPrices = {
-            pro: '$9.99',
-            team: '$29.99'
+            pro: '$9.99'
         };
 
         const confirmPayment = confirm(`Upgrade to ${plan.toUpperCase()} plan for ${planPrices[plan]}/month?\n\nThis is a demo - no actual payment will be processed.`);
@@ -217,9 +191,7 @@ Looking forward to hearing from you!`;
 
         const messages = {
             'free-to-pro': 'Welcome to Pro! You now have unlimited access to all features.',
-            'pro-to-free': 'You have been downgraded to Free. Some features are now limited.',
-            'free-to-team': 'Welcome to Team Coach! Your team dashboard is now available.',
-            'pro-to-team': 'Upgraded to Team Coach! Team management features are now active.'
+            'pro-to-free': 'You have been downgraded to Free. Some features are now limited.'
         };
 
         const key = `${oldPlan}-to-${newPlan}`;
@@ -277,10 +249,6 @@ function upgradeToPro() {
     pricingManager.upgradeToPro();
 }
 
-function contactTeamSales() {
-    const pricingManager = new PricingManager();
-    pricingManager.contactTeamSales();
-}
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

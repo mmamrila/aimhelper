@@ -50,7 +50,7 @@ function initTest() {
     const settings = localStorage.getItem('testSettings');
     if (!settings) {
         alert('No test settings found. Returning to home.');
-        window.location.href = '/app';
+        window.location.href = '/';
         return;
     }
     
@@ -595,7 +595,7 @@ function retryTest() {
 }
 
 function goHome() {
-    window.location.href = '/app';
+    window.location.href = '/';
 }
 
 window.addEventListener('load', function() {

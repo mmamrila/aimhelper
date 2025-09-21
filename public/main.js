@@ -166,7 +166,7 @@ async function handleLogout() {
             const backBtn = document.querySelector('.back-btn');
             if (backBtn) {
                 backBtn.innerHTML = '← Back to Home';
-                backBtn.onclick = () => window.location.href = '/app';
+                backBtn.onclick = () => window.location.href = '/';
             }
             
             // Remove menu

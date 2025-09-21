@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensitivity Test - Find Your Perfect Settings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-category-test">
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🎯 Sensitivity Test</h1>
+            <button id="homeBtn" class="home-btn">← Back to Home</button>
+        </div>
+
+        <div class="test-instructions" id="instructions">
+            <h2>Find Your Perfect Sensitivity</h2>
+            <p>This 60-second test analyzes your natural aiming patterns to recommend optimal mouse sensitivity settings.</p>
+            <p>Click on targets as they appear to measure your precision and reaction time at your current sensitivity.</p>
+            <p><strong>Current Settings:</strong> DPI: <span id="currentDPI">800</span> | Sensitivity: <span id="currentSens">1.0</span></p>
+            <div style="margin: 20px 0; padding: 15px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px;">
+                <p><strong>💡 Tip:</strong> Use your normal gaming settings for the most accurate recommendations.</p>
+            </div>
+            <button id="startBtn" class="start-btn">Start Sensitivity Test</button>
+        </div>
+
+        <div class="test-area" id="testArea" style="display: none;">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="test-ui">
+                <div class="test-info">
+                    <p>Progress: <span id="currentTestNum">1</span> / <span id="totalTests">1</span></p>
+                    <p>Targets Hit: <span id="targetsDisplay">0</span></p>
+                    <p>Accuracy: <span id="accuracyDisplay">0</span>%</p>
+                    <p>Avg Time: <span id="timeDisplay">0</span>ms</p>
+                </div>
+                <div class="sensitivity-info">
+                    <p>DPI: <span id="testDPI">800</span></p>
+                    <p>Sensitivity: <span id="testSens">1.0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-results" id="results" style="display: none;">
+            <h2>📊 Your Sensitivity Analysis</h2>
+            <div id="resultsContent"></div>
+            <div class="sensitivity-recommendations" style="margin: 20px 0; padding: 20px; background: rgba(52, 168, 83, 0.1); border: 1px solid rgba(52, 168, 83, 0.2); border-radius: 8px;">
+                <h3>🎯 Recommended Next Steps</h3>
+                <p>Based on your performance, try adjusting your sensitivity and taking additional tests to find your perfect settings.</p>
+                <p><strong>Want detailed analysis and cross-game optimization?</strong> <a href="/register" style="color: #3b82f6;">Create a free account</a> to unlock advanced features.</p>
+            </div>
+            <div class="results-actions">
+                <button id="retryBtn" class="retry-btn">Test Again</button>
+                <button id="nextTestBtn" class="test-btn">Try Advanced Tests →</button>
+                <button id="homeBtn2" class="home-btn">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="grid-shot.js"></script>
+</body>
+</html>

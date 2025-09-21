@@ -35,22 +35,31 @@ class CommunityManager {
         this.updateCommunityStats();
     }
 
-    updateCommunityStats() {
-        // Simulate growing community stats
-        const baseStats = {
-            totalUsers: 15247,
-            totalTests: 2100000,
-            avgImprovement: 34,
-            discordMembers: 8450
-        };
+    async updateCommunityStats() {
+        try {
+            const response = await fetch('/api/analytics/global');
+            if (response.ok) {
+                const data = await response.json();
 
-        // Add some realistic variation based on current time
-        const variance = Math.sin(Date.now() / (1000 * 60 * 60 * 24)) * 0.1;
-
-        document.getElementById('totalUsers').textContent = Math.floor(baseStats.totalUsers * (1 + variance)).toLocaleString();
-        document.getElementById('totalTests').textContent = (baseStats.totalTests / 1000000).toFixed(1) + 'M';
-        document.getElementById('avgImprovement').textContent = Math.floor(baseStats.avgImprovement * (1 + variance * 0.5)) + '%';
-        document.getElementById('discordMembers').textContent = Math.floor(baseStats.discordMembers * (1 + variance * 0.3)).toLocaleString();
+                document.getElementById('totalUsers').textContent = data.totalUsers?.toLocaleString() || '0';
+                document.getElementById('totalTests').textContent = this.formatNumber(data.totalSessions || 0);
+                document.getElementById('avgImprovement').textContent = data.averageAccuracy ? Math.round(data.averageAccuracy) + '%' : '0%';
+                document.getElementById('discordMembers').textContent = '0'; // Real Discord member count would need Discord API
+            } else {
+                // Fallback to loading state if API fails
+                document.getElementById('totalUsers').textContent = '0';
+                document.getElementById('totalTests').textContent = '0';
+                document.getElementById('avgImprovement').textContent = '0%';
+                document.getElementById('discordMembers').textContent = '0';
+            }
+        } catch (error) {
+            console.error('Failed to fetch community stats:', error);
+            // Show real zeros instead of fake numbers
+            document.getElementById('totalUsers').textContent = '0';
+            document.getElementById('totalTests').textContent = '0';
+            document.getElementById('avgImprovement').textContent = '0%';
+            document.getElementById('discordMembers').textContent = '0';
+        }
     }
 
     loadCommunityFeed() {
@@ -396,60 +405,6 @@ class CommunityManager {
 
         const feed = [];
         const now = Date.now();
-
-        // Generate 20 sample feed items
-        for (let i = 0; i < 20; i++) {
-            const user = sampleUsers[Math.floor(Math.random() * sampleUsers.length)];
-            const timeOffset = Math.random() * 7 * 24 * 60 * 60 * 1000; // Last 7 days
-            const timestamp = now - timeOffset;
-
-            const activityType = Math.random();
-
-            if (activityType < 0.3) {
-                // Achievement
-                const achievement = achievements[Math.floor(Math.random() * achievements.length)];
-                feed.push({
-                    type: 'achievement',
-                    username: user,
-                    achievement: achievement,
-                    timestamp: timestamp
-                });
-            } else if (activityType < 0.6) {
-                // Score
-                feed.push({
-                    type: 'score',
-                    username: user,
-                    score: Math.floor(Math.random() * 2000) + 500,
-                    accuracy: (Math.random() * 30 + 70).toFixed(1),
-                    timestamp: timestamp
-                });
-            } else if (activityType < 0.8) {
-                // Challenge completion
-                const challenges = ['Weekly Accuracy Challenge', 'Speed Demon Challenge', 'Consistency Master', 'Daily Grind'];
-                feed.push({
-                    type: 'challenge',
-                    username: user,
-                    challengeName: challenges[Math.floor(Math.random() * challenges.length)],
-                    rank: Math.floor(Math.random() * 100) + 1,
-                    timestamp: timestamp
-                });
-            } else {
-                // Milestone
-                const milestones = [
-                    '1000th training session completed!',
-                    'Joined the 90% accuracy club',
-                    '30-day training streak achieved',
-                    'First sub-200ms reaction time!',
-                    'Reached Diamond tier ranking'
-                ];
-                feed.push({
-                    type: 'milestone',
-                    username: user,
-                    description: milestones[Math.floor(Math.random() * milestones.length)],
-                    timestamp: timestamp
-                });
-            }
-        }
 
         return feed;
     }

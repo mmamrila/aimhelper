@@ -273,7 +273,7 @@ function displayRecommendations(recommendations) {
 }
 
 function startNewTest() {
-    window.location.href = '/app';
+    window.location.href = '/';
 }
 
 function viewResults() {
@@ -281,7 +281,7 @@ function viewResults() {
 }
 
 function updateSettings() {
-    window.location.href = '/app';
+    window.location.href = '/';
 }
 
 async function logout() {

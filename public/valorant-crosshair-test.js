@@ -53,7 +53,7 @@ function initTest() {
     const settings = localStorage.getItem('testSettings');
     if (!settings) {
         alert('No test settings found. Returning to app.');
-        window.location.href = '/app';
+        window.location.href = '/';
         return;
     }
 

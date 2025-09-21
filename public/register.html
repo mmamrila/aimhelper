@@ -670,7 +670,7 @@
         });
 
         document.getElementById('startTraining').addEventListener('click', function() {
-            window.location.href = '/app';
+            window.location.href = '/dashboard';
         });
 
         function showStep(step) {
@@ -787,35 +787,49 @@
             return true;
         }
 
-        function createAccount() {
+        async function createAccount() {
             const userData = {
                 username: document.getElementById('username').value.trim(),
                 email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value, // In real app, this would be hashed
-                dpi: parseInt(document.getElementById('currentDPI').value),
-                sensitivity: parseFloat(document.getElementById('currentSensitivity').value),
-                game: document.getElementById('preferredGame').value,
-                createdAt: Date.now()
+                password: document.getElementById('password').value,
+                profile: {
+                    currentDPI: parseInt(document.getElementById('currentDPI').value),
+                    currentSensitivity: parseFloat(document.getElementById('currentSensitivity').value),
+                    preferredGame: document.getElementById('preferredGame').value
+                }
             };
 
-            // Store user data
-            localStorage.setItem('aimhelper_user', JSON.stringify(userData));
-            localStorage.setItem('aimhelper_profile', JSON.stringify({
-                userId: userData.username,
-                currentDPI: userData.dpi,
-                currentSensitivity: userData.sensitivity,
-                preferredGame: userData.game
-            }));
-            localStorage.setItem('aimhelper_session', 'active');
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
 
-            // Clean up demo data
-            localStorage.removeItem('aimhelper_demo_completed');
-            localStorage.removeItem('aimhelper_demo_results');
+                const result = await response.json();
 
-            // Move to welcome step
-            currentStep = 3;
-            showStep(3);
-            updateProgress();
+                if (response.ok) {
+                    // Store authentication token
+                    localStorage.setItem('aimhelper_token', result.token);
+                    localStorage.setItem('aimhelper_user', JSON.stringify(result.user));
+
+                    // Clean up demo data
+                    localStorage.removeItem('aimhelper_demo_completed');
+                    localStorage.removeItem('aimhelper_demo_results');
+
+                    // Move to welcome step
+                    currentStep = 3;
+                    showStep(3);
+                    updateProgress();
+                } else {
+                    showAlert(result.error || 'Registration failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showAlert('Network error. Please check your connection and try again.', 'error');
+            }
         }
 
         function isValidEmail(email) {

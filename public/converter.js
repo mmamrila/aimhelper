@@ -153,6 +153,7 @@ class SensitivityConverter {
         this.generateGamesGrid();
         this.updateConversion();
         this.initializeProComparison();
+        this.loadRecentConversions();
     }
 
     initializeElements() {
@@ -294,11 +295,26 @@ class SensitivityConverter {
     }
 
     copyResult() {
-        const result = `${GAMES_DATABASE[this.elements.toGame.value]?.name}: ${this.elements.convertedSensitivity.textContent}`;
+        const fromGame = GAMES_DATABASE[this.elements.fromGame.value]?.name || this.elements.fromGame.value;
+        const toGame = GAMES_DATABASE[this.elements.toGame.value]?.name || this.elements.toGame.value;
+        const sensitivity = this.elements.convertedSensitivity.textContent;
+        const dpi = this.elements.inputDPI.value;
+        const edpi = this.elements.effectiveDPI.textContent;
+        const inches = this.elements.inches360.textContent;
+        const cm = this.elements.cm360.textContent;
+
+        const result = `🎯 AimHelper Pro Conversion:
+${fromGame} → ${toGame}
+Sensitivity: ${sensitivity}
+DPI: ${dpi} | eDPI: ${edpi}
+Distance: ${inches}" / ${cm}cm per 360°
+
+Generated at ${new Date().toLocaleString()}`;
 
         if (navigator.clipboard) {
             navigator.clipboard.writeText(result).then(() => {
-                this.showNotification('✅ Copied to clipboard!', 'success');
+                this.showNotification('✅ Detailed conversion copied to clipboard!', 'success');
+                this.saveToRecentConversions();
             }).catch(() => {
                 this.fallbackCopy(result);
             });
@@ -314,7 +330,143 @@ class SensitivityConverter {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        this.showNotification('✅ Copied to clipboard!', 'success');
+        this.showNotification('✅ Detailed conversion copied to clipboard!', 'success');
+        this.saveToRecentConversions();
+    }
+
+    saveToRecentConversions() {
+        const conversion = {
+            id: Date.now(),
+            fromGame: this.elements.fromGame.value,
+            toGame: this.elements.toGame.value,
+            originalSensitivity: this.elements.inputSensitivity.value,
+            convertedSensitivity: this.elements.convertedSensitivity.textContent,
+            dpi: this.elements.inputDPI.value,
+            edpi: this.elements.effectiveDPI.textContent,
+            inches360: this.elements.inches360.textContent,
+            cm360: this.elements.cm360.textContent,
+            timestamp: new Date().toLocaleString()
+        };
+
+        let recentConversions = JSON.parse(localStorage.getItem('aimhelper_recent_conversions') || '[]');
+
+        // Add new conversion to the beginning
+        recentConversions.unshift(conversion);
+
+        // Keep only the last 5 conversions
+        recentConversions = recentConversions.slice(0, 5);
+
+        localStorage.setItem('aimhelper_recent_conversions', JSON.stringify(recentConversions));
+        this.updateRecentConversionsDisplay();
+    }
+
+    loadRecentConversions() {
+        const recentConversions = JSON.parse(localStorage.getItem('aimhelper_recent_conversions') || '[]');
+        if (recentConversions.length > 0) {
+            document.getElementById('recentConversionsCard').style.display = 'block';
+            this.updateRecentConversionsDisplay();
+        }
+    }
+
+    updateRecentConversionsDisplay() {
+        const recentConversions = JSON.parse(localStorage.getItem('aimhelper_recent_conversions') || '[]');
+        const container = document.getElementById('recentConversions');
+
+        if (recentConversions.length === 0) {
+            document.getElementById('recentConversionsCard').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('recentConversionsCard').style.display = 'block';
+
+        container.innerHTML = recentConversions.map(conversion => {
+            const fromGameName = GAMES_DATABASE[conversion.fromGame]?.name || conversion.fromGame;
+            const toGameName = GAMES_DATABASE[conversion.toGame]?.name || conversion.toGame;
+            const fromIcon = GAMES_DATABASE[conversion.fromGame]?.icon || '🎮';
+            const toIcon = GAMES_DATABASE[conversion.toGame]?.icon || '🎮';
+
+            return `
+                <div class="recent-conversion-item" data-conversion='${JSON.stringify(conversion)}'>
+                    <div class="conversion-games">
+                        <span class="game-info">
+                            <span class="game-icon">${fromIcon}</span>
+                            <span class="game-name">${fromGameName}</span>
+                            <span class="game-sens">${conversion.originalSensitivity}</span>
+                        </span>
+                        <span class="conversion-arrow">→</span>
+                        <span class="game-info">
+                            <span class="game-icon">${toIcon}</span>
+                            <span class="game-name">${toGameName}</span>
+                            <span class="game-sens">${conversion.convertedSensitivity}</span>
+                        </span>
+                    </div>
+                    <div class="conversion-details">
+                        <span class="conversion-dpi">${conversion.dpi} DPI</span>
+                        <span class="conversion-edpi">eDPI: ${conversion.edpi}</span>
+                        <span class="conversion-distance">${conversion.inches360}" / ${conversion.cm360}cm</span>
+                        <span class="conversion-time">${conversion.timestamp}</span>
+                    </div>
+                    <div class="conversion-actions">
+                        <button class="btn-mini btn-use" onclick="sensitivityConverter.useRecentConversion('${conversion.id}')">
+                            🔄 Use
+                        </button>
+                        <button class="btn-mini btn-copy" onclick="sensitivityConverter.copyRecentConversion('${conversion.id}')">
+                            📋 Copy
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Add clear history button event listener
+        document.getElementById('clearHistory').addEventListener('click', () => {
+            this.clearRecentConversions();
+        });
+    }
+
+    useRecentConversion(conversionId) {
+        const recentConversions = JSON.parse(localStorage.getItem('aimhelper_recent_conversions') || '[]');
+        const conversion = recentConversions.find(c => c.id == conversionId);
+
+        if (conversion) {
+            this.elements.fromGame.value = conversion.fromGame;
+            this.elements.toGame.value = conversion.toGame;
+            this.elements.inputSensitivity.value = conversion.originalSensitivity;
+            this.elements.inputDPI.value = conversion.dpi;
+
+            this.updateConversion();
+            this.showNotification('🔄 Conversion settings loaded!', 'info');
+        }
+    }
+
+    copyRecentConversion(conversionId) {
+        const recentConversions = JSON.parse(localStorage.getItem('aimhelper_recent_conversions') || '[]');
+        const conversion = recentConversions.find(c => c.id == conversionId);
+
+        if (conversion) {
+            const fromGameName = GAMES_DATABASE[conversion.fromGame]?.name || conversion.fromGame;
+            const toGameName = GAMES_DATABASE[conversion.toGame]?.name || conversion.toGame;
+
+            const result = `🎯 AimHelper Pro Conversion:
+${fromGameName} → ${toGameName}
+Sensitivity: ${conversion.convertedSensitivity}
+DPI: ${conversion.dpi} | eDPI: ${conversion.edpi}
+Distance: ${conversion.inches360}" / ${conversion.cm360}cm per 360°
+
+Generated at ${conversion.timestamp}`;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(result).then(() => {
+                    this.showNotification('✅ Recent conversion copied to clipboard!', 'success');
+                });
+            }
+        }
+    }
+
+    clearRecentConversions() {
+        localStorage.removeItem('aimhelper_recent_conversions');
+        document.getElementById('recentConversionsCard').style.display = 'none';
+        this.showNotification('🗑️ Conversion history cleared!', 'info');
     }
 
     saveSettings() {
@@ -359,7 +511,7 @@ class SensitivityConverter {
             similarPros = 'woxic, ropz (old), subroza';
         }
 
-        this.elements.edpiRank.textContent = `${rank} (Top ${percentage}%)`;
+        this.elements.edpiRank.textContent = rank;
         this.elements.similarPros.textContent = similarPros;
     }
 
@@ -417,11 +569,12 @@ class SensitivityConverter {
 }
 
 // Initialize converter when DOM is loaded
+let sensitivityConverter;
 document.addEventListener('DOMContentLoaded', () => {
-    new SensitivityConverter();
+    sensitivityConverter = new SensitivityConverter();
 });
 
-// Add CSS animations
+// Add CSS animations and styles
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -432,6 +585,139 @@ style.textContent = `
     @keyframes slideOutRight {
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* Recent Conversions Styles */
+    .recent-conversions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .recent-conversion-item {
+        background: var(--bg-glass);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        transition: all var(--transition-base);
+    }
+
+    .recent-conversion-item:hover {
+        background: var(--bg-glass-strong);
+        border-color: var(--current-category-color, var(--border-primary));
+    }
+
+    .conversion-games {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    .game-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .game-icon {
+        font-size: 18px;
+    }
+
+    .game-name {
+        font-weight: var(--font-weight-medium);
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+    }
+
+    .game-sens {
+        font-family: var(--font-family-mono);
+        background: var(--bg-card);
+        padding: 2px 8px;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-xs);
+        color: var(--text-accent);
+    }
+
+    .conversion-arrow {
+        color: var(--current-category-color, var(--text-muted));
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .conversion-details {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: var(--font-size-xs);
+        color: var(--text-muted);
+        margin-bottom: 12px;
+    }
+
+    .conversion-details span {
+        background: var(--bg-card);
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+    }
+
+    .conversion-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+
+    .btn-mini {
+        background: var(--bg-card);
+        border: 1px solid var(--border-primary);
+        border-radius: var(--radius-sm);
+        padding: 4px 8px;
+        font-size: var(--font-size-xs);
+        cursor: pointer;
+        transition: all var(--transition-base);
+        color: var(--text-secondary);
+    }
+
+    .btn-mini:hover {
+        background: var(--bg-glass-strong);
+        border-color: var(--current-category-color, var(--border-primary));
+        color: var(--text-primary);
+    }
+
+    .btn-use:hover {
+        background: rgba(52, 168, 83, 0.1);
+        border-color: var(--brand-secondary);
+        color: var(--brand-secondary);
+    }
+
+    .btn-copy:hover {
+        background: rgba(26, 115, 232, 0.1);
+        border-color: var(--brand-primary);
+        color: var(--brand-primary);
+    }
+
+    .recent-actions {
+        text-align: center;
+        border-top: 1px solid var(--border-primary);
+        padding-top: 16px;
+    }
+
+    .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-primary);
+        color: var(--text-muted);
+    }
+
+    .btn-outline:hover {
+        background: var(--bg-glass);
+        border-color: var(--current-category-color, var(--border-primary));
+        color: var(--text-primary);
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: var(--font-size-sm);
     }
 `;
 document.head.appendChild(style);

@@ -386,26 +386,18 @@ class DiscordIntegration {
     }
 
     getUserStats(username) {
-        // This would fetch real user statistics
-        // For demo purposes, return simulated data
         return {
-            totalTests: Math.floor(Math.random() * 100) + 10,
-            bestScore: Math.floor(Math.random() * 1500) + 500,
-            bestAccuracy: Math.random() * 30 + 70,
-            avgReaction: Math.random() * 100 + 200,
-            improvement: Math.random() * 50 + 10,
-            globalRank: Math.floor(Math.random() * 1000) + 1
+            totalTests: 0,
+            bestScore: 0,
+            bestAccuracy: 0,
+            avgReaction: 0,
+            improvement: 0,
+            globalRank: 0
         };
     }
 
     getLeaderboard(category) {
-        // Simulated leaderboard data
-        const players = ['AimGod2024', 'SniperElite', 'HeadshotHero', 'FlickMaster', 'PrecisionPro'];
-        return players.map((name, index) => ({
-            name,
-            value: 2000 - (index * 150),
-            accuracy: 95 - (index * 2)
-        }));
+        return [];
     }
 
     getActiveChallenges() {

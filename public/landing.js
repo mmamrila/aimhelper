@@ -67,7 +67,7 @@ function setupEventListeners() {
             setTimeout(() => {
                 btn.style.transform = '';
                 // Navigate to main app
-                window.location.href = '/app';
+                window.location.href = '/';
             }, 150);
         });
     });

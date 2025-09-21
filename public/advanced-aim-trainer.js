@@ -980,13 +980,8 @@ class AdvancedAimTrainer {
     }
 
     updateRecentScores() {
-        // Simulate recent scores for demo
         const scores = [
             { player: 'You', score: Math.round(this.metrics.score) },
-            { player: 'TenZ', score: 4250 },
-            { player: 's1mple', score: 4100 },
-            { player: 'ZywOo', score: 3950 },
-            { player: 'Aspas', score: 3800 },
         ].sort((a, b) => b.score - a.score);
 
         const container = document.getElementById('recentScores');
@@ -1107,14 +1102,7 @@ Train your aim at aimhelper.pro! #AimTraining #FPS`;
     }
 
     showLeaderboard() {
-        // Simulate leaderboard data
-        const leaderboard = [
-            { player: 'TenZ', score: 4250, mode: 'Grid Shot' },
-            { player: 's1mple', score: 4100, mode: 'Flick Shot' },
-            { player: 'ZywOo', score: 3950, mode: 'Grid Shot' },
-            { player: 'Aspas', score: 3800, mode: 'Target Switch' },
-            { player: 'Chronicle', score: 3750, mode: 'Tracking' },
-        ];
+        const leaderboard = [];
 
         const container = document.getElementById('fullLeaderboard');
         container.innerHTML = leaderboard.map((entry, index) => `

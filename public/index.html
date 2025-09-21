@@ -3,514 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AimHelper Pro - Advanced Aim Analysis Platform</title>
-    <meta name="description" content="Professional-grade aim analysis and sensitivity optimization platform for competitive gaming.">
-    
+    <title>AimHelper Pro - Find Your Perfect Mouse Sensitivity</title>
+    <meta name="description" content="Discover your optimal mouse sensitivity with our 60-second aim test. Get personalized recommendations and optimize your settings across 50+ FPS games.">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 
-    <!-- Category Navigation Script -->
-    <script src="category-navigation.js"></script>
-
-    <!-- Professional Icon System -->
-    <script src="icons.js"></script>
-    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <style>
+        /* Landing Page Specific Styles */
+        .landing-page {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+        }
+
+        .landing-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .landing-nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .landing-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .landing-nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #3b82f6;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+        }
+
+        .hero-section {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .features-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 2rem auto 0;
+        }
+
+        .stat-item {
+            color: #ffffff;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #3b82f6;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .landing-nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="page-category-home">
+<body class="landing-page">
     <!-- Navigation -->
-    <nav class="app-nav">
-        <div class="container">
-            <div class="nav-content">
-                <a href="/" class="nav-brand">
-                    <div class="nav-logo"></div>
-                    <span>AimHelper Pro</span>
-                </a>
-                <div class="nav-actions">
-                    <a href="/" class="nav-btn nav-btn--secondary active">Home</a>
-                    <a href="/converter" class="nav-btn nav-btn--secondary">Converter</a>
-                    <a href="/education" class="nav-btn nav-btn--secondary">Learn</a>
-                    <a href="/analytics" class="nav-btn nav-btn--secondary">Analytics</a>
-                    <a href="/community" class="nav-btn nav-btn--secondary">Community</a>
-                    <a href="/profile" class="nav-btn nav-btn--secondary">Profile</a>
-                    <a href="/pricing" class="nav-btn nav-btn--secondary">Pricing</a>
-                    <a href="/login" class="nav-btn nav-btn--secondary">Sign In</a>
-                    <a href="/register" class="nav-btn nav-btn--primary">Get Started</a>
-                </div>
+    <nav class="landing-nav">
+        <div class="landing-nav-content">
+            <a href="/" class="landing-logo">
+                <div class="logo-icon">🎯</div>
+                <span>AimHelper Pro</span>
+            </a>
+            <div class="landing-nav-links">
+                <a href="/sensitivity-test" class="nav-link">Sensitivity Test</a>
+                <a href="/how-it-works" class="nav-link">How It Works</a>
+                <a href="/pricing" class="nav-link">Pricing</a>
+                <a href="/login" class="nav-link">Sign In</a>
+                <a href="/sensitivity-test" class="nav-cta">Free Test →</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Breadcrumb -->
-        <div class="page-breadcrumb">
-            <span class="category-icon"></span>
-            <span class="page-breadcrumb-current">Home</span>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-badge">
+            <span>🎯</span>
+            <span>Find Your Perfect Sensitivity</span>
         </div>
-        <!-- Header -->
-        <header class="main-header">
-            <div class="header-badge">
-                <span class="icon"></span>
-                <span>Professional Aim Analysis Platform</span>
+        <h1 class="hero-title">Discover Your<br>Optimal Sensitivity</h1>
+        <p class="hero-subtitle">
+            Take our 60-second aim test to find your perfect mouse sensitivity, then optimize it across all your games.
+        </p>
+        <a href="/sensitivity-test" class="hero-cta">
+            <span>Take Sensitivity Test</span>
+            <span>→</span>
+        </a>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Sensitivity Analysis</h3>
+                <p class="feature-description">
+                    Quick aim test analyzes your performance and recommends optimal sensitivity settings.
+                </p>
             </div>
-            <h1 class="header-title">AimHelper Pro</h1>
-            <p class="header-subtitle">Professional sensitivity optimization for competitive FPS gaming</p>
-            <p class="header-description">Complete your performance analysis to unlock your optimal gaming settings</p>
-        </header>
-
-        <!-- Gaming Profile Setup Section -->
-        <section class="profile-setup-section">
-            <!-- Animated background elements -->
-            <div class="profile-bg-effects">
-                <div class="floating-orb orb-1"></div>
-                <div class="floating-orb orb-2"></div>
-                <div class="floating-orb orb-3"></div>
-                <div class="mesh-gradient"></div>
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3 class="feature-title">Cross-Game Optimization</h3>
+                <p class="feature-description">
+                    Apply your perfect sensitivity across Valorant, CS2, Apex Legends, and 50+ games.
+                </p>
             </div>
-
-            <div class="profile-setup-container">
-                <div class="profile-setup-header">
-                    <div class="profile-icon">
-                        <div class="icon-circle">
-                            <div class="icon-rings">
-                                <div class="ring ring-1"></div>
-                                <div class="ring ring-2"></div>
-                                <div class="ring ring-3"></div>
-                            </div>
-                            <div class="icon-core">
-                                <span class="icon-gaming">⚡</span>
-                                <div class="pulse-effect"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-header-text">
-                        <h2 class="profile-title">
-                            <span class="title-gradient">Gaming Profile</span>
-                            <span class="title-accent">Setup</span>
-                        </h2>
-                        <p class="profile-subtitle">Configure your gaming profile for precision analysis</p>
-                        <div class="title-underline"></div>
-                    </div>
-                </div>
-
-                <div class="profile-setup-form">
-                    <form id="profileForm" class="modern-form">
-                        <div class="form-grid">
-                            <div class="form-field" data-field="identity">
-                                <div class="field-card">
-                                    <div class="field-header">
-                                        <div class="field-icon-container">
-                                            <div class="field-icon">👤</div>
-                                            <div class="icon-glow"></div>
-                                        </div>
-                                        <label for="userId" class="field-label">Player Identity</label>
-                                    </div>
-                                    <div class="input-container">
-                                        <input type="text" id="userId" class="modern-input" required placeholder="Enter your gaming handle">
-                                        <div class="input-highlight"></div>
-                                        <div class="input-focus-ring"></div>
-                                        <div class="input-particles"></div>
-                                    </div>
-                                    <p class="field-hint">Used to track your progress and personalize recommendations</p>
-                                </div>
-                            </div>
-
-                            <div class="form-field" data-field="dpi">
-                                <div class="field-card">
-                                    <div class="field-header">
-                                        <div class="field-icon-container">
-                                            <div class="field-icon">🖱️</div>
-                                            <div class="icon-glow"></div>
-                                        </div>
-                                        <label for="currentDPI" class="field-label">Mouse DPI</label>
-                                    </div>
-                                    <div class="input-container">
-                                        <input type="number" id="currentDPI" class="modern-input" required min="400" max="3200" value="800">
-                                        <div class="input-highlight"></div>
-                                        <div class="input-focus-ring"></div>
-                                        <div class="input-particles"></div>
-                                        <div class="input-unit">DPI</div>
-                                    </div>
-                                    <p class="field-hint">Optimal range: 400-3200 DPI</p>
-                                    <div class="dpi-indicator">
-                                        <div class="dpi-bar">
-                                            <div class="dpi-fill"></div>
-                                            <div class="dpi-markers">
-                                                <span class="marker" data-value="400">400</span>
-                                                <span class="marker" data-value="800">800</span>
-                                                <span class="marker" data-value="1600">1600</span>
-                                                <span class="marker" data-value="3200">3200</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-field" data-field="sensitivity">
-                                <div class="field-card">
-                                    <div class="field-header">
-                                        <div class="field-icon-container">
-                                            <div class="field-icon">⚙️</div>
-                                            <div class="icon-glow"></div>
-                                        </div>
-                                        <label for="currentSensitivity" class="field-label">Game Sensitivity</label>
-                                    </div>
-                                    <div class="input-container">
-                                        <input type="number" id="currentSensitivity" class="modern-input" required min="0.1" max="10" step="0.01" value="1.0">
-                                        <div class="input-highlight"></div>
-                                        <div class="input-focus-ring"></div>
-                                        <div class="input-particles"></div>
-                                    </div>
-                                    <p class="field-hint">Your current in-game sensitivity setting</p>
-                                </div>
-                            </div>
-
-                            <div class="form-field form-field--select" data-field="game">
-                                <div class="field-card">
-                                    <div class="field-header">
-                                        <div class="field-icon-container">
-                                            <div class="field-icon">🎮</div>
-                                            <div class="icon-glow"></div>
-                                        </div>
-                                        <label for="preferredGame" class="field-label">Primary Game</label>
-                                    </div>
-                                    <div class="select-container">
-                                        <select id="preferredGame" class="modern-select">
-                                            <option value="valorant" data-icon="🎯">Valorant</option>
-                                            <option value="csgo" data-icon="💥">CS:GO / CS2</option>
-                                            <option value="apex" data-icon="🔥">Apex Legends</option>
-                                            <option value="overwatch" data-icon="⚡">Overwatch 2</option>
-                                            <option value="marvelrivals" data-icon="🦸">Marvel Rivals</option>
-                                            <option value="cod" data-icon="🔫">Call of Duty</option>
-                                            <option value="rainbow6" data-icon="🛡️">Rainbow Six Siege</option>
-                                            <option value="fortnite" data-icon="🏗️">Fortnite</option>
-                                            <option value="other" data-icon="🎮">Other FPS Game</option>
-                                        </select>
-                                        <div class="select-highlight"></div>
-                                        <div class="select-focus-ring"></div>
-                                        <div class="select-arrow">
-                                            <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <p class="field-hint">Game-specific optimization algorithms</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="profile-submit-btn">
-                                <span class="btn-text">Begin Analysis</span>
-                                <div class="btn-icon">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                        <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </div>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Features Preview -->
-                <div class="profile-features">
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-icon">📊</div>
-                            <div class="feature-content">
-                                <h4>Advanced Analytics</h4>
-                                <p>Deep movement analysis</p>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">🎯</div>
-                            <div class="feature-content">
-                                <h4>Precision Testing</h4>
-                                <p>12+ optimization metrics</p>
-                            </div>
-                        </div>
-                        <div class="feature-card">
-                            <div class="feature-icon">🚀</div>
-                            <div class="feature-content">
-                                <h4>Instant Results</h4>
-                                <p>Real-time recommendations</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Performance Tracking</h3>
+                <p class="feature-description">
+                    Track your aim improvement over time with detailed analytics and insights.
+                </p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Performance Testing Section -->
-        <section class="section hidden" id="testsSection">
-            <div class="section-header">
-                <h2 class="section-title">⚡ Advanced Performance Analysis</h2>
-                <p class="section-description">Complete all 4 tests to unlock your personalized sensitivity recommendations. Our advanced algorithms analyze your performance across different scenarios to find your optimal settings.</p>
-            </div>
-            
-            <div class="alert alert--info">
-                <span>💡</span>
-                <span>Each test evaluates different aspects of your aim. Complete all tests for the most accurate analysis.</span>
-            </div>
-            
-            <div class="grid grid--2">
-                <div class="test-card" data-test="circle-tracking">
-                    <div class="test-card-icon">🔄</div>
-                    <h3 class="test-card-title">Circle Tracking</h3>
-                    <p class="test-card-description">Follow a moving target to test smooth tracking ability and micro-adjustments</p>
-                    <div class="test-status" id="circleStatus">
-                        <span>⏸️</span>
-                        <span>Not Started</span>
-                    </div>
-                    <button class="btn btn--primary" data-test="circle-tracking">Start Test</button>
-                </div>
-                
-                <div class="test-card" data-test="grid-shot">
-                    <div class="test-card-icon">🎯</div>
-                    <h3 class="test-card-title">Grid Shot</h3>
-                    <p class="test-card-description">Click targets as they appear to test precision and reaction time</p>
-                    <div class="test-status" id="gridStatus">
-                        <span>⏸️</span>
-                        <span>Not Started</span>
-                    </div>
-                    <button class="btn btn--primary" data-test="grid-shot">Start Test</button>
-                </div>
-                
-                <div class="test-card" data-test="flick-test">
-                    <div class="test-card-icon">⚡</div>
-                    <h3 class="test-card-title">Flick Test</h3>
-                    <p class="test-card-description">Quick target-to-target movements to test flick accuracy and speed</p>
-                    <div class="test-status" id="flickStatus">
-                        <span>⏸️</span>
-                        <span>Not Started</span>
-                    </div>
-                    <button class="btn btn--primary" data-test="flick-test">Start Test</button>
-                </div>
-                
-                <div class="test-card" data-test="consistency-test">
-                    <div class="test-card-icon">📊</div>
-                    <h3 class="test-card-title">Consistency Test</h3>
-                    <p class="test-card-description">Repeat the same movement multiple times to test muscle memory</p>
-                    <div class="test-status" id="consistencyStatus">
-                        <span>⏸️</span>
-                        <span>Not Started</span>
-                    </div>
-                    <button class="btn btn--primary" data-test="consistency-test">Start Test</button>
-                </div>
-            </div>
-            
-            <div class="optimization-section">
-                <div class="optimization-actions">
-                    <button id="optimizeBtn" class="btn btn--warning btn--lg" disabled>
-                        <span>🧠 Get Optimization Recommendations</span>
-                    </button>
-                    <button id="viewResultsBtn" class="btn btn--secondary btn--lg">
-                        <span>📊 View Detailed Results</span>
-                    </button>
-                </div>
-            </div>
-        </section>
 
-        <!-- Current Settings Display -->
-        <section class="current-settings">
-            <h3 class="section-title">⚙️ Current Settings</h3>
-            <div class="settings-grid" id="currentSettingsDisplay">
-                <div class="setting-item">
-                    <div class="setting-label">DPI</div>
-                    <div class="setting-value" id="displayDPI">800</div>
-                </div>
-                <div class="setting-item">
-                    <div class="setting-label">Sensitivity</div>
-                    <div class="setting-value" id="displaySens">1.0</div>
-                </div>
-                <div class="setting-item">
-                    <div class="setting-label">in/360°</div>
-                    <div class="setting-value" id="displayCm">-</div>
-                </div>
-                <div class="setting-item">
-                    <div class="setting-label">Game</div>
-                    <div class="setting-value" id="displayGame" style="font-size: var(--font-size-lg);">Valorant</div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <h2 class="cta-title">Ready to Find Your Perfect Sensitivity?</h2>
+        <p class="cta-description">
+            Discover your optimal mouse sensitivity in 60 seconds and unlock your true aiming potential.
+        </p>
+        <a href="/sensitivity-test" class="hero-cta">
+            <span>Start Free Sensitivity Test</span>
+            <span>→</span>
+        </a>
+    </section>
 
-    <!-- Success Message Template -->
-    <div id="successTemplate" class="alert alert--success animate-fade-in hidden">
-        <span>✅</span>
-        <span>Profile saved successfully! You can now start the performance tests.</span>
-    </div>
-
-    <!-- Scripts -->
-    <script src="main.js"></script>
-    
     <script>
-        // Enhanced profile form handling
-        document.getElementById('profileForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                userId: document.getElementById('userId').value,
-                currentDPI: parseInt(document.getElementById('currentDPI').value),
-                currentSensitivity: parseFloat(document.getElementById('currentSensitivity').value),
-                preferredGame: document.getElementById('preferredGame').value
-            };
-            
-            // Save to localStorage
-            localStorage.setItem('aimhelper_profile', JSON.stringify(formData));
-            
-            // Update display
-            updateSettingsDisplay(formData);
-            
-            // Show success message
-            showSuccessMessage();
-            
-            // Show tests section with animation
-            setTimeout(() => {
-                document.getElementById('testsSection').classList.remove('hidden');
-                document.getElementById('testsSection').classList.add('animate-fade-in');
-                
-                // Smooth scroll to tests section
-                document.getElementById('testsSection').scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }, 1000);
-        });
-        
-        function updateSettingsDisplay(data) {
-            document.getElementById('displayDPI').textContent = data.currentDPI;
-            document.getElementById('displaySens').textContent = data.currentSensitivity;
-            document.getElementById('displayGame').textContent = getGameDisplayName(data.preferredGame);
-            
-            // Calculate in/360
-            const in360 = calculateIn360(data.currentDPI, data.currentSensitivity);
-            document.getElementById('displayCm').textContent = in360 + ' in';
-        }
-        
-        function getGameDisplayName(gameValue) {
-            const gameNames = {
-                valorant: 'Valorant',
-                csgo: 'CS:GO/CS2',
-                apex: 'Apex Legends',
-                overwatch: 'Overwatch 2',
-                marvelrivals: 'Marvel Rivals',
-                cod: 'Call of Duty',
-                rainbow6: 'R6 Siege',
-                fortnite: 'Fortnite',
-                other: 'Other FPS'
-            };
-            return gameNames[gameValue] || gameValue;
-        }
-        
-        function calculateIn360(dpi, sensitivity) {
-            // Standard calculation for inches/360
-            const inches360 = 10080 / (dpi * sensitivity);
-            return Math.round(inches360 * 100) / 100;
-        }
-        
-        function showSuccessMessage() {
-            const template = document.getElementById('successTemplate');
-            const message = template.cloneNode(true);
-            message.id = '';
-            message.classList.remove('hidden');
-            
-            // Insert after the form section
-            const formSection = document.querySelector('.section');
-            formSection.appendChild(message);
-            
-            // Remove after 4 seconds
-            setTimeout(() => {
-                message.remove();
-            }, 4000);
-        }
-        
-        // Load saved profile on page load
-        window.addEventListener('load', function() {
-            const savedProfile = localStorage.getItem('aimhelper_profile');
-            if (savedProfile) {
-                const data = JSON.parse(savedProfile);
-                
-                // Fill form fields
-                document.getElementById('userId').value = data.userId || '';
-                document.getElementById('currentDPI').value = data.currentDPI || 800;
-                document.getElementById('currentSensitivity').value = data.currentSensitivity || 1.0;
-                document.getElementById('preferredGame').value = data.preferredGame || 'valorant';
-                
-                // Update display
-                updateSettingsDisplay(data);
-                
-                // Show tests section if profile exists
-                document.getElementById('testsSection').classList.remove('hidden');
-            }
-        });
-        
-        // Enhanced test card interactions
-        document.querySelectorAll('.test-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const testType = this.dataset.test;
-                if (testType) {
-                    window.location.href = `/${testType}`;
-                }
+        // Simple analytics for page views
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                page_title: 'Homepage',
+                page_location: window.location.href
             });
-        });
-        
-        // Test button handlers
-        document.querySelectorAll('[data-test]').forEach(button => {
-            if (button.tagName === 'BUTTON') {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const testType = this.dataset.test;
-                    if (testType) {
-                        window.location.href = `/${testType}`;
-                    }
-                });
-            }
-        });
-        
-        // Results button handler
-        document.getElementById('viewResultsBtn').addEventListener('click', function() {
-            window.location.href = '/results';
-        });
-        
-        // Optimize button handler
-        document.getElementById('optimizeBtn').addEventListener('click', function() {
-            // This would trigger the optimization process
-            alert('Optimization feature will analyze your test results and provide recommendations.');
-        });
-        
-        // Check for completed tests and enable optimize button
-        function checkTestCompletion() {
-            const tests = ['circle', 'grid', 'flick', 'consistency'];
-            let completedCount = 0;
-            
-            tests.forEach(test => {
-                const results = localStorage.getItem(`aimhelper_${test}_results`);
-                if (results) {
-                    completedCount++;
-                    const statusElement = document.getElementById(`${test}Status`);
-                    if (statusElement) {
-                        statusElement.innerHTML = '<span>✅</span><span>Completed</span>';
-                        statusElement.classList.add('test-status--completed');
-                    }
-                }
-            });
-            
-            // Enable optimize button if at least 2 tests completed
-            if (completedCount >= 2) {
-                document.getElementById('optimizeBtn').disabled = false;
-            }
         }
-        
-        // Check test completion on load
-        window.addEventListener('load', checkTestCompletion);
     </script>
 </body>
 </html>

@@ -47,7 +47,7 @@ function initTest() {
     const settings = localStorage.getItem('testSettings');
     if (!settings) {
         alert('No test settings found. Returning to home.');
-        window.location.href = '/app';
+        window.location.href = '/';
         return;
     }
     
@@ -667,12 +667,45 @@ function updateNextTestButton() {
     }
 }
 
-function retryTest() {
-    window.location.reload();
+function goHome() {
+    window.location.href = '/';
 }
 
-function goHome() {
-    window.location.href = '/app';
+function retryTest() {
+    // Reset test state
+    isTestRunning = false;
+    currentTest = 0;
+    testResults = [];
+    targets = [];
+
+    // Reset UI
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('instructions').style.display = 'block';
+    document.getElementById('testArea').style.display = 'none';
+
+    // Reset test data
+    testData = {
+        startTime: 0,
+        duration: 60000,
+        clicks: [],
+        hits: 0,
+        misses: 0,
+        totalTargets: 0,
+        overshoots: 0,
+        undershoots: 0,
+        corrections: 0,
+        movementPath: [],
+        velocityData: [],
+        lastCrosshairPos: { x: 400, y: 300 },
+        lastMoveTime: 0,
+        targetAcquisitionTimes: [],
+        clickPrecision: []
+    };
+
+    // Clear canvas
+    if (canvas && ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 }
 
 window.addEventListener('load', function() {

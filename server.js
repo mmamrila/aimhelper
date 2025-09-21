@@ -35,7 +35,7 @@ const RedisService = require('./services/redis');
 const SocketService = require('./services/socket');
 
 // Configuration
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const IS_PRODUCTION = NODE_ENV === 'production';
 
@@ -46,7 +46,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = socketIo(server, {
     cors: {
-        origin: IS_PRODUCTION ? process.env.CLIENT_URL : "http://localhost:3000",
+        origin: IS_PRODUCTION ? process.env.CLIENT_URL : `http://localhost:${PORT}`,
         methods: ["GET", "POST"],
         credentials: true
     },
@@ -59,19 +59,32 @@ const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),
-        winston.format.json()
+        IS_PRODUCTION ? winston.format.json() : winston.format.simple()
     ),
     defaultMeta: { service: 'aimhelper-api' },
     transports: [
-        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'logs/combined.log' }),
+        // Always include console transport for visibility
+        new winston.transports.Console({
+            format: IS_PRODUCTION ?
+                winston.format.combine(winston.format.timestamp(), winston.format.json()) :
+                winston.format.simple()
+        })
     ],
 });
 
-if (!IS_PRODUCTION) {
-    logger.add(new winston.transports.Console({
-        format: winston.format.simple()
+// Add file transports with error handling
+try {
+    logger.add(new winston.transports.File({
+        filename: 'logs/error.log',
+        level: 'error',
+        handleExceptions: true
     }));
+    logger.add(new winston.transports.File({
+        filename: 'logs/combined.log',
+        handleExceptions: true
+    }));
+} catch (error) {
+    console.log('Warning: Could not initialize file logging, continuing with console only');
 }
 
 // Security middleware
@@ -92,7 +105,7 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-    origin: IS_PRODUCTION ? process.env.CLIENT_URL : ["http://localhost:3000", "http://127.0.0.1:3000"],
+    origin: IS_PRODUCTION ? process.env.CLIENT_URL : [`http://localhost:${PORT}`, `http://127.0.0.1:${PORT}`],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
@@ -183,14 +196,84 @@ app.get('/api/status', (req, res) => {
     });
 });
 
-// Catch-all handler for client-side routing
+// Page routes - serve specific HTML files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/converter', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'converter.html'));
+});
+
+app.get('/how-it-works', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'how-it-works.html'));
+});
+
+app.get('/pricing', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'pricing.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
+
+app.get('/sensitivity-test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'sensitivity-test.html'));
+});
+
+app.get('/flick-test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'flick-test.html'));
+});
+
+app.get('/consistency-test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'consistency-test.html'));
+});
+
+app.get('/apex-tracking-test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'apex-tracking-test.html'));
+});
+
+app.get('/valorant-crosshair-test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'valorant-crosshair-test.html'));
+});
+
+app.get('/test-interface', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'test-interface.html'));
+});
+
+app.get('/results', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'results.html'));
+});
+
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+// Catch-all handler for unmatched routes
 app.get('*', (req, res) => {
     // Don't serve index.html for API routes
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ error: 'API endpoint not found' });
     }
 
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    // Redirect unknown routes to homepage
+    res.redirect('/');
 });
 
 // Error handling middleware
@@ -212,6 +295,7 @@ async function initializeServices() {
         // Initialize Redis (optional, fallback to memory if not available)
         try {
             await RedisService.initialize();
+            console.log('📢 Redis is optional - app works fine without it for basic functionality');
             logger.info('Redis service initialized');
         } catch (error) {
             logger.warn('Redis service unavailable, falling back to in-memory cache');

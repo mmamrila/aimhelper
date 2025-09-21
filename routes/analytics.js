@@ -344,6 +344,24 @@ router.get('/comparison', authMiddleware, [
     });
 }));
 
+// Get global analytics (public endpoint for community stats)
+router.get('/global', asyncHandler(async (req, res) => {
+    const { timeframe = '24h' } = req.query;
+
+    try {
+        const globalAnalytics = await DatabaseService.getGlobalAnalytics(timeframe);
+        res.json(globalAnalytics);
+    } catch (error) {
+        console.error('Error fetching global analytics:', error);
+        res.status(500).json({
+            error: 'Failed to fetch global analytics',
+            totalUsers: 0,
+            totalSessions: 0,
+            averageAccuracy: 0
+        });
+    }
+}));
+
 // Get improvement recommendations
 router.get('/recommendations', authMiddleware, asyncHandler(async (req, res) => {
     const userStats = await DatabaseService.prisma.userStats.findUnique({

@@ -476,12 +476,12 @@ function exportResults() {
 function clearAllData() {
     if (confirm('Are you sure you want to clear all test data? This cannot be undone.')) {
         localStorage.clear();
-        window.location.href = '/app';
+        window.location.href = '/';
     }
 }
 
 function goHome() {
-    window.location.href = '/app';
+    window.location.href = '/';
 }
 
 // Helper functions for new analysis system
